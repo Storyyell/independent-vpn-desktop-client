@@ -1,5 +1,7 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import { ipcRenderer } from 'electron'
+
 
 // Custom APIs for renderer
 const api = {}
@@ -11,6 +13,7 @@ if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
+    contextBridge.exposeInMainWorld('ipc', triggerConnectionFx)
   } catch (error) {
     console.error(error)
   }
@@ -18,3 +21,14 @@ if (process.contextIsolated) {
   window.electron = electronAPI
   window.api = api
 }
+
+function triggerConnectionFx(){
+  ipcRenderer.invoke('triggerConnection')
+  .then((res) => {
+
+  })
+  .catch((e) => {
+    console.log(e)
+  })
+}
+

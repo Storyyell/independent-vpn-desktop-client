@@ -2,6 +2,16 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { vpnConnet } from './system/vpnBase.js'
+import os from 'os'
+import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs'
+import path from 'path'
+
+let sessionTempDir={
+  path: '',
+  uuid: uuidv4()
+};
 
 function createWindow() {
   // Create the browser window.
@@ -26,6 +36,11 @@ function createWindow() {
     return { action: 'deny' }
   })
 
+  ipcMain.handle('triggerConnection', () => {
+    console.log('vpn connection trigger on main process')
+    vpnConnet()
+  })
+  
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
@@ -70,5 +85,24 @@ app.on('window-all-closed', () => {
   }
 })
 
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.
+app.on('ready', () => {
+  const tempDir = os.tmpdir();
+
+    fs.mkdtemp(path.join(tempDir, sessionTempDir.uuid), (err, folder) => {
+      if (err) throw err;
+      sessionTempDir.path = folder;
+      
+    });
+
+})
+
+app.on('will-quit', () => {
+  if (sessionTempDir.path) {
+    fs.rm(sessionTempDir.path, { recursive: true }, (err) => {
+      if (err) throw err;
+    });
+  }
+});
+
+app.disableHardwareAcceleration() 
+

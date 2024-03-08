@@ -4,6 +4,12 @@ import electronLogo from './assets/electron.svg'
 function App() {
   const ipcHandle = () => window.electron.ipcRenderer.send('ping')
 
+  function triggerVpnConnection() { 
+    console.log("vpn connection triggered fron renderer");
+    window.ipc();
+  }
+
+
   return (
     <>
       <img alt="logo" className="logo" src={electronLogo} />
@@ -20,9 +26,12 @@ function App() {
             Documentation
           </a>
         </div>
-        <div className="action">
+        <div className="action" >
           <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
             Send IPC
+          </a>
+          <a target="_blank" rel="noreferrer" onClick={triggerVpnConnection}>
+            vpn connect
           </a>
         </div>
       </div>
