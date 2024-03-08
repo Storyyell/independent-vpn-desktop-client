@@ -3,19 +3,34 @@ import { spawn } from "child_process"
 import path from "path";
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-import {getDefaultGateway} from "./defaultGateway"
+import { getDefaultGateway } from "./defaultGateway"
+import child_process from "child_process";
 
-export function vpnConnet(){
+var vpnStatusObj = {
+    connected: false,
+    v2ray: null,
+    tun2socks: null,
+    setStaticIP: false,
+    setDnsServer: false,
+    addVpnRoute: false,
+    addGlobalRoute: false,
+    gateway: null,
+}
+
+
+export function vpnConnet() {
     getDefaultGateway()
-    .then((gateway) => {
-        vpnConnetFx(gateway)
-    })
-    .catch((e) => {console.log(e);});
+        .then((gateway) => {
+            vpnStatusObj.gateway = gateway
+            vpnConnetFx(gateway)
+        })
+        .catch((e) => { console.log(e); });
 }
 
 export function vpnConnetFx(gateway) {
+
     console.log("VPN connection initializing...");
-    
+
     console.log(`gateway ${gateway}`);
 
     let basePath = path.join(__dirname, "../../resources/bin/");
@@ -52,6 +67,7 @@ export function vpnConnetFx(gateway) {
 
     function onVpnConnected() {
         console.log("V2ray tunnel created");
+        vpnStatusObj.v2ray = v2ray;
         startSocksInternalTunnel();
     }
 
@@ -73,6 +89,7 @@ export function vpnConnetFx(gateway) {
 
         tun2socks.on('close', (code) => {
             console.log(`tun2socks process exited with code ${code}`);
+            vpnStatusObj.connected = false;
         });
 
         function onDataReceived(data) {
@@ -94,6 +111,7 @@ export function vpnConnetFx(gateway) {
         function onTun2SocksConnected() {
             console.log("Tun2socks tunnel created");
 
+            vpnStatusObj.tun2socks = tun2socks
             // Now start the other process
             startAnotherCommand();
         }
@@ -101,21 +119,30 @@ export function vpnConnetFx(gateway) {
         function startAnotherCommand() {
             console.log("Starting another command after tun2socks...");
             setStaticIP()
-            .then(() =>{
-                return setDnsServer()
-            })
-            .then(() =>{
-                return addVpnRoute(gateway)
-            })
-            .then(() =>{
-                return addGlobalRoute()
-            })
-            .then(() =>{
-                console.log("vpn connection established");
-            })
-            .catch((e) =>{
-                console.log("vpn connection error: " + e.message);
-            });
+                .then(() => {
+                    vpnStatusObj.setStaticIP = true;
+                    return setDnsServer()
+                })
+                .then(() => {
+                    vpnStatusObj.setDnsServer = true;
+
+                    return addVpnRoute(gateway)
+                })
+                .then(() => {
+                    vpnStatusObj.addVpnRoute = true;
+
+                    return addGlobalRoute()
+                })
+                .then(() => {
+                    vpnStatusObj.addGlobalRoute = true;
+                    vpnStatusObj.connected = true;
+                    console.log(vpnStatusObj);
+                    console.log("vpn connection established");
+                })
+                .catch((e) => {
+                    vpnStatusObj.connected = false;
+                    console.log("vpn connection error: " + e.message);
+                });
         }
 
     }
@@ -144,3 +171,83 @@ function addVpnRoute(gateway) {
     return exec(`route add 47.129.9.91 mask 255.255.255.255 ${gateway}`);
 }
 
+export function vpnDisconnect() {
+    let keys = Object.keys(vpnStatusObj).reverse();
+    keys.forEach((key) => {
+        vpnConnCleanup(key);
+    })
+    if(!vpnStatusObj.connected) {
+        console.log("vpn disconnected");
+    }
+}
+
+function vpnConnCleanup(key) {
+
+    switch (key) {
+        case "addGlobalRoute":
+            if (vpnStatusObj["setStaticIP"]) {
+
+                child_process.exec('netsh interface ipv4 delete route 0.0.0.0/0 "wintun" 192.168.123.1', (err, result) => {
+                    if (!err) {
+                        vpnStatusObj["addGlobalRoute"] = false;
+                    }
+                })
+            }
+            break;
+        case "addVpnRoute":
+            if (vpnStatusObj["addVpnRoute"]) {
+
+                child_process.exec(`route delete ${vpnStatusObj.gateway}`, (err, result) => {
+                    if (!err) {
+                        vpnStatusObj["addVpnRoute"] = false;
+                    }
+
+                })
+            }
+            break;
+        case "setDnsServer":
+            if (vpnStatusObj["setDnsServer"]) {
+
+                child_process.exec('netsh interface ipv4 set dnsservers name="wintun" source=dhcp', (err, result) => {
+                    if (!err) {
+                        vpnStatusObj["setDnsServer"] = false;
+                    }
+                })
+            }
+            break;
+        case "setStaticIP":
+            if (vpnStatusObj["setStaticIP"]) {
+                child_process.exec('netsh interface ipv4 set address name="wintun" source=dhcp', (err, result) => {
+                    if (!err) {
+                        vpnStatusObj["setStaticIP"] = false;
+                    }
+                })
+            }
+            break;
+        case "tun2socks":
+            if (vpnStatusObj["tun2socks"] != null) {
+                vpnStatusObj.tun2socks.kill();
+                vpnStatusObj.tun2socks = null;
+            }
+            break;
+        case "v2ray":
+            if (vpnStatusObj["v2ray"] != null) {
+                vpnStatusObj.v2ray.kill();
+                vpnStatusObj.v2ray = null;
+            }
+            break;
+        case "connected":
+            if (vpnStatusObj["connected"]) {
+                vpnStatusObj.connected = false;
+                vpnStatusObj.gateway = null;
+            }
+            break;
+        case "gateway":
+            if (vpnStatusObj["gateway"] != null) {
+                vpnStatusObj.gateway = null;
+            }
+            break;
+        default:
+            break
+    }
+}
