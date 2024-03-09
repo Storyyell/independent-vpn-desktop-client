@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -9,7 +9,6 @@ import fs from 'fs'
 import path from 'path'
 import { vpnObj } from './system/vpnBase.js'
 
-
 let sessionTempDir={
   path: '',
   uuid: uuidv4()
@@ -18,10 +17,15 @@ let sessionTempDir={
 global.sessionTempDir = sessionTempDir; // Todo remove this global variable 
 
 function createWindow() {
+  let screen_size = screen.getPrimaryDisplay().workAreaSize
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    minWidth: 380,
+    minHeight: 640,
+    width: 380,
+    height: 640,
+    x: screen_size.width - 380 - 40,
+    y: screen_size.height - 640 - 30,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
