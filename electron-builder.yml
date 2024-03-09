@@ -12,6 +12,7 @@ asarUnpack:
   - resources/**
 win:
   executableName: sentinal_windows_app
+  requestedExecutionLevel: requireAdministrator # for admin privileges
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

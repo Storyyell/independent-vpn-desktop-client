@@ -33,7 +33,7 @@ export function vpnConnet() {
     getDefaultGateway()
         .then((gateway) => {
             vpnObj.gateway = gateway
-            if(saveV2rayConfig(process.env.SERVER_IP, parseInt(process.env.SERVER_PORT), process.env.SERVER_UUID)){ // Todo make this function async and use await
+            if(saveV2rayConfig(import.meta.env.VITE_SERVER_IP, parseInt(import.meta.env.VITE_SERVER_PORT), import.meta.env.VITE_SERVER_UUID)){ // Todo make this function async and use await
                 vpnObj.triggerConnection(gateway)
             }else{
                 vpnObj.triggerDisconnection();
@@ -50,6 +50,12 @@ export function vpnConnetFx(gateway) {
     vpnObj.connectionProgress = true;
 
     let basePath = path.join(__dirname, "../../resources/bin/");
+    
+    // Todo want to find a another way to use the resourcesPath from the main process in production
+    if (app.isPackaged) {
+        // When the app is packaged, the "resourcesPath" points to the "resources" directory adjacent to app.asar
+        basePath = path.join(process.resourcesPath, 'app.asar.unpacked/resources/bin');
+    }
 
     const v2rayPath = path.join(basePath, 'v2ray.exe');
     // const configPath = path.join(basePath, 'config.json');
