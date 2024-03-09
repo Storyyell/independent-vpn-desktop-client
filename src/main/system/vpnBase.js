@@ -18,6 +18,7 @@ var vpnObj = {
     triggerConnection:vpnConnetFx,
     triggerDisconnection:vpnDisconnect,
     disconnectionProgress:false,
+    connectionProgress:false,
 
 }
 
@@ -36,6 +37,7 @@ export function vpnConnetFx(gateway) {
     console.log("VPN connection initializing...");
 
     console.log(`gateway ${gateway}`);
+    vpnObj.connectionProgress = true;
 
     let basePath = path.join(__dirname, "../../resources/bin/");
 
@@ -146,6 +148,7 @@ export function vpnConnetFx(gateway) {
                 .then(() => {
                     vpnObj.addGlobalRoute = true;
                     vpnObj.connected = true;
+                    vpnObj.connectionProgress = false;
                     console.log("vpn connection established");
                     // setTimeout(() => {
                     //     vpnObj.triggerDisconnection()
@@ -204,6 +207,7 @@ export function vpnDisconnect() {
         }
         vpnObj.disconnectionProgress = false;
         vpnObj.connected = false;
+        vpnObj.connectionProgress = false;
     }
 
 }
