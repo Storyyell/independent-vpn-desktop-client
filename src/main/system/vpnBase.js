@@ -16,6 +16,8 @@ var vpnObj = {
     addGlobalRoute: false,
     gateway: null,
     triggerConnection:vpnConnetFx,
+    triggerDisconnection:vpnDisconnect,
+
 }
 
 
@@ -139,7 +141,7 @@ export function vpnConnetFx(gateway) {
                     vpnObj.connected = true;
                     console.log("vpn connection established");
                     setTimeout(() => {
-                        vpnDisconnect()
+                        vpnObj.triggerDisconnection()
                     },10000)
 
 
