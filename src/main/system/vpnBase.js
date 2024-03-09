@@ -6,7 +6,7 @@ const exec = util.promisify(require('child_process').exec);
 import { getDefaultGateway } from "./defaultGateway"
 import child_process from "child_process";
 
-var vpnStatusObj = {
+var vpnObj = {
     connected: false,
     v2ray: null,
     tun2socks: null,
@@ -15,14 +15,15 @@ var vpnStatusObj = {
     addVpnRoute: false,
     addGlobalRoute: false,
     gateway: null,
+    triggerConnection:vpnConnetFx,
 }
 
 
 export function vpnConnet() {
     getDefaultGateway()
         .then((gateway) => {
-            vpnStatusObj.gateway = gateway
-            vpnConnetFx(gateway)
+            vpnObj.gateway = gateway
+            vpnObj.triggerConnection(gateway)
         })
         .catch((e) => { console.log(e); });
 }
@@ -61,13 +62,13 @@ export function vpnConnetFx(gateway) {
 
     v2ray.stdout.on('data', onDataReceived);
 
-    v2ray.stderr.on('data', (data) => {
-        console.error(`child stderr:\n${data}`);
-    });
+    // v2ray.stderr.on('data', (data) => {
+    //     console.error(`child stderr:\n${data}`);
+    // });
 
     function onVpnConnected() {
         console.log("V2ray tunnel created");
-        vpnStatusObj.v2ray = v2ray;
+        vpnObj.v2ray = v2ray;
         startSocksInternalTunnel();
     }
 
@@ -89,7 +90,7 @@ export function vpnConnetFx(gateway) {
 
         tun2socks.on('close', (code) => {
             console.log(`tun2socks process exited with code ${code}`);
-            vpnStatusObj.connected = false;
+            vpnObj.connected = false;
         });
 
         function onDataReceived(data) {
@@ -104,14 +105,14 @@ export function vpnConnetFx(gateway) {
 
         tun2socks.stdout.on('data', onDataReceived);
 
-        tun2socks.stderr.on('data', (data) => {
-            console.error(`child stderr:\n${data}`);
-        });
+        // tun2socks.stderr.on('data', (data) => {
+        //     console.error(`child stderr:\n${data}`);
+        // });
 
         function onTun2SocksConnected() {
             console.log("Tun2socks tunnel created");
 
-            vpnStatusObj.tun2socks = tun2socks
+            vpnObj.tun2socks = tun2socks
             // Now start the other process
             startAnotherCommand();
         }
@@ -120,27 +121,31 @@ export function vpnConnetFx(gateway) {
             console.log("Starting another command after tun2socks...");
             setStaticIP()
                 .then(() => {
-                    vpnStatusObj.setStaticIP = true;
+                    vpnObj.setStaticIP = true;
                     return setDnsServer()
                 })
                 .then(() => {
-                    vpnStatusObj.setDnsServer = true;
+                    vpnObj.setDnsServer = true;
 
                     return addVpnRoute(gateway)
                 })
                 .then(() => {
-                    vpnStatusObj.addVpnRoute = true;
+                    vpnObj.addVpnRoute = true;
 
                     return addGlobalRoute()
                 })
                 .then(() => {
-                    vpnStatusObj.addGlobalRoute = true;
-                    vpnStatusObj.connected = true;
-                    console.log(vpnStatusObj);
+                    vpnObj.addGlobalRoute = true;
+                    vpnObj.connected = true;
                     console.log("vpn connection established");
+                    setTimeout(() => {
+                        vpnDisconnect()
+                    },10000)
+
+
                 })
                 .catch((e) => {
-                    vpnStatusObj.connected = false;
+                    vpnObj.connected = false;
                     console.log("vpn connection error: " + e.message);
                 });
         }
@@ -172,11 +177,13 @@ function addVpnRoute(gateway) {
 }
 
 export function vpnDisconnect() {
-    let keys = Object.keys(vpnStatusObj).reverse();
+    console.log("vpn disconnection running...");
+    let keys = Object.keys(vpnObj).reverse();
     keys.forEach((key) => {
+        console.log(`cleaning vpn object key :=> ${key}`);
         vpnConnCleanup(key);
     })
-    if(!vpnStatusObj.connected) {
+    if(!vpnObj.connected) {
         console.log("vpn disconnected");
     }
 }
@@ -185,66 +192,66 @@ function vpnConnCleanup(key) {
 
     switch (key) {
         case "addGlobalRoute":
-            if (vpnStatusObj["setStaticIP"]) {
+            if (vpnObj["setStaticIP"]) {
 
                 child_process.exec('netsh interface ipv4 delete route 0.0.0.0/0 "wintun" 192.168.123.1', (err, result) => {
                     if (!err) {
-                        vpnStatusObj["addGlobalRoute"] = false;
+                        vpnObj["addGlobalRoute"] = false;
                     }
                 })
             }
             break;
         case "addVpnRoute":
-            if (vpnStatusObj["addVpnRoute"]) {
+            if (vpnObj["addVpnRoute"]) {
 
-                child_process.exec(`route delete ${vpnStatusObj.gateway}`, (err, result) => {
+                child_process.exec(`route delete ${vpnObj.gateway}`, (err, result) => {
                     if (!err) {
-                        vpnStatusObj["addVpnRoute"] = false;
+                        vpnObj["addVpnRoute"] = false;
                     }
 
                 })
             }
             break;
         case "setDnsServer":
-            if (vpnStatusObj["setDnsServer"]) {
+            if (vpnObj["setDnsServer"]) {
 
                 child_process.exec('netsh interface ipv4 set dnsservers name="wintun" source=dhcp', (err, result) => {
                     if (!err) {
-                        vpnStatusObj["setDnsServer"] = false;
+                        vpnObj["setDnsServer"] = false;
                     }
                 })
             }
             break;
         case "setStaticIP":
-            if (vpnStatusObj["setStaticIP"]) {
+            if (vpnObj["setStaticIP"]) {
                 child_process.exec('netsh interface ipv4 set address name="wintun" source=dhcp', (err, result) => {
                     if (!err) {
-                        vpnStatusObj["setStaticIP"] = false;
+                        vpnObj["setStaticIP"] = false;
                     }
                 })
             }
             break;
         case "tun2socks":
-            if (vpnStatusObj["tun2socks"] != null) {
-                vpnStatusObj.tun2socks.kill();
-                vpnStatusObj.tun2socks = null;
+            if (vpnObj["tun2socks"] != null) {
+                vpnObj.tun2socks.kill();
+                vpnObj.tun2socks = null;
             }
             break;
         case "v2ray":
-            if (vpnStatusObj["v2ray"] != null) {
-                vpnStatusObj.v2ray.kill();
-                vpnStatusObj.v2ray = null;
+            if (vpnObj["v2ray"] != null) {
+                vpnObj.v2ray.kill();
+                vpnObj.v2ray = null;
             }
             break;
         case "connected":
-            if (vpnStatusObj["connected"]) {
-                vpnStatusObj.connected = false;
-                vpnStatusObj.gateway = null;
+            if (vpnObj["connected"]) {
+                vpnObj.connected = false;
+                vpnObj.gateway = null;
             }
             break;
         case "gateway":
-            if (vpnStatusObj["gateway"] != null) {
-                vpnStatusObj.gateway = null;
+            if (vpnObj["gateway"] != null) {
+                vpnObj.gateway = null;
             }
             break;
         default:
