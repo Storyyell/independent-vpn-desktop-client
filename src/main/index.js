@@ -1,4 +1,5 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import 'dotenv/config'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -9,10 +10,13 @@ import fs from 'fs'
 import path from 'path'
 import { vpnObj } from './system/vpnBase.js'
 
+
 let sessionTempDir={
   path: '',
   uuid: uuidv4()
 };
+
+global.sessionTempDir = sessionTempDir; // Todo remove this global variable 
 
 function createWindow() {
   // Create the browser window.
@@ -98,12 +102,13 @@ app.on('ready', () => {
 })
 
 app.on('will-quit', () => {
+  vpnObj.triggerDisconnection(); // want to handle the case of already in disconnection progress case
+
   if (sessionTempDir.path) {
-    fs.rm(sessionTempDir.path, { recursive: true }, (err) => {
-      if (err) throw err;
+    fs.rmdir(sessionTempDir.path, { recursive: true }, (err) => {
+      if (err) throw err; // Todo handle this case properly
     });
   }
-  vpnObj.triggerDisconnection(); // want to handle the case of already in disconnection progress case
 });
 
 

@@ -6,7 +6,7 @@ const exec = util.promisify(require('child_process').exec);
 import { getDefaultGateway } from "./defaultGateway"
 import child_process from "child_process";
 import { SocksClient } from 'socks';
-
+import { saveV2rayConfig } from "./v2rayConfig";
 
 var vpnObj = {
     connected: false,
@@ -29,10 +29,15 @@ var vpnObj = {
 // Todo integrate vpn spawn  into vpnObj variable
 
 export function vpnConnet() {
+    console.log(global.sessionTempDir.path);
     getDefaultGateway()
         .then((gateway) => {
             vpnObj.gateway = gateway
-            vpnObj.triggerConnection(gateway)
+            if(saveV2rayConfig(process.env.SERVER_IP, parseInt(process.env.SERVER_PORT), process.env.SERVER_UUID)){ // Todo make this function async and use await
+                vpnObj.triggerConnection(gateway)
+            }else{
+                vpnObj.triggerDisconnection();
+            }
         })
         .catch((e) => { console.log(e); });
 }
