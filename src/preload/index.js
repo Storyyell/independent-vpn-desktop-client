@@ -8,7 +8,8 @@ const api = {
   registerDevice: () => ipcRenderer.invoke('registerDevice'),
   getCountries: (device_token) => ipcRenderer.invoke('getCountries', device_token),
   getCities: (device_token, countryCode) => ipcRenderer.invoke('getCities', device_token, countryCode),
-  getServers: (device_token, countryCode, cityCode) => ipcRenderer.invoke('getServers', device_token, countryCode, cityCode)
+  getServers: (device_token, countryCode, cityCode) => ipcRenderer.invoke('getServers', device_token, countryCode, cityCode),
+  getServerConf: (device_token, countryCode, cityCode, serverId) => ipcRenderer.invoke('getServerConf', device_token, countryCode, cityCode, serverId)
 
 }
 

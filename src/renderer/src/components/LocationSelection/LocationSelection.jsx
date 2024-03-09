@@ -14,7 +14,7 @@ const LocationSelection = () => {
     <Stack spacing={3} direction="row" sx={{paddingTop:"40px"}}>  
       <Countries selectedCountryId={selectedCountryId } setSelectedCountryId={setSelectedCountryId}/>
       <City selectedCityId={selectedCityId}  setSelectedCityId={setSelectedCityId}  selectedCountryId={selectedCountryId}/>
-      <Servers selectedCityId={selectedCityId} selectedCountryId={selectedCountryId}/>
+      {/* <Servers selectedCityId={selectedCityId} selectedCountryId={selectedCountryId}/> */}
     </Stack>
     </>
   )

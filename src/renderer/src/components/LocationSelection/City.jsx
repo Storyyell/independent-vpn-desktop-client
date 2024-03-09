@@ -4,10 +4,12 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import { ServerListContext } from '../../context/ServerListContext';
 
 const City = (props) => {
 
     const [cities, setCities] = React.useState(localStorage.getItem("city_list") ? localStorage.getItem("city_list") : [])
+    const { serverList, setServerList } = React.useContext(ServerListContext);
 
     useEffect(() => {
         props.setSelectedCityId('')
@@ -27,6 +29,16 @@ const City = (props) => {
 
     const handleChange = (event) => {
         props.setSelectedCityId(event.target.value);
+// 
+        window.api.getServers(localStorage.getItem("device_token"), props.selectedCountryId, event.target.value)
+        .then((res) => {
+            // console.log(res.data);
+            setServerList(res.data)
+        })
+        .catch((e) => {
+            console.log(e)
+        })
+// 
     };
 
     return (

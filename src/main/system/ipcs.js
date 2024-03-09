@@ -111,3 +111,33 @@ return new Promise((resolve, reject) => {
         });
 })
 }
+
+// pullServerConf
+
+export async function pullServerConf(device_token, countryCode, cityCode, serverId) {
+
+const appkey = import.meta.env.VITE_SERVER_APP_KEY
+const apiUrl = import.meta.env.VITE_SERVER_API_URL
+
+let config = {
+  method: 'post',
+  maxBodyLength: Infinity,
+  url: `https://${apiUrl}/countries/${countryCode}/cities/${cityCode}/servers/${serverId}/credentials`,
+  headers: {
+        'x-app-token': appkey,
+        'x-device-token': device_token
+    }
+};
+
+return new Promise((resolve, reject) => {
+    axios.request(config)
+        .then((response) => {
+            resolve(response.data);
+        })
+        .catch((error) => {
+            console.log(error);
+            reject(error)
+            
+        });
+})
+}

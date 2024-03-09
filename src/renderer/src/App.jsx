@@ -1,3 +1,4 @@
+import React from 'react';
 import { Stack } from '@mui/material';
 import electronLogo from './assets/electron.svg'
 import Button from '@mui/material/Button';
@@ -7,6 +8,7 @@ import { useEffect } from 'react';
 import LocationSelection from './components/LocationSelection/LocationSelection';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { ServerListContext, ServerListProvider } from './context/ServerListContext';
 
 const theme = createTheme({
   palette: {
@@ -18,6 +20,7 @@ const theme = createTheme({
 function App() {
 
   const [vpnStatus, setVpnStatus] = useState("VPN disconnected");
+  const { serverList, setServerList } = React.useContext(ServerListContext);
 
   useEffect(() => {
     window.setVpnStatus = setVpnStatus;
@@ -48,7 +51,26 @@ function App() {
 
   function triggerVpnConnection() {
     console.log("vpn connection triggered fron renderer");
-    window.ipc();
+    if(serverList.length > 0){
+      const randomIndex = Math.floor(Math.random() * serverList.length);
+      const server =  serverList[randomIndex]
+      console.log(server);
+      window.api.getServerConf(localStorage.getItem("device_token"), server.country_id, server.city_id, server.id)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+
+    }else{
+      setVpnStatus("please choose country and city")
+      setTimeout(() => {
+        if(vpnStatus != "VPN connection established")
+        setVpnStatus("VPN disconnected")
+      },3000)
+    }
+    // window.ipc();
   }
 
 
@@ -62,6 +84,7 @@ function App() {
     <>
     <ThemeProvider theme={theme}>
     <CssBaseline />
+    {/* <ServerListProvider> */}
       <img alt="logo" className="logo" style={genLogoStyle()} src={electronLogo} />
       <div className="creator">sentinal - dvpn</div>
       <div className="text">
@@ -90,6 +113,7 @@ function App() {
       </div>
       {/* <Versions></Versions> */}
       <LocationSelection/>
+      {/* </ServerListProvider> */}
       </ThemeProvider>
     </>
   )
