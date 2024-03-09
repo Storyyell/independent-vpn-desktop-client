@@ -22,6 +22,7 @@ var vpnObj = {
 
 }
 
+// Todo case of triggered disconnection while connection in progress and connected is true
 
 export function vpnConnet() {
     getDefaultGateway()
