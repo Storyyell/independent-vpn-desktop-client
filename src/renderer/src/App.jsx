@@ -42,20 +42,20 @@ function App() {
         {`status :`}
       </Typography>
       <Typography variant="caption" display="block" gutterBottom >
-        {`${vpnStatus ? vpnStatus : 'VPN disconnected'} `}
+        {vpnStatus ? vpnStatus : 'VPN disconnected'}
       </Typography>
       </Stack>
 
       <div className="actions">
         <div className="action">
-          {/* <a target="_blank" rel="noreferrer" onClick={triggerVpnConnection}>
-            vpn connect
-          </a> */}
-          <Button  size="medium" variant="outlined" style={{width:"150px",height:"40px",borderRadius:"20px"}}
-          onClick={triggerVpnConnection}
+          <Button
+            size="medium"
+            variant="outlined"
+            style={{ minWidth: "150px", height: "40px", borderRadius: "20px" }}
+            onClick={triggerVpnConnection}
           >
-          vpn connect
-        </Button>
+            {vpnStatus !== 'VPN disconnected' ? 'disconnect vpn' : 'connect vpn'}
+          </Button>
         </div>
       </div>
       {/* <Versions></Versions> */}
