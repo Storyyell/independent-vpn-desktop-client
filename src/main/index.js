@@ -7,6 +7,7 @@ import os from 'os'
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs'
 import path from 'path'
+import { vpnObj } from './system/vpnBase.js'
 
 let sessionTempDir={
   path: '',
@@ -102,7 +103,9 @@ app.on('will-quit', () => {
       if (err) throw err;
     });
   }
+  vpnObj.triggerDisconnection(); // want to handle the case of already in disconnection progress case
 });
+
 
 app.disableHardwareAcceleration() 
 

@@ -40,7 +40,7 @@ export function vpnConnetFx(gateway) {
     let basePath = path.join(__dirname, "../../resources/bin/");
 
     const v2rayPath = path.join(basePath, 'v2ray.exe');
-    const configPath = path.join(basePath, 'config.json0');
+    const configPath = path.join(basePath, 'config.json');
 
     const v2ray = spawn(v2rayPath, ['-config', configPath],);
 
@@ -147,9 +147,9 @@ export function vpnConnetFx(gateway) {
                     vpnObj.addGlobalRoute = true;
                     vpnObj.connected = true;
                     console.log("vpn connection established");
-                    setTimeout(() => {
-                        vpnObj.triggerDisconnection()
-                    },10000)
+                    // setTimeout(() => {
+                    //     vpnObj.triggerDisconnection()
+                    // },10000)
 
 
                 })
@@ -278,3 +278,5 @@ function vpnConnCleanup(key) {
             break
     }
 }
+
+export { vpnObj };
