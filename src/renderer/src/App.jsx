@@ -1,4 +1,3 @@
-import Versions from './components/Versions'
 import electronLogo from './assets/electron.svg'
 
 function App() {
@@ -35,7 +34,7 @@ function App() {
           </a>
         </div>
       </div>
-      <Versions></Versions>
+      {/* <Versions></Versions> */}
     </>
   )
 }
