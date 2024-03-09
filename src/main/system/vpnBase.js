@@ -147,7 +147,7 @@ export function vpnConnetFx(gateway) {
 
         function onTun2SocksConnected() {
             console.log("Tun2socks tunnel created");
-            global.mainWindow.webContents.send('connectionStatus', 'Tun2socks tunnel created');
+            global.mainWindow.webContents.send('connectionStatus', 'adapter created');
             vpnObj.tun2socks = tun2socks
             // Now start the other process
             startAnotherCommand();
