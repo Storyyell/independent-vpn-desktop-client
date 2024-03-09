@@ -7,7 +7,9 @@ import { ipcRenderer } from 'electron'
 const api = {
   registerDevice: () => ipcRenderer.invoke('registerDevice'),
   getCountries: (device_token) => ipcRenderer.invoke('getCountries', device_token),
-  getCities: (device_token, countryCode) => ipcRenderer.invoke('getCities', device_token, countryCode)
+  getCities: (device_token, countryCode) => ipcRenderer.invoke('getCities', device_token, countryCode),
+  getServers: (device_token, countryCode, cityCode) => ipcRenderer.invoke('getServers', device_token, countryCode, cityCode)
+
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
