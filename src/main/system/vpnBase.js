@@ -30,16 +30,13 @@ var vpnObj = {
 
 export function vpnConnet() {
     console.log(global.sessionTempDir.path);
-    getDefaultGateway()
-        .then((gateway) => {
-            vpnObj.gateway = gateway
-            if(saveV2rayConfig(import.meta.env.VITE_SERVER_IP, parseInt(import.meta.env.VITE_SERVER_PORT), import.meta.env.VITE_SERVER_UUID)){ // Todo make this function async and use await
-                vpnObj.triggerConnection(gateway)
-            }else{
-                vpnObj.triggerDisconnection();
-            }
-        })
-        .catch((e) => { console.log(e); });
+    gateway = global.gateway
+    vpnObj.gateway = gateway
+        if(saveV2rayConfig(import.meta.env.VITE_SERVER_IP, parseInt(import.meta.env.VITE_SERVER_PORT), import.meta.env.VITE_SERVER_UUID)){ // Todo make this function async and use await
+            vpnObj.triggerConnection(gateway)
+        }else{
+            vpnObj.triggerDisconnection();
+        }
 }
 
 export function vpnConnetFx(gateway) {
