@@ -1,13 +1,15 @@
+import { Stack } from '@mui/material';
 import electronLogo from './assets/electron.svg'
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 function App() {
-  const ipcHandle = () => window.electron.ipcRenderer.send('ping')
 
   function triggerVpnConnection() {
     console.log("vpn connection triggered fron renderer");
     window.ipc();
   }
-
+let statusText = "not connected"
 
   return (
     <>
@@ -19,19 +21,25 @@ function App() {
       {/* <p className="tip">
         Please try pressing <code>F12</code> to open the devTool
       </p> */}
+      <Stack direction="row" spacing={1}  style={{paddingTop:"8px",alignItems:'center' }} >
+      <Typography variant="overline" display="block" gutterBottom>
+        {`status :`}
+      </Typography>
+      <Typography variant="caption" display="block" gutterBottom >
+        {`${statusText} `}
+      </Typography>
+      </Stack>
+
       <div className="actions">
         <div className="action">
-          {/* <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action" >
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a> */}
-          <a target="_blank" rel="noreferrer" onClick={triggerVpnConnection}>
+          {/* <a target="_blank" rel="noreferrer" onClick={triggerVpnConnection}>
             vpn connect
-          </a>
+          </a> */}
+          <Button  size="medium" variant="outlined" style={{width:"150px",height:"40px",borderRadius:"20px"}}
+          onClick={triggerVpnConnection}
+          >
+          vpn connect
+        </Button>
         </div>
       </div>
       {/* <Versions></Versions> */}
