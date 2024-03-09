@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs'
 import path from 'path'
 import { vpnObj } from './system/vpnBase.js'
+import {registerDevice} from './system/ipcs.js'
 
 let sessionTempDir={
   path: '',
@@ -49,6 +50,11 @@ function createWindow() {
   ipcMain.handle('triggerConnection', () => {
     console.log('vpn connection trigger on main process')
     vpnConnet()
+  })
+
+  ipcMain.handle('registerDevice', async () => {
+    console.log('device registration triggered on main process')
+    return registerDevice()
   })
   
   // HMR for renderer base on electron-vite cli.

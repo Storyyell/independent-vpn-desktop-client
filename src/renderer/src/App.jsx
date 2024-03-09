@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import LocationSelection from './components/LocationSelection/LocationSelection';
 
 function App() {
 
@@ -21,18 +22,33 @@ function App() {
     };
   }, []);
 
+
+  if (localStorage.getItem("device_token")) {
+    console.log("device token already exists")
+  } else {
+    console.log("device token does not exists")
+    console.log("creating device token")
+    window.api.registerDevice()
+      .then((res) => {
+        localStorage.setItem("device_token", res)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  }
+
   function triggerVpnConnection() {
     console.log("vpn connection triggered fron renderer");
     window.ipc();
   }
 
 
-  function genLogoStyle(){
+  function genLogoStyle() {
     return {
       filter: vpnStatus === 'VPN connection established' ? 'drop-shadow(0 0 1.2em #6988e6aa)' : 'none'
     }
   }
-  
+
   return (
     <>
       <img alt="logo" className="logo" style={genLogoStyle()} src={electronLogo} />
@@ -40,13 +56,13 @@ function App() {
       <div className="text">
         Your Decentralized VPN Solution
       </div>
-      <Stack direction="row" spacing={1}  style={{paddingTop:"8px",alignItems:'center' }} >
-      <Typography variant="overline" display="block" gutterBottom>
-        {`status :`}
-      </Typography>
-      <Typography variant="caption" display="block" gutterBottom >
-        {vpnStatus ? vpnStatus : 'VPN disconnected'}
-      </Typography>
+      <Stack direction="row" spacing={1} style={{ paddingTop: "8px", alignItems: 'center' }} >
+        <Typography variant="overline" display="block" gutterBottom>
+          {`status :`}
+        </Typography>
+        <Typography variant="caption" display="block" gutterBottom >
+          {vpnStatus ? vpnStatus : 'VPN disconnected'}
+        </Typography>
       </Stack>
 
       <div className="actions">
@@ -62,6 +78,7 @@ function App() {
         </div>
       </div>
       {/* <Versions></Versions> */}
+      <LocationSelection></LocationSelection>
     </>
   )
 }
