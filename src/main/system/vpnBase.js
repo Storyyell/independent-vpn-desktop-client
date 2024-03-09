@@ -17,6 +17,7 @@ var vpnObj = {
     gateway: null,
     triggerConnection:vpnConnetFx,
     triggerDisconnection:vpnDisconnect,
+    disconnectionProgress:false,
 
 }
 
@@ -179,15 +180,24 @@ function addVpnRoute(gateway) {
 }
 
 export function vpnDisconnect() {
-    console.log("vpn disconnection running...");
-    let keys = Object.keys(vpnObj).reverse();
-    keys.forEach((key) => {
-        console.log(`cleaning vpn object key :=> ${key}`);
-        vpnConnCleanup(key);
-    })
-    if(!vpnObj.connected) {
-        console.log("vpn disconnected");
+    if(vpnObj.disconnectionProgress) {
+        console.log("vpn disconnection in progress");
+        return;
+    }else{
+        console.log("vpn disconnection started...");
+        vpnObj.disconnectionProgress = true;
+        setTimeout(() => {vpnObj.disconnectionProgress = false},10000) // 10 seconds timeout for disconnection status cleanup on error
+        let keys = Object.keys(vpnObj).reverse();
+        keys.forEach((key) => {
+            console.log(`cleaning vpn object key :=> ${key}`);
+            vpnConnCleanup(key);
+        })
+        if(!vpnObj.connected) {
+            console.log("vpn disconnected");
+        }
+        vpnObj.disconnectionProgress = false;
     }
+
 }
 
 function vpnConnCleanup(key) {
