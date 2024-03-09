@@ -27,16 +27,19 @@ function App() {
   }
 
 
+  function genLogoStyle(){
+    return {
+      filter: vpnStatus === 'VPN connection established' ? 'drop-shadow(0 0 1.2em #6988e6aa)' : 'none'
+    }
+  }
+  
   return (
     <>
-      <img alt="logo" className="logo" src={electronLogo} />
+      <img alt="logo" className="logo" style={genLogoStyle()} src={electronLogo} />
       <div className="creator">sentinal - dvpn</div>
       <div className="text">
         Your Decentralized VPN Solution
       </div>
-      {/* <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p> */}
       <Stack direction="row" spacing={1}  style={{paddingTop:"8px",alignItems:'center' }} >
       <Typography variant="overline" display="block" gutterBottom>
         {`status :`}
