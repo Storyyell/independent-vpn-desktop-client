@@ -46,6 +46,7 @@ export function vpnConnetFx(gateway) {
 
     v2ray.on('error', (error) => {
         console.error(`Failed to start v2ray process: ${error.message}`);
+        vpnObj.triggerDisconnection();
     });
 
     v2ray.on('close', (code) => {
@@ -89,6 +90,7 @@ export function vpnConnetFx(gateway) {
 
         tun2socks.on('error', (error) => {
             console.error(`Failed to start tun2socks process: ${error.message}`);
+            vpnObj.triggerDisconnection();
         });
 
         tun2socks.on('close', (code) => {
@@ -150,6 +152,7 @@ export function vpnConnetFx(gateway) {
                 .catch((e) => {
                     vpnObj.connected = false;
                     console.log("vpn connection error: " + e.message);
+                    vpnObj.triggerDisconnection();
                 });
         }
 
