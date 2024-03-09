@@ -52,7 +52,9 @@ export function vpnConnetFx(gateway) {
     let basePath = path.join(__dirname, "../../resources/bin/");
 
     const v2rayPath = path.join(basePath, 'v2ray.exe');
-    const configPath = path.join(basePath, 'config.json');
+    // const configPath = path.join(basePath, 'config.json');
+    const configPath = path.join(global.sessionTempDir.path ,`${global.sessionTempDir.uuid}.json`);
+
 
     const v2ray = spawn(v2rayPath, ['-config', configPath],);
 
