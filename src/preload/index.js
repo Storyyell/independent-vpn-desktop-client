@@ -2,7 +2,6 @@ import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { ipcRenderer } from 'electron'
 
-import React, { useState, useEffect } from 'react';
 
 // Custom APIs for renderer
 const api = {}
@@ -12,7 +11,7 @@ const api = {}
 // just add to the DOM global.
 if (process.contextIsolated) {
   try {
-    // contextBridge.exposeInMainWorld('electron', electronAPI)
+    contextBridge.exposeInMainWorld('electron', electronAPI)
     // contextBridge.exposeInMainWorld('api', api)
     contextBridge.exposeInMainWorld('ipc', triggerConnectionFx)
   } catch (error) {
@@ -20,7 +19,7 @@ if (process.contextIsolated) {
   }
 } else {
   window.electron = electronAPI
-  window.api = api
+  // window.api = api
 }
 
 function triggerConnectionFx(){
@@ -33,24 +32,24 @@ function triggerConnectionFx(){
   })
 }
 
-ipcRenderer.on('connectionStatus', (event, arg) => {
-  console.log(arg)
-})
+// ipcRenderer.on('connectionStatus', (event, arg) => {
+//   console.log(arg)
+// })
 
 
-// contextBridge.exposeInMainWorld(
-//   'ipcRenderer', {
-//     send: (channel, data) => {
-//       ipcRenderer.send(channel, data);
-//     },
-//     on: (channel, func) => {
-//       ipcRenderer.on(channel, (event, ...args) => func(...args));
-//     },
-//     invoke: (channel, data) => {
-//       return ipcRenderer.invoke(channel, data);
-//     },
-//     removeAllListeners: (channel) => {
-//       ipcRenderer.removeAllListeners(channel);
-//     }
-//   }
-// );
+contextBridge.exposeInMainWorld(
+  'ipcRenderer', {
+    send: (channel, data) => {
+      ipcRenderer.send(channel, data);
+    },
+    on: (channel, func) => {
+      ipcRenderer.on(channel, (event, ...args) => func(...args));
+    },
+    invoke: (channel, data) => {
+      return ipcRenderer.invoke(channel, data);
+    },
+    removeAllListeners: (channel) => {
+      ipcRenderer.removeAllListeners(channel);
+    }
+  }
+);

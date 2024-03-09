@@ -7,24 +7,25 @@ import { useEffect } from 'react';
 
 function App() {
 
-const { vpnStatus, setVpnStatus } = useState("VPN disconnected");
+  const [vpnStatus, setVpnStatus] = useState("VPN disconnected");
 
-const { ipcRenderer } = window.require('electron');
-    useEffect(() => {
-        ipcRenderer.handle('connectionStatus', (event, ...args) => {
-          console.log(args);
-        });
-        return () => {
-            ipcRenderer.removeHandler('your-event');
-        };
-    }, []);
+  useEffect(() => {
+    window.setVpnStatus = setVpnStatus;
+    window.ipcRenderer.on('connectionStatus', (arg) => {
+      window.setVpnStatus(arg);
+      console.log(arg);
+    });
 
+    return () => {
+      window.ipcRenderer.removeAllListeners('connectionStatus');
+    };
+  }, []);
 
   function triggerVpnConnection() {
     console.log("vpn connection triggered fron renderer");
     window.ipc();
   }
-let statusText = "not connected"
+
 
   return (
     <>
@@ -41,7 +42,7 @@ let statusText = "not connected"
         {`status :`}
       </Typography>
       <Typography variant="caption" display="block" gutterBottom >
-        {`${vpnStatus} `}
+        {`${vpnStatus ? vpnStatus : 'VPN disconnected'} `}
       </Typography>
       </Stack>
 

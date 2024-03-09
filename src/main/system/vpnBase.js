@@ -234,7 +234,11 @@ export function vpnDisconnect() {
         vpnObj.connected = false;
         vpnObj.connectionProgress = false;
     }
-    global.mainWindow.webContents.send('connectionStatus', 'VPN disconnected');
+    try {
+        global.mainWindow.webContents.send('connectionStatus', 'VPN disconnected');
+    } catch (error) {
+    }
+    
 }
 
 function vpnConnCleanup(key) {
