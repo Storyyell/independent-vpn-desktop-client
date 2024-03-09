@@ -42,6 +42,7 @@ export function vpnConnet() {
 export function vpnConnetFx(gateway) {
 
     console.log("VPN connection initializing...");
+    global.mainWindow.webContents.send('connectionStatus', 'VPN connection initializing...');
 
     console.log(`gateway ${gateway}`);
     vpnObj.connectionProgress = true;
@@ -91,6 +92,7 @@ export function vpnConnetFx(gateway) {
 
     function onVpnConnected() {
         console.log("V2ray tunnel created");
+        global.mainWindow.webContents.send('connectionStatus', 'V2ray tunnel created');
         vpnObj.v2ray = v2ray;
         // if(checkConnectivity('127.0.0.1', 10808)){
         //     startSocksInternalTunnel();
@@ -145,7 +147,7 @@ export function vpnConnetFx(gateway) {
 
         function onTun2SocksConnected() {
             console.log("Tun2socks tunnel created");
-
+            global.mainWindow.webContents.send('connectionStatus', 'Tun2socks tunnel created');
             vpnObj.tun2socks = tun2socks
             // Now start the other process
             startAnotherCommand();
@@ -176,7 +178,7 @@ export function vpnConnetFx(gateway) {
                     // setTimeout(() => {
                     //     vpnObj.triggerDisconnection()
                     // },10000)
-
+                    global.mainWindow.webContents.send('connectionStatus', 'VPN connection established');
 
                 })
                 .catch((e) => {
@@ -232,7 +234,7 @@ export function vpnDisconnect() {
         vpnObj.connected = false;
         vpnObj.connectionProgress = false;
     }
-
+    global.mainWindow.webContents.send('connectionStatus', 'VPN disconnected');
 }
 
 function vpnConnCleanup(key) {

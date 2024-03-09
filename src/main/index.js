@@ -36,6 +36,7 @@ function createWindow() {
   })
 
   mainWindow.on('ready-to-show', () => {
+    global.mainWindow = mainWindow
     mainWindow.show()
   })
 

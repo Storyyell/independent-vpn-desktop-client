@@ -2,8 +2,23 @@ import { Stack } from '@mui/material';
 import electronLogo from './assets/electron.svg'
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 function App() {
+
+const { vpnStatus, setVpnStatus } = useState("VPN disconnected");
+
+const { ipcRenderer } = window.require('electron');
+    useEffect(() => {
+        ipcRenderer.handle('connectionStatus', (event, ...args) => {
+          console.log(args);
+        });
+        return () => {
+            ipcRenderer.removeHandler('your-event');
+        };
+    }, []);
+
 
   function triggerVpnConnection() {
     console.log("vpn connection triggered fron renderer");
@@ -26,7 +41,7 @@ let statusText = "not connected"
         {`status :`}
       </Typography>
       <Typography variant="caption" display="block" gutterBottom >
-        {`${statusText} `}
+        {`${vpnStatus} `}
       </Typography>
       </Stack>
 

@@ -2,6 +2,7 @@ import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { ipcRenderer } from 'electron'
 
+import React, { useState, useEffect } from 'react';
 
 // Custom APIs for renderer
 const api = {}
@@ -32,3 +33,24 @@ function triggerConnectionFx(){
   })
 }
 
+ipcRenderer.on('connectionStatus', (event, arg) => {
+  console.log(arg)
+})
+
+
+// contextBridge.exposeInMainWorld(
+//   'ipcRenderer', {
+//     send: (channel, data) => {
+//       ipcRenderer.send(channel, data);
+//     },
+//     on: (channel, func) => {
+//       ipcRenderer.on(channel, (event, ...args) => func(...args));
+//     },
+//     invoke: (channel, data) => {
+//       return ipcRenderer.invoke(channel, data);
+//     },
+//     removeAllListeners: (channel) => {
+//       ipcRenderer.removeAllListeners(channel);
+//     }
+//   }
+// );
