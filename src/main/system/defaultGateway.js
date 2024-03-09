@@ -1,6 +1,6 @@
 const { exec } = require('child_process');
 
-export function getDefaultGateway() {
+export function getDefaultGateway() {   // Todo think of the case of after vpn connection
     return new Promise((resolve, reject) => {
         exec(
             'wmic path Win32_NetworkAdapterConfiguration where IPEnabled=true get DefaultIPGateway',
