@@ -3,7 +3,7 @@ import electronLogo from './assets/electron.svg'
 function App() {
   const ipcHandle = () => window.electron.ipcRenderer.send('ping')
 
-  function triggerVpnConnection() { 
+  function triggerVpnConnection() {
     console.log("vpn connection triggered fron renderer");
     window.ipc();
   }
@@ -12,23 +12,23 @@ function App() {
   return (
     <>
       <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
+      <div className="creator">sentinal - dvpn</div>
       <div className="text">
-        Build an Electron app with <span className="react">React</span>
+        Your Decentralized VPN Solution
       </div>
-      <p className="tip">
+      {/* <p className="tip">
         Please try pressing <code>F12</code> to open the devTool
-      </p>
+      </p> */}
       <div className="actions">
         <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
+          {/* <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
             Documentation
           </a>
         </div>
         <div className="action" >
           <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
             Send IPC
-          </a>
+          </a> */}
           <a target="_blank" rel="noreferrer" onClick={triggerVpnConnection}>
             vpn connect
           </a>
