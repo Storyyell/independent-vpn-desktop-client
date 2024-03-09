@@ -23,6 +23,8 @@ var vpnObj = {
 }
 
 // Todo case of triggered disconnection while connection in progress and connected is true
+// Todo handle the case of multiple vpn disconnection function call on closing and error [ now it wont cause any bugs for performance optimization ]
+// Todo integrate vpn spawn  into vpnObj variable
 
 export function vpnConnet() {
     getDefaultGateway()
