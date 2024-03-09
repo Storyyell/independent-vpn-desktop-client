@@ -5,6 +5,8 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 import { getDefaultGateway } from "./defaultGateway"
 import child_process from "child_process";
+import { SocksClient } from 'socks';
+
 
 var vpnObj = {
     connected: false,
@@ -80,7 +82,15 @@ export function vpnConnetFx(gateway) {
     function onVpnConnected() {
         console.log("V2ray tunnel created");
         vpnObj.v2ray = v2ray;
+        // if(checkConnectivity('127.0.0.1', 10808)){
+        //     startSocksInternalTunnel();
+        //     console.log("vpn server internet connectivity check passed...");
+        // }else{
+        //     console.log("vpn server internet connectivity check failed...");
+        //     vpnObj.triggerDisconnection();
+        // }
         startSocksInternalTunnel();
+
     }
 
 
@@ -285,5 +295,31 @@ function vpnConnCleanup(key) {
             break
     }
 }
+
+
+async function checkConnectivity(proxyIp, proxyPort) {
+    const options = {
+        proxy: {
+            ipaddress: proxyIp,
+            port: proxyPort,
+            type: 5
+        },
+        command: 'connect',
+        destination: {
+            host: '1.1.1.1', 
+            port: 80
+        }
+    };
+
+    try {
+        const info = await SocksClient.createConnection(options);
+        info.socket.end();
+        return true;
+    } catch (error) {
+        console.error(`Failed to connect: ${error.message}`);
+        return false;
+    }
+}
+
 
 export { vpnObj };
