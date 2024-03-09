@@ -5,6 +5,15 @@ import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import LocationSelection from './components/LocationSelection/LocationSelection';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
 
 function App() {
 
@@ -51,6 +60,8 @@ function App() {
 
   return (
     <>
+    <ThemeProvider theme={theme}>
+    <CssBaseline />
       <img alt="logo" className="logo" style={genLogoStyle()} src={electronLogo} />
       <div className="creator">sentinal - dvpn</div>
       <div className="text">
@@ -78,7 +89,8 @@ function App() {
         </div>
       </div>
       {/* <Versions></Versions> */}
-      <LocationSelection></LocationSelection>
+      <LocationSelection/>
+      </ThemeProvider>
     </>
   )
 }

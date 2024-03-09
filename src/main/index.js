@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs'
 import path from 'path'
 import { vpnObj } from './system/vpnBase.js'
-import {registerDevice} from './system/ipcs.js'
+import {registerDevice, pullCountryList, pullCityList} from './system/ipcs.js'
 
 let sessionTempDir={
   path: '',
@@ -55,6 +55,14 @@ function createWindow() {
   ipcMain.handle('registerDevice', async () => {
     console.log('device registration triggered on main process')
     return registerDevice()
+  })
+
+  ipcMain.handle('getCountries', async (event, args) => {
+    return pullCountryList(args)
+  })
+
+  ipcMain.handle('getCities', async (event, device_token, countryCode) => {
+    return pullCityList( device_token, countryCode)
   })
   
   // HMR for renderer base on electron-vite cli.
@@ -139,5 +147,5 @@ app.on('will-quit', () => {
 
 
 
-app.disableHardwareAcceleration() 
+// app.disableHardwareAcceleration() 
 

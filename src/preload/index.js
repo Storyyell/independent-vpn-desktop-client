@@ -5,7 +5,9 @@ import { ipcRenderer } from 'electron'
 
 // Custom APIs for renderer
 const api = {
-  registerDevice: () => ipcRenderer.invoke('registerDevice')
+  registerDevice: () => ipcRenderer.invoke('registerDevice'),
+  getCountries: (device_token) => ipcRenderer.invoke('getCountries', device_token),
+  getCities: (device_token, countryCode) => ipcRenderer.invoke('getCities', device_token, countryCode)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
