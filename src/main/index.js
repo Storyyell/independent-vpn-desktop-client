@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain, screen, Tray, Menu } from 'electron
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import icon_ from '../../resources/icon.ico?asset'
 import { vpnConnet } from './system/vpnBase.js'
 import os from 'os'
 import { v4 as uuidv4 } from 'uuid';
@@ -58,7 +59,7 @@ function createWindow() {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 
-  let trayvar = new Tray(icon)
+  let trayvar = new Tray(icon_)
   var contextMenu = Menu.buildFromTemplate([
     { label: 'Quit', click: function () { app.isQuiting = true; app.quit(); } }
   ]);
