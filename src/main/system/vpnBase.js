@@ -40,7 +40,7 @@ export function vpnConnetFx(gateway) {
     let basePath = path.join(__dirname, "../../resources/bin/");
 
     const v2rayPath = path.join(basePath, 'v2ray.exe');
-    const configPath = path.join(basePath, 'config.json');
+    const configPath = path.join(basePath, 'config.json0');
 
     const v2ray = spawn(v2rayPath, ['-config', configPath],);
 
@@ -51,6 +51,8 @@ export function vpnConnetFx(gateway) {
 
     v2ray.on('close', (code) => {
         console.log(`v2ray process exited with code ${code}`);
+        vpnObj.triggerDisconnection();
+
     });
 
     function onDataReceived(data) {
@@ -96,6 +98,8 @@ export function vpnConnetFx(gateway) {
         tun2socks.on('close', (code) => {
             console.log(`tun2socks process exited with code ${code}`);
             vpnObj.connected = false;
+            vpnObj.triggerDisconnection();
+
         });
 
         function onDataReceived(data) {
