@@ -178,7 +178,7 @@ function setStaticIP() {
 
 function setDnsServer() {
     console.log('enabling custom DNS server');
-    return exec('netsh interface ipv4 set dnsservers name="wintun" static address=8.8.8.8 register=none validate=no');
+    return exec('netsh interface ipv4 set dnsservers name="wintun" static address=1.1.1.1 register=none validate=no');
 
 }
 
