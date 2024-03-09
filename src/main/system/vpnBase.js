@@ -203,6 +203,7 @@ export function vpnDisconnect() {
             console.log("vpn disconnected");
         }
         vpnObj.disconnectionProgress = false;
+        vpnObj.connected = false;
     }
 
 }
