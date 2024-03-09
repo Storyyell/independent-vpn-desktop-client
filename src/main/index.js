@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, screen, Tray, Menu } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -56,6 +56,18 @@ function createWindow() {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  let trayvar = new Tray(icon)
+  var contextMenu = Menu.buildFromTemplate([
+    { label: 'Quit', click: function () { app.isQuiting = true; app.quit(); } }
+  ]);
+  trayvar.on('click', function () { mainWindow.show(); });
+  trayvar.setContextMenu(contextMenu)
+  
+  mainWindow.on('minimize', function (event) {
+    event.preventDefault();
+    mainWindow.hide();
+  });
 }
 
 // This method will be called when Electron has finished
@@ -82,7 +94,8 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
-})
+
+  })
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -113,6 +126,9 @@ app.on('will-quit', () => {
     });
   }
 });
+
+
+
 
 
 app.disableHardwareAcceleration() 
