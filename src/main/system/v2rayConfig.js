@@ -71,19 +71,18 @@ function generateV2rayConfig(serverIp, serverPort, serverId) {  // Todo use prot
                     ]
                 },
                 "streamSettings": {
-                    "network": "ws",
+                    "network": "tcp",
                     "security": "tls",
+                    "tcpSettings": {
+                        "header": {
+                            "type": "none"
+                        }
+                    },
                     "tlsSettings": {
                         "allowInsecure": false,
                         "fingerprint": "",
                         "serverName": "",
                         "show": false
-                    },
-                    "wsSettings": {
-                        "headers": {
-                            "Host": ""
-                        },
-                        "path": "/"
                     }
                 },
                 "tag": "proxy"
