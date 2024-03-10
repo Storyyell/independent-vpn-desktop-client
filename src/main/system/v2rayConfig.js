@@ -45,17 +45,26 @@ function generateV2rayConfig(serverIp, serverPort, serverId) {  // Todo use prot
         },
         "outbounds": [
             {
+                "mux": {
+                    "concurrency": -1,
+                    "enabled": false,
+                    "xudpConcurrency": 8,
+                    "xudpProxyUDP443": ""
+                },
                 "protocol": "vmess",
                 "settings": {
                     "vnext": [
                         {
-                            "address": serverIp,  // server IP address as a string
-                            "port": serverPort,                     // server port as an integer
+                            "address": serverIp,
+                            "port": serverPort,
                             "users": [
                                 {
-                                    "id": serverId,  // server ID as a string
-                                    "alterId": 0,             // alterId as an integer
-                                    "security": "auto"        // security type as a string
+                                    "alterId": 0,
+                                    "encryption": "",
+                                    "flow": "",
+                                    "id": serverId,
+                                    "level": 8,
+                                    "security": "auto"
                                 }
                             ]
                         }
@@ -63,16 +72,35 @@ function generateV2rayConfig(serverIp, serverPort, serverId) {  // Todo use prot
                 },
                 "streamSettings": {
                     "network": "ws",
-                    "wsSettings": {
-                        "path": "/",
-                        "headers": {}         // empty object for headers as there are none specified in the vmess link
-                    },
                     "security": "tls",
                     "tlsSettings": {
-                        "serverName": serverIp   // identical to the address field value for SNI
+                        "allowInsecure": false,
+                        "fingerprint": "",
+                        "serverName": "",
+                        "show": false
+                    },
+                    "wsSettings": {
+                        "headers": {
+                            "Host": ""
+                        },
+                        "path": "/"
                     }
                 },
-                "tag": "proxy"  // Must match the outbound tag from the routing rules
+                "tag": "proxy"
+            },
+            {
+                "protocol": "freedom",
+                "settings": {},
+                "tag": "direct"
+            },
+            {
+                "protocol": "blackhole",
+                "settings": {
+                    "response": {
+                        "type": "http"
+                    }
+                },
+                "tag": "block"
             }
         ],
         "routing": {
