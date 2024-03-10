@@ -7,6 +7,9 @@ import { getDefaultGateway } from "./defaultGateway"
 import child_process from "child_process";
 import { SocksClient } from 'socks';
 import { saveV2rayConfig } from "./v2rayConfig";
+import dns from "dns";
+import net from "net";
+
 
 var vpnObj = {
     connected: false,
@@ -32,11 +35,21 @@ export function vpnConnet(serverObj) {
     console.log(global.sessionTempDir.path);
     gateway = global.gateway
     vpnObj.gateway = gateway
-        if(saveV2rayConfig(serverObj)){ // Todo make this function async and use await
+    if(saveV2rayConfig(serverObj)){ // Todo make this function async and use await
+        getIPv4(global.serverUrl)
+        .then((ip) => {
+            global.server_ip = ip;
+            console.log(`server ip: ${global.server_ip}`);
             vpnObj.triggerConnection(gateway)
-        }else{
-            vpnObj.triggerDisconnection();
-        }
+
+        })
+        .catch((e) => {
+            console.log("error in getting ip address: " + e.message);
+            vpnObj.triggerDisconnection(gateway);
+        });
+    }else{
+        vpnObj.triggerDisconnection();
+    }
 }
 
 export function vpnConnetFx(gateway) {
@@ -211,7 +224,7 @@ function addGlobalRoute() {
 
 function addVpnRoute(gateway) {
     console.log("vpn traffic routing rule ");
-    return exec(`route add 47.129.9.91 mask 255.255.255.255 ${gateway}`);
+    return exec(`route add ${global.server_ip} mask 255.255.255.255 ${gateway}`);
 }
 
 export function vpnDisconnect() {
@@ -337,5 +350,20 @@ async function checkConnectivity(proxyIp, proxyPort) {
     }
 }
 
+function getIPv4(input) {
+    return new Promise((resolve, reject) => {
+        if (net.isIPv4(input)) {
+            resolve(input);
+        } else {
+            dns.resolve4(input, (err, addresses) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(addresses[0]);
+                }
+            });
+        }
+    });
+}
 
 export { vpnObj };

@@ -12,6 +12,7 @@ export function saveV2rayConfig(serverObj) {
         if (!fs.existsSync(directoryPath)) {
             fs.mkdirSync(directoryPath, { recursive: true });
         }
+        global.serverUrl = vpn_profile.address;
         fs.writeFileSync(filePath,gen_conf(vpn_profile.uid, vpn_profile.address, vpn_profile.listen_port), { flag: 'w' });
         return true;
         } catch (err) {
