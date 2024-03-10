@@ -357,6 +357,7 @@ async function checkConnectivity(proxyIp, proxyPort) {
             port: options.port
         }
     });
+    global.mainWindow.webContents.send('connectionStatus', 'checking connectivity...');
 
     options.agent = new https.Agent({ socket: agent.socket });
     
@@ -370,18 +371,24 @@ async function checkConnectivity(proxyIp, proxyPort) {
             
             res.on('end', () => {
                 console.log('Successfully connected to www.google.com');
+                global.mainWindow.webContents.send('connectionStatus', 'internet connectivity check passed...');
+
                 resolve(true);
             });
         });
 
         req.on('error', (e) => {
             console.error(`Request error: ${e.message}`);
+            global.mainWindow.webContents.send('connectionStatus', 'internet connectivity check failed...');
+
             resolve(false);
         });
         
         req.on('timeout', () => {
             req.abort();
             console.error('Request timeout after 3 seconds.');
+            global.mainWindow.webContents.send('connectionStatus', 'internet connectivity check failed...');
+
             resolve(false);
         });
 
