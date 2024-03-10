@@ -45,30 +45,34 @@ function generateV2rayConfig(serverIp, serverPort, serverId) {  // Todo use prot
         },
         "outbounds": [
             {
-                "protocol": "vless",
+                "protocol": "vmess",
                 "settings": {
                     "vnext": [
                         {
-                            "address": serverIp,    // server port in format 255.255.255.255
-                            "port": serverPort,      // server port in integer
+                            "address": serverIp,  // server IP address as a string
+                            "port": serverPort,                     // server port as an integer
                             "users": [
                                 {
-                                    "id": serverId,   // server id in string format
-                                    "encryption": "none",
-                                    "level": 0
+                                    "id": serverId,  // server ID as a string
+                                    "alterId": 0,             // alterId as an integer
+                                    "security": "auto"        // security type as a string
                                 }
                             ]
                         }
                     ]
                 },
                 "streamSettings": {
-                    "network": "tcp",
+                    "network": "ws",
+                    "wsSettings": {
+                        "path": "/",
+                        "headers": {}         // empty object for headers as there are none specified in the vmess link
+                    },
                     "security": "tls",
                     "tlsSettings": {
-                        "serverName": serverIp,    // server port in format 255.255.255.255
+                        "serverName": serverIp   // identical to the address field value for SNI
                     }
                 },
-                "tag": "vless_outbound"
+                "tag": "proxy"  // Must match the outbound tag from the routing rules
             }
         ],
         "routing": {
