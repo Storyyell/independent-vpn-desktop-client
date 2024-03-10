@@ -57,7 +57,9 @@ function App() {
       console.log(server);
       window.api.getServerConf(localStorage.getItem("device_token"), server.country_id, server.city_id, server.id)
       .then((res) => {
-        console.log(res.data);
+      const serverObj = res.data;
+      window.ipc(serverObj);
+
       })
       .catch((e) => {
         console.log(e)

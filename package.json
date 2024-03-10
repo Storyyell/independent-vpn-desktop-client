@@ -17,7 +17,7 @@
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "npm run build && electron-builder --mac",
     "build:linux": "npm run build && electron-builder --linux",
-    "debug": "electron-vite dev --sourcemap --inspect-brk=5858" 
+    "debug": "electron-vite dev --sourcemap --inspect-brk=5858"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.0",
@@ -27,6 +27,8 @@
     "@fontsource/roboto": "^5.0.12",
     "@mui/icons-material": "^5.15.12",
     "@mui/material": "^5.15.12",
+    "atob": "^2.1.2",
+    "axios": "^1.6.7",
     "default-gateway": "^7.2.2",
     "electron-updater": "^6.1.7",
     "socks": "^2.8.1",

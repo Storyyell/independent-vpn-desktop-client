@@ -1,8 +1,34 @@
 import fs from 'node:fs';
 import path from 'node:path';
+const atob = require('atob');
 
-function generateV2rayConfig(serverIp, serverPort, serverId) {  // Todo use protobuff
-    return {
+
+export function saveV2rayConfig(serverObj) {
+    let vpn_profile = decode_v2ray_vpn_profile(serverObj.payload, serverObj.uid)
+    if (vpn_profile) {
+        try{
+        const filePath = path.join(global.sessionTempDir.path, `${global.sessionTempDir.uuid}.json`);
+        const directoryPath = path.dirname(filePath);
+        if (!fs.existsSync(directoryPath)) {
+            fs.mkdirSync(directoryPath, { recursive: true });
+        }
+        fs.writeFileSync(filePath,gen_conf(vpn_profile.uid, vpn_profile.address, vpn_profile.listen_port), { flag: 'w' });
+        return true;
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
+    } else {
+        console.log("Failed to decode VPN profile");
+        return false;
+    }
+    // serverIp, serverPort, serverId
+
+}
+
+
+function gen_conf(user_id, address, port) {
+    let config = `{
         "dns": {
             "hosts": {
                 "domain:googleapis.cn": "googleapis.com"
@@ -26,56 +52,71 @@ function generateV2rayConfig(serverIp, serverPort, serverId) {  // Todo use prot
                         "http",
                         "tls"
                     ],
+                    "metadataOnly": false,
+                    "routeOnly": false,
+                    "excludedDomains": {},
                     "enabled": true
                 },
                 "tag": "socks"
-            },
-            {
-                "listen": "127.0.0.1",
-                "port": 10809,
-                "protocol": "http",
-                "settings": {
-                    "userLevel": 8
-                },
-                "tag": "http"
             }
         ],
         "log": {
-            "loglevel": "warning"
+            "loglevel": "info"
         },
         "outbounds": [
             {
-                "protocol": "vless",
+                "mux": {
+                    "concurrency": 8,
+                    "enabled": false
+                },
+                "protocol": "vmess",
                 "settings": {
                     "vnext": [
                         {
-                            "address": serverIp,    // server port in format 255.255.255.255
-                            "port": serverPort,      // server port in integer
+                            "address": "${address}",
+                            "port": ${port},
                             "users": [
                                 {
-                                    "id": serverId,   // server id in string format
-                                    "encryption": "none",
-                                    "level": 0
+                                    "alterId": 0,
+                                    "encryption": "",
+                                    "flow": "",
+                                    "id": "${user_id}",
+                                    "level": 8,
+                                    "security": "auto"
                                 }
                             ]
                         }
                     ]
                 },
                 "streamSettings": {
-                    "network": "tcp",
-                    "security": "tls",
-                    "tlsSettings": {
-                        "serverName": serverIp,    // server port in format 255.255.255.255
+                    "network": "grpc",
+                    "grpcSettings": {
+                        "serviceName": "",
+                        "multiMode": false
                     }
                 },
-                "tag": "vless_outbound"
-            }
-        ],
-        "routing": {
-            "domainStrategy": "IPIfNonMatch",
-            "rules": [
-                {
-                    "ip": [
+                "tag": "proxy"
+            },
+            {
+                "protocol": "freedom",
+                "settings": {},
+                "tag": "direct"
+            },
+            {
+                "protocol": "blackhole",
+                "settings": {
+                    "response": {
+                        "type": "http"
+                    }
+                },
+                "tag": "block"
+        }
+      ],
+      "routing": {
+        "domainStrategy": "IPIfNonMatch",
+        "rules": [
+          {
+            "ip": [
                         "1.1.1.1"
                     ],
                     "outboundTag": "proxy",
@@ -84,20 +125,45 @@ function generateV2rayConfig(serverIp, serverPort, serverId) {  // Todo use prot
                 }
             ]
         }
+    }`;
+    return config;
+}
+
+class V2RayVpnProfile {
+    constructor(uid, address, listen_port, transport) {
+        this.uid = uid;
+        this.address = address;
+        this.listen_port = listen_port;
+        this.transport = transport;
     }
 }
 
-export function saveV2rayConfig(serverIp, serverPort, serverId) {
+function decode_v2ray_vpn_profile(payload, uid) {
     try {
-        const filePath = path.join(global.sessionTempDir.path, `${global.sessionTempDir.uuid}.json`);
-        const directoryPath = path.dirname(filePath);
-        if (!fs.existsSync(directoryPath)) {
-            fs.mkdirSync(directoryPath, { recursive: true });
+        let bytes_ = Buffer.from(atob(payload), 'binary');
+        
+        if (bytes_.length != 7) {
+            return null;
         }
-        fs.writeFileSync(filePath, JSON.stringify(generateV2rayConfig(serverIp, serverPort, serverId)), { flag: 'w' });
-        return true;
-    } catch (err) {
-        console.error(err);
-        return false;
+        
+        let address = Array.from(bytes_.slice(0, 4)).join('.');
+        
+        let port = (bytes_[4] << 8) + bytes_[5];
+        
+        let transport_map = {
+            1: "tcp",
+            2: "mkcp",
+            3: "websocket",
+            4: "http",
+            5: "domainsocket",
+            6: "quic",
+            7: "gun",
+            8: "grpc",
+        };
+        let transport = transport_map[bytes_[6]] || "";
+        
+        return new V2RayVpnProfile(uid, address, port, transport);
+    } catch (e) {
+        return null;
     }
 }

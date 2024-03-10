@@ -29,8 +29,8 @@ if (process.contextIsolated) {
   // window.api = api
 }
 
-function triggerConnectionFx(){
-  ipcRenderer.invoke('triggerConnection')
+function triggerConnectionFx(serverObj){
+  ipcRenderer.invoke('triggerConnection', serverObj)
   .then((res) => {
 
   })

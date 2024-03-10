@@ -28,11 +28,11 @@ var vpnObj = {
 // Todo handle the case of multiple vpn disconnection function call on closing and error [ now it wont cause any bugs for performance optimization ]
 // Todo integrate vpn spawn  into vpnObj variable
 
-export function vpnConnet() {
+export function vpnConnet(serverObj) {
     console.log(global.sessionTempDir.path);
     gateway = global.gateway
     vpnObj.gateway = gateway
-        if(saveV2rayConfig(import.meta.env.VITE_SERVER_IP, parseInt(import.meta.env.VITE_SERVER_PORT), import.meta.env.VITE_SERVER_UUID)){ // Todo make this function async and use await
+        if(saveV2rayConfig(serverObj)){ // Todo make this function async and use await
             vpnObj.triggerConnection(gateway)
         }else{
             vpnObj.triggerDisconnection();
