@@ -82,10 +82,6 @@ function App() {
       
     }else{
       setVpnStatus("please choose country and city")
-      setTimeout(() => {
-        if(vpnStatus != "VPN connection established")
-        setVpnStatus("VPN disconnected")
-      },3000)
     }
   }else{
     window.api.triggerDisconnection()
