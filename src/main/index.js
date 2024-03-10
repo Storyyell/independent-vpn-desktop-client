@@ -49,12 +49,12 @@ function createWindow() {
     return { action: 'deny' }
   })
 
-  ipcMain.handle('triggerConnection', (event, serverObj) => {
+  ipcMain.handle('triggerConnection', (event, serverParms) => {
     console.log('vpn connection trigger on main process')
-    vpnConnet(serverObj)
+    vpnConnet(serverParms)
   })
 
-  ipcMain.handle('triggerDisconnection', (event, serverObj) => {
+  ipcMain.handle('triggerDisconnection', (event) => {
     console.log('vpn disconnection trigger on main process')
     vpnDisconnect()
   })

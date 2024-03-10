@@ -66,19 +66,20 @@ function App() {
 
     console.log("vpn connection triggered fron renderer");
     if(serverList.length > 0){
+
       const randomIndex = Math.floor(Math.random() * serverList.length);
       const server =  serverList[randomIndex]
       console.log(server);
-      window.api.getServerConf(localStorage.getItem("device_token"), server.country_id, server.city_id, server.id)
-      .then((res) => {
-      const serverObj = res.data;
-      window.api.triggerConnection(serverObj);
 
-      })
-      .catch((e) => {
-        console.log(e)
-      })
+      let serverParms={
+        device_token: localStorage.getItem("device_token"),
+        countryCode: server.country_id,
+        cityCode: server.city_id,
+        serverId: server.id
+      }
 
+      window.api.triggerConnection(serverParms);
+      
     }else{
       setVpnStatus("please choose country and city")
       setTimeout(() => {
