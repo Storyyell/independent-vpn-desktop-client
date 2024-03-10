@@ -3,7 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import icon_ from '../../resources/icon.ico?asset'
-import { vpnConnet } from './system/vpnBase.js'
+import { vpnConnet, vpnDisconnect } from './system/vpnBase.js'
 import os from 'os'
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs'
@@ -17,6 +17,8 @@ let sessionTempDir={
 };
 
 global.sessionTempDir = sessionTempDir; // Todo remove this global variable 
+global.vpnConnStatus = false;
+
 
 function createWindow() {
   let screen_size = screen.getPrimaryDisplay().workAreaSize
@@ -50,6 +52,15 @@ function createWindow() {
   ipcMain.handle('triggerConnection', (event, serverObj) => {
     console.log('vpn connection trigger on main process')
     vpnConnet(serverObj)
+  })
+
+  ipcMain.handle('triggerDisconnection', (event, serverObj) => {
+    console.log('vpn disconnection trigger on main process')
+    vpnDisconnect(serverObj)
+  })
+
+  ipcMain.handle('vpnConnStatus', (event, serverObj) => {
+    return global.vpnConnStatus
   })
 
   ipcMain.handle('registerDevice', async () => {

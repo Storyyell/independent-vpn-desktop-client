@@ -34,6 +34,7 @@ var vpnObj = {
 // Todo integrate vpn spawn  into vpnObj variable
 
 export function vpnConnet(serverObj) {
+    vpnObj.connectionProgress = true;
     console.log(global.sessionTempDir.path);
     gateway = global.gateway
     vpnObj.gateway = gateway
@@ -60,7 +61,7 @@ export function vpnConnetFx(gateway) {
     global.mainWindow.webContents.send('connectionStatus', 'VPN connection initializing...');
 
     console.log(`gateway ${gateway}`);
-    vpnObj.connectionProgress = true;
+    
 
     let basePath = path.join(__dirname, "../../resources/bin/");
     
@@ -197,6 +198,7 @@ export function vpnConnetFx(gateway) {
                     vpnObj.connected = true;
                     vpnObj.connectionProgress = false;
                     console.log("vpn connection established");
+                    global.vpnConnStatus= true;
                     // setTimeout(() => {
                     //     vpnObj.triggerDisconnection()
                     // },10000)
@@ -237,6 +239,9 @@ function addVpnRoute(gateway) {
 }
 
 export function vpnDisconnect() {
+
+    global.vpnConnStatus = false;
+
     if(vpnObj.disconnectionProgress) {
         console.log("vpn disconnection in progress");
         return;
@@ -253,7 +258,6 @@ export function vpnDisconnect() {
             console.log("vpn disconnected");
         }
         vpnObj.disconnectionProgress = false;
-        vpnObj.connected = false;
         vpnObj.connectionProgress = false;
     }
     try {

@@ -9,9 +9,11 @@ const api = {
   getCountries: (device_token) => ipcRenderer.invoke('getCountries', device_token),
   getCities: (device_token, countryCode) => ipcRenderer.invoke('getCities', device_token, countryCode),
   getServers: (device_token, countryCode, cityCode) => ipcRenderer.invoke('getServers', device_token, countryCode, cityCode),
-  getServerConf: (device_token, countryCode, cityCode, serverId) => ipcRenderer.invoke('getServerConf', device_token, countryCode, cityCode, serverId)
-
+  getServerConf: (device_token, countryCode, cityCode, serverId) => ipcRenderer.invoke('getServerConf', device_token, countryCode, cityCode, serverId), 
+  triggerConnection: (serverObj) => ipcRenderer.invoke('triggerConnection',serverObj),
+  triggerDisconnection: () => ipcRenderer.invoke('triggerDisconnection'),
 }
+
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
@@ -20,29 +22,13 @@ if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
-    contextBridge.exposeInMainWorld('ipc', triggerConnectionFx)
   } catch (error) {
     console.error(error)
   }
 } else {
   window.electron = electronAPI
-  // window.api = api
+  window.api = api
 }
-
-function triggerConnectionFx(serverObj){
-  ipcRenderer.invoke('triggerConnection', serverObj)
-  .then((res) => {
-
-  })
-  .catch((e) => {
-    console.log(e)
-  })
-}
-
-// ipcRenderer.on('connectionStatus', (event, arg) => {
-//   console.log(arg)
-// })
-
 
 contextBridge.exposeInMainWorld(
   'ipcRenderer', {
