@@ -100,7 +100,7 @@ function App() {
     <CssBaseline />
     {/* <ServerListProvider> */}
       <img alt="logo" className="logo" style={genLogoStyle()} src={electronLogo} />
-      <div className="creator">sentinal - dvpn</div>
+      <div className="creator">sentinel - dvpn</div>
       <div className="text">
         Your Decentralized VPN Solution
       </div>

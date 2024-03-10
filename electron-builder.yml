@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: sentinal_windows_app
+productName: sentinel_windows_app
 directories:
   buildResources: build
 files:
@@ -11,7 +11,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: sentinal_windows_app
+  executableName: sentinel_windows_app
   requestedExecutionLevel: requireAdministrator # for admin privileges
 nsis:
   artifactName: ${name}-${version}-setup.${ext}

@@ -151,7 +151,7 @@ export function vpnConnetFx(gateway) {
 
         const tun2socks = spawn(tun2socksPath, [
             '-tcp-auto-tuning',
-            '-device', 'tun://sentinal_vpn',
+            '-device', 'tun://sentinel_vpn',
             '-proxy', 'socks5://127.0.0.1:10808'
         ]);
 
@@ -171,7 +171,7 @@ export function vpnConnetFx(gateway) {
             const output = data.toString();
             console.log(`child stdout:\n${output}`);
 
-            if (output.includes('level=info msg="[STACK] tun://sentinal_vpn <-> socks5://127.0.0.1:10808')) {
+            if (output.includes('level=info msg="[STACK] tun://sentinel_vpn <-> socks5://127.0.0.1:10808')) {
                 onTun2SocksConnected();
                 tun2socks.stdout.removeListener('data', onDataReceived);
             }
@@ -234,18 +234,18 @@ export function vpnConnetFx(gateway) {
 
 function setStaticIP() {
     console.log("assigning static ip to internal adapter");
-    return exec('netsh interface ipv4 set address name="sentinal_vpn" source=static addr=192.168.123.1 mask=255.255.255.0');
+    return exec('netsh interface ipv4 set address name="sentinel_vpn" source=static addr=192.168.123.1 mask=255.255.255.0');
 }
 
 function setDnsServer() {
     console.log('enabling custom DNS server');
-    return exec('netsh interface ipv4 set dnsservers name="sentinal_vpn" static address=1.1.1.1 register=none validate=no');
+    return exec('netsh interface ipv4 set dnsservers name="sentinel_vpn" static address=1.1.1.1 register=none validate=no');
 
 }
 
 function addGlobalRoute() {
     console.log("global traffic routing rule ");
-    return exec('netsh interface ipv4 add route 0.0.0.0/0 "sentinal_vpn" 192.168.123.1 metric=1');
+    return exec('netsh interface ipv4 add route 0.0.0.0/0 "sentinel_vpn" 192.168.123.1 metric=1');
 }
 
 function addVpnRoute(gateway) {
@@ -288,7 +288,7 @@ function vpnConnCleanup(key) {
         case "addGlobalRoute":
             if (vpnObj["setStaticIP"]) {
 
-                child_process.exec('netsh interface ipv4 delete route 0.0.0.0/0 "sentinal_vpn" 192.168.123.1', (err, result) => {
+                child_process.exec('netsh interface ipv4 delete route 0.0.0.0/0 "sentinel_vpn" 192.168.123.1', (err, result) => {
                     if (!err) {
                         vpnObj["addGlobalRoute"] = false;
                     }
@@ -309,7 +309,7 @@ function vpnConnCleanup(key) {
         case "setDnsServer":
             if (vpnObj["setDnsServer"]) {
 
-                child_process.exec('netsh interface ipv4 set dnsservers name="sentinal_vpn" source=dhcp', (err, result) => {
+                child_process.exec('netsh interface ipv4 set dnsservers name="sentinel_vpn" source=dhcp', (err, result) => {
                     if (!err) {
                         vpnObj["setDnsServer"] = false;
                     }
@@ -318,7 +318,7 @@ function vpnConnCleanup(key) {
             break;
         case "setStaticIP":
             if (vpnObj["setStaticIP"]) {
-                child_process.exec('netsh interface ipv4 set address name="sentinal_vpn" source=dhcp', (err, result) => {
+                child_process.exec('netsh interface ipv4 set address name="sentinel_vpn" source=dhcp', (err, result) => {
                     if (!err) {
                         vpnObj["setStaticIP"] = false;
                     }

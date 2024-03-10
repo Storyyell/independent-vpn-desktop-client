@@ -1,4 +1,4 @@
-# sentinal_windows_app
+# sentinel_windows_app
 
 An Electron application with React
 
