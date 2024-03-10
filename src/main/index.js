@@ -56,7 +56,7 @@ function createWindow() {
 
   ipcMain.handle('triggerDisconnection', (event, serverObj) => {
     console.log('vpn disconnection trigger on main process')
-    vpnDisconnect(serverObj)
+    vpnDisconnect()
   })
 
   ipcMain.handle('vpnConnStatus', (event, serverObj) => {

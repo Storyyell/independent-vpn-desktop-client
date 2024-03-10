@@ -9,6 +9,7 @@ import LocationSelection from './components/LocationSelection/LocationSelection'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ServerListContext, ServerListProvider } from './context/ServerListContext';
+import { VpnStatusMainContext } from './context/VpnStatusMainContext';
 
 const theme = createTheme({
   palette: {
@@ -21,11 +22,13 @@ function App() {
 
   const [vpnStatus, setVpnStatus] = useState("VPN disconnected");
   const { serverList, setServerList } = React.useContext(ServerListContext);
+  const { vpnStatusMain, setVpnStatusMain } = React.useContext(VpnStatusMainContext);
 
   useEffect(() => {
     window.setVpnStatus = setVpnStatus;
     window.ipcRenderer.on('connectionStatus', (arg) => {
       window.setVpnStatus(arg);
+      arg === 'VPN connection established' ? setVpnStatusMain('connected') : setVpnStatusMain('disconnected');
       console.log(arg);
     });
 
@@ -50,6 +53,8 @@ function App() {
   }
 
   function triggerVpnConnection() {
+    if(vpnStatusMain !== 'connected'){
+
     console.log("vpn connection triggered fron renderer");
     if(serverList.length > 0){
       const randomIndex = Math.floor(Math.random() * serverList.length);
@@ -72,13 +77,14 @@ function App() {
         setVpnStatus("VPN disconnected")
       },3000)
     }
-    // window.ipc();
-  }
+  }else{
+    window.api.triggerDisconnection()
+  }}
 
 
   function genLogoStyle() {
     return {
-      filter: vpnStatus === 'VPN connection established' ? 'drop-shadow(0 0 1.2em #6988e6aa)' : 'none'
+      filter: vpnStatusMain === 'connected' ? 'drop-shadow(0 0 1.2em #6988e6aa)' : 'none'
     }
   }
 
