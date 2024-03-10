@@ -10,6 +10,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ServerListContext, ServerListProvider } from './context/ServerListContext';
 import { VpnStatusMainContext } from './context/VpnStatusMainContext';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const theme = createTheme({
   palette: {
@@ -28,7 +29,15 @@ function App() {
     window.setVpnStatus = setVpnStatus;
     window.ipcRenderer.on('connectionStatus', (arg) => {
       window.setVpnStatus(arg);
-      arg === 'VPN connection established' ? setVpnStatusMain('connected') : setVpnStatusMain('disconnected');
+
+      if (arg === 'VPN connection established') {
+        setVpnStatusMain('connected');
+      } else if (arg === 'VPN disconnected') {
+        setVpnStatusMain('disconnected');
+      } else {
+        setVpnStatusMain('connecting');
+      }
+
       console.log(arg);
     });
 
@@ -115,7 +124,9 @@ function App() {
             style={{ minWidth: "150px", height: "40px", borderRadius: "20px" }}
             onClick={triggerVpnConnection}
           >
-            {vpnStatus !== 'VPN disconnected' ? 'disconnect vpn' : 'connect vpn'}
+            {vpnStatusMain === 'connected' && 'disconnect vpn'}
+            {vpnStatusMain === 'disconnected' && 'connect vpn'}
+            {vpnStatusMain === 'connecting' &&  'connecting...'}{vpnStatusMain === 'connecting' && <CircularProgress size="15px"  color="secondary" sx={{mx:2}} />}
           </Button>
         </div>
       </div>
