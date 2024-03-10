@@ -9,6 +9,8 @@ import { SocksClient } from 'socks';
 import { saveV2rayConfig } from "./v2rayConfig";
 import dns from "dns";
 import net from "net";
+import axios from 'axios';
+const https = require('https');
 
 
 var vpnObj = {
@@ -107,14 +109,21 @@ export function vpnConnetFx(gateway) {
         console.log("V2ray tunnel created");
         global.mainWindow.webContents.send('connectionStatus', 'V2ray tunnel created');
         vpnObj.v2ray = v2ray;
-        // if(checkConnectivity('127.0.0.1', 10808)){
-        //     startSocksInternalTunnel();
-        //     console.log("vpn server internet connectivity check passed...");
-        // }else{
-        //     console.log("vpn server internet connectivity check failed...");
-        //     vpnObj.triggerDisconnection();
-        // }
-        startSocksInternalTunnel();
+        checkConnectivity('127.0.0.1', 10808)
+            .then((result) => {
+                if (result) {
+                    console.log("connectivity check passed");
+                    startSocksInternalTunnel();
+
+                } else {
+                    console.log("connectivity check failed");
+                    vpnObj.triggerDisconnection();
+                }
+            })
+            .catch((e) => {
+                console.log("error in checking connectivity: " + e.message);
+                vpnObj.triggerDisconnection();
+            });
 
     }
 
@@ -328,26 +337,56 @@ function vpnConnCleanup(key) {
 
 async function checkConnectivity(proxyIp, proxyPort) {
     const options = {
+        hostname: 'www.google.com',
+        port: 443,
+        path: '/',
+        method: 'GET',
+        timeout: 3000 // 3 seconds timeout
+    };
+    
+    // Create a socks agent
+    const agent = await SocksClient.createConnection({
         proxy: {
             ipaddress: proxyIp,
             port: proxyPort,
-            type: 5
+            type: 5 // For SOCKS5
         },
         command: 'connect',
         destination: {
-            host: '1.1.1.1', 
-            port: 80
+            host: options.hostname,
+            port: options.port
         }
-    };
+    });
 
-    try {
-        const info = await SocksClient.createConnection(options);
-        info.socket.end();
-        return true;
-    } catch (error) {
-        console.error(`Failed to connect: ${error.message}`);
-        return false;
-    }
+    options.agent = new https.Agent({ socket: agent.socket });
+    
+    return new Promise((resolve, reject) => {
+        const req = https.request(options, (res) => {
+            let data = '';
+            
+            res.on('data', (chunk) => {
+                data += chunk;
+            });
+            
+            res.on('end', () => {
+                console.log('Successfully connected to www.google.com');
+                resolve(true);
+            });
+        });
+
+        req.on('error', (e) => {
+            console.error(`Request error: ${e.message}`);
+            resolve(false);
+        });
+        
+        req.on('timeout', () => {
+            req.abort();
+            console.error('Request timeout after 3 seconds.');
+            resolve(false);
+        });
+
+        req.end();
+    });
 }
 
 function getIPv4(input) {
