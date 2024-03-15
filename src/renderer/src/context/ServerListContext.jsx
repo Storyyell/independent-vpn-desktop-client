@@ -4,7 +4,10 @@ import { createContext, useState } from "react";
 const ServerListContext = createContext({});
 
 function ServerListProvider({ children }) {
-    const [serverList, setServerList] = useState([]);
+    const [serverList, setServerList] = useState({
+        countries:[],
+        cities:{},
+    });
 
     return (
         <ServerListContext.Provider value={{ serverList, setServerList }}>

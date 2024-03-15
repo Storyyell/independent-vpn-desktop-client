@@ -4,16 +4,21 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import { ServerListContext } from '../../context/ServerListContext';
 
 const Countries = (props) => {
 
-    const [countries, setCountries] = React.useState(localStorage.getItem("country_list") ? localStorage.getItem("country_list") : [])
-    useEffect(() => {
+    const { serverList, setServerList } = React.useContext(ServerListContext);
+    let countries = serverList.countries
+
+    useEffect(( ) => {
         if (localStorage.getItem("device_token")) {
             window.api.getCountries(localStorage.getItem("device_token"))
                 .then((res) => {
                     localStorage.setItem("country_list", res.data)
-                    setCountries(res.data)
+                    setServerList((d)=>{
+                        return {...d, countries:res.data}
+                    })
                 })
                 .catch((e) => {
                     console.log(e)
@@ -21,13 +26,15 @@ const Countries = (props) => {
         } else { //Todo fix below part by context
             setTimeout(() => {
                 window.api.getCountries(localStorage.getItem("device_token"))
-                    .then((res) => {
-                        localStorage.setItem("country_list", res.data)
-                        setCountries(res.data)
+                .then((res) => {
+                    localStorage.setItem("country_list", res.data)
+                    setServerList((d)=>{
+                        return {...d, countries:res.data}
                     })
-                    .catch((e) => {
-                        console.log(e)
-                    })
+                })
+                .catch((e) => {
+                    console.log(e)
+                })
             }, 3000)
         }
 
