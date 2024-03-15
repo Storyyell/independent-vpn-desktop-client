@@ -27,7 +27,10 @@ var vpnObj = {
     triggerDisconnection:vpnDisconnect,
     disconnectionProgress:false,
     connectionProgress:false,
-
+    serverIp:null,
+    serverAddress:null,
+    serverPort:null,
+    serverUUID:null
 }
 
 // Todo case of triggered disconnection while connection in progress and connected is true
@@ -45,14 +48,20 @@ export async function vpnConnet(serverParms) {
         global.mainWindow.webContents.send('connectionStatus', 'Fetching server configuration...');
         const res = await pullServerConf(serverParms.device_token, serverParms.countryCode, serverParms.cityCode, serverParms.serverId);
         const serverObj = res.data;
-        if (await saveV2rayConfig(serverObj)) {
-            const ip = await getIPv4(global.serverUrl);
-            global.server_ip = ip;
-            console.log(`server ip: ${global.server_ip}`);
-            vpnObj.triggerConnection(gateway);
-        } else {
-            vpnObj.triggerDisconnection();
-        }
+        const { uuid, address:server_address, listen_port} = await saveV2rayConfig(serverObj);
+        
+        // updating server parms
+        vpnObj.serverAddress = server_address;
+        vpnObj.serverPort = listen_port;
+        vpnObj.serverUUID = uuid;
+        
+        // getting server ip
+        const serverIp = await getIPv4(server_address);
+        vpnObj.serverIp = serverIp;
+        console.log(`server ip: ${vpnObj.serverIp}`);
+        
+        vpnObj.triggerConnection(gateway);
+
     } catch (e) {
         console.log("error in VPN connection: " + e.message);
         vpnObj.triggerDisconnection();
@@ -237,7 +246,7 @@ function addGlobalRoute() {
 
 function addVpnRoute(gateway) {
     console.log("vpn traffic routing rule ");
-    return exec(`route add ${global.server_ip} mask 255.255.255.255 ${gateway}`);
+    return exec(`route add ${vpnObj.serverIp} mask 255.255.255.255 ${gateway}`);
 }
 
 export function vpnDisconnect() {
@@ -285,7 +294,7 @@ function vpnConnCleanup(key) {
         case "addVpnRoute":
             if (vpnObj["addVpnRoute"]) {
 
-                child_process.exec(`route delete ${global.server_ip}`, (err, result) => {
+                child_process.exec(`route delete ${vpnObj.serverIp}`, (err, result) => {
                     if (!err) {
                         vpnObj["addVpnRoute"] = false;
                     }
@@ -402,14 +411,14 @@ async function checkConnectivity(proxyIp, proxyPort) {
     });
 }
 
-function getIPv4(input) {
+async function getIPv4(input) {
     return new Promise((resolve, reject) => {
         if (net.isIPv4(input)) {
             resolve(input);
         } else {
             dns.resolve4(input, (err, addresses) => {
                 if (err) {
-                    reject(err);
+                    reject('Failed to resolve server address');
                 } else {
                     resolve(addresses[0]);
                 }

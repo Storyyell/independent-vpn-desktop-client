@@ -3,28 +3,25 @@ import path from 'node:path';
 const atob = require('atob');
 
 
-export function saveV2rayConfig(serverObj) {
-    let vpn_profile = decode_v2ray_vpn_profile(serverObj.payload, serverObj.uid)
+export async function saveV2rayConfig(serverObj) {
+    let vpn_profile = decode_v2ray_vpn_profile(serverObj.payload, serverObj.uid);
     if (vpn_profile) {
-        try{
-        const filePath = path.join(global.sessionTempDir.path, `${global.sessionTempDir.uuid}.json`);
-        const directoryPath = path.dirname(filePath);
-        if (!fs.existsSync(directoryPath)) {
-            fs.mkdirSync(directoryPath, { recursive: true });
-        }
-        global.serverUrl = vpn_profile.address;
-        fs.writeFileSync(filePath,gen_conf(vpn_profile.uid, vpn_profile.address, vpn_profile.listen_port), { flag: 'w' });
-        return true;
+        try {
+            const filePath = path.join(global.sessionTempDir.path, `${global.sessionTempDir.uuid}.json`);
+            const directoryPath = path.dirname(filePath);
+            if (!fs.existsSync(directoryPath)) {
+                fs.mkdirSync(directoryPath, { recursive: true });
+            }
+            await fs.promises.writeFile(filePath, gen_conf(vpn_profile.uid, vpn_profile.address, vpn_profile.listen_port), { flag: 'w' });
+            return { uuid: vpn_profile.uid, address: vpn_profile.address, listen_port: vpn_profile.listen_port };
         } catch (err) {
             console.error(err);
-            return false;
+            throw Error("Failed to cache VPN profile");
         }
     } else {
         console.log("Failed to decode VPN profile");
-        return false;
+        throw Error("Failed to decode VPN profile");
     }
-    // serverIp, serverPort, serverId
-
 }
 
 
