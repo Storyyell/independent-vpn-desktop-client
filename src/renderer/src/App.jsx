@@ -73,6 +73,7 @@ function App() {
       
     }else{
       setVpnStatus("fetching server list...")
+      // Todo handle this case properly
       setTimeout(() => {setVpnStatus("VPN disconnected")}, 2000);
     }
   }else{
