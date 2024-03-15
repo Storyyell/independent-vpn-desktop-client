@@ -153,12 +153,14 @@ app.on('ready', () => {
 })
 
 app.on('will-quit', () => {
-  vpnObj.triggerDisconnection(); // want to handle the case of already in disconnection progress case
+  vpnObj.triggerDisconnection(); 
 
-  if (sessionTempDir.path) {
-    fs.rmdir(sessionTempDir.path, { recursive: true }, (err) => {
-      if (err) throw err; // Todo handle this case properly
-    });
+  if (global.sessionTempDir.path) {
+    try {
+      fs.rmdirSync(global.sessionTempDir.path, { recursive: true });
+    } catch (err) {
+      console.error(err);
+    }
   }
 });
 
