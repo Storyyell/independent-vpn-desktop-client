@@ -119,21 +119,14 @@ export function vpnConnetFx() {
         console.log("V2ray tunnel created");
         global.mainWindow.webContents.send('connectionStatus', 'V2ray tunnel created');
         checkConnectivity('127.0.0.1', 10808)
-            .then((result) => {
-                if (result) {
+            .then(() => {
                     console.log("connectivity check passed");
                     startSocksInternalTunnel();
-
-                } else {
-                    console.log("connectivity check failed");
-                    vpnObj.triggerDisconnection();
-                }
             })
             .catch((e) => {
                 console.log("error in checking connectivity: " + e.message);
                 vpnObj.triggerDisconnection();
             });
-
     }
 
 
@@ -355,7 +348,7 @@ async function checkConnectivity(proxyIp, proxyPort) {
         method: 'GET',
         timeout: 3000 // 3 seconds timeout
     };
-    
+
     // Create a socks agent
     const agent = await SocksClient.createConnection({
         proxy: {
@@ -369,18 +362,19 @@ async function checkConnectivity(proxyIp, proxyPort) {
             port: options.port
         }
     });
+
     global.mainWindow.webContents.send('connectionStatus', 'checking connectivity...');
 
     options.agent = new https.Agent({ socket: agent.socket });
-    
+
     return new Promise((resolve, reject) => {
         const req = https.request(options, (res) => {
             let data = '';
-            
+
             res.on('data', (chunk) => {
                 data += chunk;
             });
-            
+
             res.on('end', () => {
                 console.log('Successfully connected to www.google.com');
                 global.mainWindow.webContents.send('connectionStatus', 'internet connectivity check passed...');
@@ -393,15 +387,15 @@ async function checkConnectivity(proxyIp, proxyPort) {
             console.error(`Request error: ${e.message}`);
             global.mainWindow.webContents.send('connectionStatus', 'internet connectivity check failed...');
 
-            resolve(false);
+            reject('internet connectivity check failed...');
         });
-        
+
         req.on('timeout', () => {
-            req.abort();
+            req.end();
             console.error('Request timeout after 3 seconds.');
             global.mainWindow.webContents.send('connectionStatus', 'internet connectivity check failed...');
 
-            resolve(false);
+            reject('internet connectivity check failed...');
         });
 
         req.end();
