@@ -68,12 +68,10 @@ export async function vpnConnet(serverParms) {
     }
 }
 
-export function vpnConnetFx(gateway) {
+export function vpnConnetFx() {
 
-
-    console.log(`gateway ${gateway}`);
+    console.log(`gateway ${vpnObj.gateway}`);
     
-
     let basePath = path.join(__dirname, "../../resources/bin/");
     
     // Todo want to find a another way to use the resourcesPath from the main process in production
@@ -197,7 +195,7 @@ export function vpnConnetFx(gateway) {
                 .then(() => {
                     vpnObj.setDnsServer = true;
 
-                    return addVpnRoute(gateway)
+                    return addVpnRoute(vpnObj.gateway)
                 })
                 .then(() => {
                     vpnObj.addVpnRoute = true;
