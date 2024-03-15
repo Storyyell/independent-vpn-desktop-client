@@ -20,6 +20,7 @@ const theme = createTheme({
   },
 });
 
+// todo add case of revoed device token and followed by re-regisration
 
 function App() {
 
