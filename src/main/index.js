@@ -155,6 +155,7 @@ app.on('ready', () => {
 app.on('will-quit', () => {
   vpnObj.triggerDisconnection(); 
 
+  //Todo: remove file just after connection and use protobuff to store the data
   if (global.sessionTempDir.path) {
     try {
       fs.rmSync(global.sessionTempDir.path, { recursive: true });
