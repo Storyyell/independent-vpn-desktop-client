@@ -5,17 +5,22 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { ServerListContext } from '../../context/ServerListContext';
+import { DeviceTokenContext } from '../../context/DeviceTokenContext';
+import { SelectionContext } from '../../context/SelectionContext';
 
 const Countries = (props) => {
 
     const { serverList, setServerList } = React.useContext(ServerListContext);
+    const {deviceToken, setDeviceToken} = React.useContext(DeviceTokenContext);
+    const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
+
+
     let countries = serverList.countries
 
     useEffect(( ) => {
-        if (localStorage.getItem("device_token")) {
-            window.api.getCountries(localStorage.getItem("device_token"))
+        if (deviceToken) {
+            window.api.getCountries(deviceToken)
                 .then((res) => {
-                    localStorage.setItem("country_list", res.data)
                     setServerList((d)=>{
                         return {...d, countries:res.data}
                     })
@@ -23,25 +28,14 @@ const Countries = (props) => {
                 .catch((e) => {
                     console.log(e)
                 })
-        } else { //Todo fix below part by context
-            setTimeout(() => {
-                window.api.getCountries(localStorage.getItem("device_token"))
-                .then((res) => {
-                    localStorage.setItem("country_list", res.data)
-                    setServerList((d)=>{
-                        return {...d, countries:res.data}
-                    })
-                })
-                .catch((e) => {
-                    console.log(e)
-                })
-            }, 3000)
         }
-
-    }, [])
+    }, [deviceToken])
 
     const handleChange = (event) => {
-        props.setSelectedCountryId(event.target.value);
+        setSelectedItems((d)=>{
+            return {...d, countryId: event.target.value, cityId: ''}
+        })
+
     };
 
 
@@ -51,14 +45,13 @@ const Countries = (props) => {
             <Select
                 labelId="country-select-label"
                 id="country-select"
-                value={props.selectedCountryId}
+                value={selectedItems.countryId}
                 label="country"
                 onChange={handleChange}
                 sx={{width:"150px"}}
                 size='small'
-
             >
-            {Array.isArray(countries) && countries.map((country) => (
+            {countries.map((country) => (
                 <MenuItem key={country.id} value={country.id}>{country?.name}</MenuItem>
             ))}
             </Select>

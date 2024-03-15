@@ -5,40 +5,50 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { ServerListContext } from '../../context/ServerListContext';
+import { DeviceTokenContext } from '../../context/DeviceTokenContext';
+import { SelectionContext } from '../../context/SelectionContext';
 
 const City = (props) => {
 
-    const [cities, setCities] = React.useState(localStorage.getItem("city_list") ? localStorage.getItem("city_list") : [])
     const { serverList, setServerList } = React.useContext(ServerListContext);
+    const {deviceToken, setDeviceToken} = React.useContext(DeviceTokenContext);
+    const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
+
+    let cities=serverList?.cities[selectedItems?.countryId] || []
 
     useEffect(() => {
-        props.setSelectedCityId('')
-        setCities([])
-        if(props.selectedCountryId){
-            window.api.getCities(localStorage.getItem("device_token"), props.selectedCountryId)
+        if(selectedItems?.countryId && deviceToken){
+            window.api.getCities(deviceToken, selectedItems?.countryId)
             .then((res) => {
-                localStorage.setItem("city_list", res)
-                setCities(res.data)
+                setServerList((d)=>{
+                    return {...d, cities:{
+                        ...d.cities,
+                        [selectedItems?.countryId]:res.data
+                    }}
+                })
             })
             .catch((e) => {
                 console.log(e)
             })
         }
 
-    }, [props.selectedCountryId])
+    }, [selectedItems?.countryId, deviceToken])
 
     const handleChange = (event) => {
-        props.setSelectedCityId(event.target.value);
-// 
-        window.api.getServers(localStorage.getItem("device_token"), props.selectedCountryId, event.target.value)
-        .then((res) => {
-            // console.log(res.data);
-            setServerList(res.data)
+        setSelectedItems((d)=>{
+            return {...d, cityId: event.target.value}
         })
-        .catch((e) => {
-            console.log(e)
-        })
-// 
+        if(deviceToken && selectedItems?.countryId && event.target.value){
+            window.api.getServers(deviceToken, selectedItems?.countryId, event.target.value)
+            .then((res) => {
+                setServerList((d)=>{
+                    return {...d, servers:res.data}
+                })
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+        }
     };
 
     return (
@@ -48,13 +58,13 @@ const City = (props) => {
             <Select
                 labelId="city-select-label"
                 id="city-select"
-                value={props.selectedCityId}
+                value={selectedItems.cityId}
                 label="city"
                 onChange={handleChange}
                 sx={{width:"150px"}}
                 size='small'
             >
-            {Array.isArray(cities) && cities.map((city) => (
+            {cities.map((city) => (
                 <MenuItem key={city.id} value={city.id}>{city?.name}</MenuItem>
             ))}
             </Select>

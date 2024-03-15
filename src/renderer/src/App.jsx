@@ -11,6 +11,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ServerListContext, ServerListProvider } from './context/ServerListContext';
 import { VpnStatusMainContext } from './context/VpnStatusMainContext';
 import CircularProgress from '@mui/material/CircularProgress';
+import { DeviceTokenContext } from './context/DeviceTokenContext';
+import { SelectionContext } from './context/SelectionContext';
 
 const theme = createTheme({
   palette: {
@@ -24,7 +26,10 @@ function App() {
   const [vpnStatus, setVpnStatus] = useState("VPN disconnected");
   const { serverList, setServerList } = React.useContext(ServerListContext);
   const { vpnStatusMain, setVpnStatusMain } = React.useContext(VpnStatusMainContext);
+  const { deviceToken, setDeviceToken } = React.useContext(DeviceTokenContext);
+  const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
 
+  // for vpn status listenening
   useEffect(() => {
     window.setVpnStatus = setVpnStatus;
     window.ipcRenderer.on('connectionStatus', (arg) => {
@@ -46,35 +51,20 @@ function App() {
     };
   }, []);
 
-
-  if (localStorage.getItem("device_token")) {
-    console.log("device token already exists")
-  } else {
-    console.log("device token does not exists")
-    console.log("creating device token")
-    window.api.registerDevice()
-      .then((res) => {
-        localStorage.setItem("device_token", res)
-      })
-      .catch((e) => {
-        console.log(e)
-      })
-  }
-
   function triggerVpnConnection() {
     if(vpnStatusMain !== 'connected'){
 
     console.log("vpn connection triggered fron renderer");
-    if(serverList.length > 0){
+    if(serverList.servers.length > 0){
 
-      const randomIndex = Math.floor(Math.random() * serverList.length);
-      const server =  serverList[randomIndex]
+      const randomIndex = Math.floor(Math.random() * serverList.servers.length);
+      const server =  serverList.servers[randomIndex]
       console.log(server);
 
       let serverParms={
-        device_token: localStorage.getItem("device_token"),
-        countryCode: server.country_id,
-        cityCode: server.city_id,
+        device_token: deviceToken,
+        countryCode: selectedItems.countryId,
+        cityCode: selectedItems.cityId,
         serverId: server.id
       }
 

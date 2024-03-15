@@ -14,3 +14,4 @@ function VpnStatusMainProvider({ children }) {
 }
 
 export { VpnStatusMainContext, VpnStatusMainProvider };
+
