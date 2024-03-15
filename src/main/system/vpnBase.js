@@ -158,8 +158,9 @@ export function vpnConnetFx() {
             console.log(`child stdout:\n${output}`);
 
             if (output.includes('level=info msg="[STACK] tun://sentinel_vpn <-> socks5://127.0.0.1:10808')) {
-                onTun2SocksConnected();
+                vpnObj.tun2socks = tun2socks
                 tun2socks.stdout.removeListener('data', onDataReceived);
+                onTun2SocksConnected();
             }
         }
 
@@ -172,8 +173,6 @@ export function vpnConnetFx() {
         function onTun2SocksConnected() {
             console.log("Tun2socks tunnel created");
             global.mainWindow.webContents.send('connectionStatus', 'adapter created');
-            vpnObj.tun2socks = tun2socks
-            // Now start the other process
             startAnotherCommand();
         }
 
