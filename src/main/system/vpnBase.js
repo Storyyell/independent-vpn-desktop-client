@@ -200,7 +200,6 @@ export function vpnConnetFx() {
                     console.log("vpn connection established");
                     global.vpnConnStatus= true;
                     global.mainWindow.webContents.send('connectionStatus', 'VPN connection established');
-
                 })
                 .catch((e) => {
                     console.log("vpn connection error: " + e.message);
@@ -253,7 +252,7 @@ export function vpnDisconnect() {
         }
         vpnObj.connected= false;
         vpnObj.disconnectionProgress = false;
-        global.mainWindow.webContents.send('connectionStatus', 'VPN disconnected');
+        try {global.mainWindow.webContents.send('connectionStatus', 'VPN disconnected');} catch (e) {}
     }else{
         return;
     }
