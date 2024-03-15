@@ -72,8 +72,8 @@ function App() {
       window.api.triggerConnection(serverParms);
       
     }else{
-      setVpnStatus("server list processing...")
-      setTimeout(() => {setVpnStatus("VPN disconnected")}, 1000);
+      setVpnStatus("fetching server list...")
+      setTimeout(() => {setVpnStatus("VPN disconnected")}, 2000);
     }
   }else{
     window.api.triggerDisconnection()
