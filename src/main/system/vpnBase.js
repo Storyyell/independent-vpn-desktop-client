@@ -103,9 +103,9 @@ export function vpnConnetFx() {
         console.log(`child stdout:\n${output}`);
 
         if (output.includes('started')) {
-            onVpnConnected();
-
             v2ray.stdout.removeListener('data', onDataReceived);
+            vpnObj.v2ray = v2ray;
+            onVpnConnected();
         }
     }
 
@@ -118,7 +118,6 @@ export function vpnConnetFx() {
     function onVpnConnected() {
         console.log("V2ray tunnel created");
         global.mainWindow.webContents.send('connectionStatus', 'V2ray tunnel created');
-        vpnObj.v2ray = v2ray;
         checkConnectivity('127.0.0.1', 10808)
             .then((result) => {
                 if (result) {
