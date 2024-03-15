@@ -203,7 +203,6 @@ export function vpnConnetFx() {
 
                 })
                 .catch((e) => {
-                    vpnObj.connected = false;
                     console.log("vpn connection error: " + e.message);
                     vpnObj.triggerDisconnection();
                 });
@@ -239,13 +238,11 @@ export function vpnDisconnect() {
 
     global.vpnConnStatus = false;
 
-    if(vpnObj.disconnectionProgress) {
-        console.log("vpn disconnection in progress");
-        return;
-    }else{
+    if( vpnObj.connectionProgress || vpnObj.connected ) {
         console.log("vpn disconnection started...");
+        vpnObj.connectionProgress = false;
         vpnObj.disconnectionProgress = true;
-        setTimeout(() => {vpnObj.disconnectionProgress = false},10000) // 10 seconds timeout for disconnection status cleanup on error
+        setTimeout(() => {vpnObj.disconnectionProgress = false}, 5000) // 10 seconds timeout for disconnection status cleanup on error
         let keys = Object.keys(vpnObj).reverse();
         keys.forEach((key) => {
             console.log(`cleaning vpn object key :=> ${key}`);
@@ -254,14 +251,12 @@ export function vpnDisconnect() {
         if(!vpnObj.connected) {
             console.log("vpn disconnected");
         }
+        vpnObj.connected= false;
         vpnObj.disconnectionProgress = false;
-        vpnObj.connectionProgress = false;
-    }
-    try {
         global.mainWindow.webContents.send('connectionStatus', 'VPN disconnected');
-    } catch (error) {
+    }else{
+        return;
     }
-    
 }
 
 function vpnConnCleanup(key) {
