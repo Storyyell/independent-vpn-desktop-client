@@ -251,6 +251,7 @@ export function vpnDisconnect() {
             console.log("vpn disconnected");
         }
         vpnObj.connected= false;
+        global.vpnConnStatus= false;
         vpnObj.disconnectionProgress = false;
         try {global.mainWindow.webContents.send('connectionStatus', 'VPN disconnected');} catch (e) {}
     }else{
