@@ -37,38 +37,45 @@ var vpnObj = {
 export function vpnConnet(serverParms) {
     vpnObj.connectionProgress = true;
     console.log(global.sessionTempDir.path);
-    gateway = global.gateway
-    vpnObj.gateway = gateway
-    console.log("VPN connection initializing...");
-
-    global.mainWindow.webContents.send('connectionStatus', 'VPN connection initializing...');
-
-    global.mainWindow.webContents.send('connectionStatus', 'Fetching server configuration...')
-    pullServerConf(serverParms.device_token, serverParms.countryCode, serverParms.cityCode, serverParms.serverId)
-    .then((res) => {
-
-        const serverObj = res.data;
-        if(saveV2rayConfig(serverObj)){ // Todo make this function async and use await
-            getIPv4(global.serverUrl)
-            .then((ip) => {
-                global.server_ip = ip;
-                console.log(`server ip: ${global.server_ip}`);
-                vpnObj.triggerConnection(gateway)
+    getDefaultGateway()
+    .then((gateway) => {
+        vpnObj.gateway = gateway
+        console.log("VPN connection initializing...");
     
-            })
-            .catch((e) => {
-                console.log("error in getting ip address: " + e.message);
-                vpnObj.triggerDisconnection(gateway);
-            });
-        }else{
-            vpnObj.triggerDisconnection();
-        }
-
+        global.mainWindow.webContents.send('connectionStatus', 'VPN connection initializing...');
+    
+        global.mainWindow.webContents.send('connectionStatus', 'Fetching server configuration...')
+        pullServerConf(serverParms.device_token, serverParms.countryCode, serverParms.cityCode, serverParms.serverId)
+        .then((res) => {
+    
+            const serverObj = res.data;
+            if(saveV2rayConfig(serverObj)){ // Todo make this function async and use await
+                getIPv4(global.serverUrl)
+                .then((ip) => {
+                    global.server_ip = ip;
+                    console.log(`server ip: ${global.server_ip}`);
+                    vpnObj.triggerConnection(gateway)
+        
+                })
+                .catch((e) => {
+                    console.log("error in getting ip address: " + e.message);
+                    vpnObj.triggerDisconnection(gateway);
+                });
+            }else{
+                vpnObj.triggerDisconnection();
+            }
+    
+        })
+        .catch((e) => {
+            console.log("error pulling server conf : " + e.message);
+            vpnObj.triggerDisconnection(gateway);
+        })
+    
     })
     .catch((e) => {
-        console.log("error pulling server conf : " + e.message);
-        vpnObj.triggerDisconnection(gateway);
+        console.log(e.message);
     })
+
 
 }
 

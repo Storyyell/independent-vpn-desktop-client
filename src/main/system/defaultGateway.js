@@ -1,10 +1,13 @@
-const { exec } = require('child_process');
 
-import("default-gateway").then(({ gateway4async, gateway4sync, gateway6async, gateway6sync }) => {
-    const {gateway, version, int} = gateway4sync();
-    global.gateway = gateway;
+async function getDefaultGateway() {
+    try {
+        const { gateway4sync } = await import("default-gateway");
+        const { gateway } = gateway4sync();
+        return gateway;
+    } catch (error) {
+        console.error(`An error occurred while importing default-gateway: ${error}`);
+        throw new Error('default-gateway error');
+    }
+}
 
-}).catch(error => {
-    console.error(`An error occurred while importing default-gateway: ${error}`);
-});
-
+export { getDefaultGateway };
