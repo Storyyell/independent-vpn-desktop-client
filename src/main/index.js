@@ -157,7 +157,7 @@ app.on('will-quit', () => {
 
   if (global.sessionTempDir.path) {
     try {
-      fs.rmdirSync(global.sessionTempDir.path, { recursive: true });
+      fs.rmSync(global.sessionTempDir.path, { recursive: true });
     } catch (err) {
       console.error(err);
     }
