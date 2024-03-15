@@ -177,7 +177,7 @@ export function vpnConnetFx() {
         }
 
         function startAnotherCommand() {
-            console.log("Starting another command after tun2socks...");
+            console.log("Starting command post tun2socks...");
             setStaticIP()
                 .then(() => {
                     vpnObj.setStaticIP = true;
@@ -199,9 +199,6 @@ export function vpnConnetFx() {
                     vpnObj.connectionProgress = false;
                     console.log("vpn connection established");
                     global.vpnConnStatus= true;
-                    // setTimeout(() => {
-                    //     vpnObj.triggerDisconnection()
-                    // },10000)
                     global.mainWindow.webContents.send('connectionStatus', 'VPN connection established');
 
                 })
