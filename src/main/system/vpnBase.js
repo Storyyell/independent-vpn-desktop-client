@@ -34,49 +34,29 @@ var vpnObj = {
 // Todo handle the case of multiple vpn disconnection function call on closing and error [ now it wont cause any bugs for performance optimization ]
 // Todo integrate vpn spawn  into vpnObj variable
 
-export function vpnConnet(serverParms) {
+export async function vpnConnet(serverParms) {
     vpnObj.connectionProgress = true;
     console.log(global.sessionTempDir.path);
-    getDefaultGateway()
-    .then((gateway) => {
-        vpnObj.gateway = gateway
+    try {
+        const gateway = await getDefaultGateway();
+        vpnObj.gateway = gateway;
         console.log("VPN connection initializing...");
-    
         global.mainWindow.webContents.send('connectionStatus', 'VPN connection initializing...');
-    
-        global.mainWindow.webContents.send('connectionStatus', 'Fetching server configuration...')
-        pullServerConf(serverParms.device_token, serverParms.countryCode, serverParms.cityCode, serverParms.serverId)
-        .then((res) => {
-    
-            const serverObj = res.data;
-            if(saveV2rayConfig(serverObj)){ // Todo make this function async and use await
-                getIPv4(global.serverUrl)
-                .then((ip) => {
-                    global.server_ip = ip;
-                    console.log(`server ip: ${global.server_ip}`);
-                    vpnObj.triggerConnection(gateway)
-        
-                })
-                .catch((e) => {
-                    console.log("error in getting ip address: " + e.message);
-                    vpnObj.triggerDisconnection(gateway);
-                });
-            }else{
-                vpnObj.triggerDisconnection();
-            }
-    
-        })
-        .catch((e) => {
-            console.log("error pulling server conf : " + e.message);
-            vpnObj.triggerDisconnection(gateway);
-        })
-    
-    })
-    .catch((e) => {
-        console.log(e.message);
-    })
-
-
+        global.mainWindow.webContents.send('connectionStatus', 'Fetching server configuration...');
+        const res = await pullServerConf(serverParms.device_token, serverParms.countryCode, serverParms.cityCode, serverParms.serverId);
+        const serverObj = res.data;
+        if (await saveV2rayConfig(serverObj)) {
+            const ip = await getIPv4(global.serverUrl);
+            global.server_ip = ip;
+            console.log(`server ip: ${global.server_ip}`);
+            vpnObj.triggerConnection(gateway);
+        } else {
+            vpnObj.triggerDisconnection();
+        }
+    } catch (e) {
+        console.log("error in VPN connection: " + e.message);
+        vpnObj.triggerDisconnection();
+    }
 }
 
 export function vpnConnetFx(gateway) {
