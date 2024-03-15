@@ -55,10 +55,11 @@ function App() {
     if(vpnStatusMain !== 'connected'){
 
     console.log("vpn connection triggered fron renderer");
-    if(serverList.servers.length > 0){
+    let sl =  serverList.servers?.[`${selectedItems.countryId}-${selectedItems.cityId}`] || []
+    if(sl.length > 0){
 
-      const randomIndex = Math.floor(Math.random() * serverList.servers.length);
-      const server =  serverList.servers[randomIndex]
+      const randomIndex = Math.floor(Math.random() * sl.length);
+      const server =  sl[randomIndex]
       console.log(server);
 
       let serverParms={
@@ -71,7 +72,8 @@ function App() {
       window.api.triggerConnection(serverParms);
       
     }else{
-      setVpnStatus("please choose country and city")
+      setVpnStatus("server list processing...")
+      setTimeout(() => {setVpnStatus("VPN disconnected")}, 1000);
     }
   }else{
     window.api.triggerDisconnection()

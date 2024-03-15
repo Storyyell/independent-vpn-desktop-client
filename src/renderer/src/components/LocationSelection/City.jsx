@@ -42,7 +42,10 @@ const City = (props) => {
             window.api.getServers(deviceToken, selectedItems?.countryId, event.target.value)
             .then((res) => {
                 setServerList((d)=>{
-                    return {...d, servers:res.data}
+                    return {...d, servers:{
+                        ...d.servers,
+                        [`${selectedItems?.countryId}-${event.target.value}`]:res.data
+                    }}
                 })
             })
             .catch((e) => {
