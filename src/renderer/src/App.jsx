@@ -10,6 +10,7 @@ import { DeviceTokenProvider } from './context/DeviceTokenContext'
 import { SelectionProvider } from './context/SelectionContext'
 import Home from './pages/Home/Home';
 import { Box } from '@mui/material';
+import Header from './components/Header/Header';
 
 
 
@@ -58,6 +59,7 @@ function App() {
               <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <Box className="app grad">
+                  <Header />
                   <Home />
                 </Box>
               </ThemeProvider>
