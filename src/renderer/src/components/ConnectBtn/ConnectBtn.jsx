@@ -12,13 +12,36 @@ const PowerBtn = () => {
   )
 }
 
-const ConnectBtn = () => {
+const ConnectBtn = (props) => {
+
+  let btnStyle = {}
+
+  switch (props.statusText) {
+
+    case 'connected':
+      btnStyle = {
+        background: 'linear-gradient(62deg, #430003 -10.14%, #CC2229 108.2%)'
+      }
+      break;
+    case 'connecting':
+      btnStyle = {
+        animation: 'shadow-pulse 2s infinite'
+      }
+      break;
+    default:
+      btnStyle = {}
+
+  }
+
+
   return (
     <>
-      <Stack direction={'column'} className='btnStyle' >
+      <Stack direction={'column'} className='btnStyle' style={btnStyle} >
         <PowerBtn />
         <Typography variant='overline'>
-          Tap to connect
+          {props.statusText === 'connected' && 'Connected'}
+          {props.statusText === 'disconnected' && 'Tap to connect'}
+          {props.statusText === 'connecting' && 'connecting...'}
         </Typography>
         <Typography variant='caption' sx={{ color: '#888888' }}>
           180.179.194.63
@@ -31,3 +54,5 @@ const ConnectBtn = () => {
 
 
 export default ConnectBtn
+
+

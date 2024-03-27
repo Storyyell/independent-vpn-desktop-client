@@ -79,9 +79,6 @@ function Home() {
                     }}
                     onClick={triggerVpnConnection}
                 >
-                    {/* {vpnStatusMain === 'connected' && 'disconnect vpn'} */}
-                    {/* {vpnStatusMain === 'disconnected' && 'connect vpn'} */}
-                    {/* {vpnStatusMain === 'connecting' && 'connecting...'}{vpnStatusMain === 'connecting' && <CircularProgress size="15px" color="secondary" sx={{ mx: 2 }} />} */}
                     {`Quick connect `}
                     <ArrowRightIcon />
                 </Button>
@@ -91,14 +88,12 @@ function Home() {
                 </Typography>
             </Stack>
             <Box>
-                <ConnectBtn />
+                <ConnectBtn
+                    onClick={triggerVpnConnection}
+                    statusText={vpnStatusMain}
+                />
             </Box>
 
-            <img alt="logo" className="logo" style={genLogoStyle()} src={electronLogo} />
-            <div className="creator">sentinel - dvpn</div>
-            <div className="text">
-                Your Decentralized VPN Solution
-            </div>
             <Stack direction="row" spacing={1} style={{ paddingTop: "8px", alignItems: 'center' }} >
                 <Typography variant="overline" display="block" gutterBottom>
                     {`status :`}
@@ -108,20 +103,6 @@ function Home() {
                 </Typography>
             </Stack>
 
-            <div className="actions">
-                <div className="action">
-                    <Button
-                        size="medium"
-                        variant="outlined"
-                        style={{ minWidth: "150px", height: "40px", borderRadius: "20px" }}
-                        onClick={triggerVpnConnection}
-                    >
-                        {vpnStatusMain === 'connected' && 'disconnect vpn'}
-                        {vpnStatusMain === 'disconnected' && 'connect vpn'}
-                        {vpnStatusMain === 'connecting' && 'connecting...'}{vpnStatusMain === 'connecting' && <CircularProgress size="15px" color="secondary" sx={{ mx: 2 }} />}
-                    </Button>
-                </div>
-            </div>
             <LocationSelection />
         </>
     )
