@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import electronLogo from '../../assets/electron.svg'
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -10,6 +10,8 @@ import { VpnStatusMainContext } from '../../context/VpnStatusMainContext';
 import CircularProgress from '@mui/material/CircularProgress';
 import { DeviceTokenContext } from '../../context/DeviceTokenContext';
 import { SelectionContext } from '../../context/SelectionContext';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import ConnectBtn from '../../components/ConnectBtn/ConnectBtn';
 
 
 // todo add case of revoked device token and followed by re-regisration
@@ -62,6 +64,36 @@ function Home() {
 
     return (
         <>
+            <Stack direction={'column'} spacing={3} alignItems={'center'} my={3}>
+                <Button
+                    size="medium"
+                    variant="outlined"
+                    style={{
+                        width: "184px",
+                        height: "46px",
+                        borderRadius: "23px",
+                        border: '2px solid #CC2229',
+                        color: 'white',
+                        backdropFilter: blur('4.5px'),
+                        background: '#101921'
+                    }}
+                    onClick={triggerVpnConnection}
+                >
+                    {/* {vpnStatusMain === 'connected' && 'disconnect vpn'} */}
+                    {/* {vpnStatusMain === 'disconnected' && 'connect vpn'} */}
+                    {/* {vpnStatusMain === 'connecting' && 'connecting...'}{vpnStatusMain === 'connecting' && <CircularProgress size="15px" color="secondary" sx={{ mx: 2 }} />} */}
+                    {`Quick connect `}
+                    <ArrowRightIcon />
+                </Button>
+
+                <Typography variant={'h4'}>
+                    United States / Buffalo
+                </Typography>
+            </Stack>
+            <Box>
+                <ConnectBtn />
+            </Box>
+
             <img alt="logo" className="logo" style={genLogoStyle()} src={electronLogo} />
             <div className="creator">sentinel - dvpn</div>
             <div className="text">
