@@ -9,9 +9,9 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs'
 import path from 'path'
 import { vpnObj } from './system/vpnBase.js'
-import {registerDevice, pullCountryList, pullCityList, pullServerList, pullServerConf} from './system/ipcs.js'
+import { registerDevice, pullCountryList, pullCityList, pullServerList, pullServerConf } from './system/ipcs.js'
 
-let sessionTempDir={
+let sessionTempDir = {
   path: '',
   uuid: uuidv4()
 };
@@ -24,12 +24,12 @@ function createWindow() {
   let screen_size = screen.getPrimaryDisplay().workAreaSize
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    minWidth: 380,
-    minHeight: 640,
-    width: 380,
-    height: 640,
-    x: screen_size.width - 380 - 40,
-    y: screen_size.height - 640 - 30,
+    minWidth: 606,
+    minHeight: 847,
+    width: 606,
+    height: 847,
+    x: screen_size.width - 606 - 40,
+    y: screen_size.height - 847 - 30,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -73,9 +73,9 @@ function createWindow() {
   })
 
   ipcMain.handle('getCities', async (event, device_token, countryCode) => {
-    return pullCityList( device_token, countryCode)
+    return pullCityList(device_token, countryCode)
   })
-  
+
   ipcMain.handle('getServers', async (event, device_token, countryCode, cityCode) => {
     return pullServerList(device_token, countryCode, cityCode)
   })
@@ -98,7 +98,7 @@ function createWindow() {
   ]);
   trayvar.on('click', function () { mainWindow.show(); });
   trayvar.setContextMenu(contextMenu)
-  
+
   mainWindow.on('minimize', function (event) {
     event.preventDefault();
     mainWindow.hide();
@@ -130,7 +130,7 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 
-  })
+})
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -144,16 +144,16 @@ app.on('window-all-closed', () => {
 app.on('ready', () => {
   const tempDir = os.tmpdir();
 
-    fs.mkdtemp(path.join(tempDir, sessionTempDir.uuid), (err, folder) => {
-      if (err) throw err;
-      sessionTempDir.path = folder;
-      
-    });
+  fs.mkdtemp(path.join(tempDir, sessionTempDir.uuid), (err, folder) => {
+    if (err) throw err;
+    sessionTempDir.path = folder;
+
+  });
 
 })
 
 app.on('will-quit', () => {
-  vpnObj.triggerDisconnection(); 
+  vpnObj.triggerDisconnection();
 
   //Todo: remove file just after connection and use protobuff to store the data
   if (global.sessionTempDir.path) {
