@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { Box, Stack } from '@mui/material';
+import { Box, IconButton, Stack } from '@mui/material';
 import electronLogo from '../../assets/electron.svg'
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -12,6 +12,7 @@ import { DeviceTokenContext } from '../../context/DeviceTokenContext';
 import { SelectionContext } from '../../context/SelectionContext';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ConnectBtn from '../../components/ConnectBtn/ConnectBtn';
+import shadows from '@mui/material/styles/shadows';
 
 
 // todo add case of revoked device token and followed by re-regisration
@@ -62,6 +63,7 @@ function Home() {
         }
     }
 
+
     return (
         <>
             <Stack direction={'column'} spacing={3} alignItems={'center'} my={3}>
@@ -77,7 +79,7 @@ function Home() {
                         backdropFilter: blur('4.5px'),
                         background: '#101921'
                     }}
-                    onClick={triggerVpnConnection}
+                // onClick={triggerVpnConnection}
                 >
                     {`Quick connect `}
                     <ArrowRightIcon />
@@ -92,6 +94,7 @@ function Home() {
                     onClick={triggerVpnConnection}
                     statusText={vpnStatusMain}
                 />
+
             </Box>
 
             <Stack direction="row" spacing={1} style={{ paddingTop: "8px", alignItems: 'center' }} >

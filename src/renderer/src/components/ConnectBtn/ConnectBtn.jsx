@@ -36,7 +36,17 @@ const ConnectBtn = (props) => {
 
   return (
     <>
-      <Stack direction={'column'} className='btnStyle' style={btnStyle} >
+      <Stack
+        direction={'column'}
+        className='btnStyle'
+        style={btnStyle}
+        onClick={props.onClick}
+        sx={{
+          transition: 'transform 0.3s ease-in-out',
+          '&:hover': {
+            transform: 'scale(1.05)'
+          }
+        }}>
         <PowerBtn />
         <Typography variant='overline'>
           {props.statusText === 'connected' && 'Connected'}
