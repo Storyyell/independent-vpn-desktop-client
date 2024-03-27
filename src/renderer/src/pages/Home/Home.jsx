@@ -1,15 +1,15 @@
 import React from 'react';
 import { useState } from 'react';
 import { Stack } from '@mui/material';
-import electronLogo from '../assets/electron.svg'
+import electronLogo from '../../assets/electron.svg'
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import LocationSelection from '../components/LocationSelection/LocationSelection';
-import { ServerListContext } from '../context/ServerListContext';
-import { VpnStatusMainContext } from '../context/VpnStatusMainContext';
+import LocationSelection from '../../components/LocationSelection/LocationSelection';
+import { ServerListContext } from '../../context/ServerListContext';
+import { VpnStatusMainContext } from '../../context/VpnStatusMainContext';
 import CircularProgress from '@mui/material/CircularProgress';
-import { DeviceTokenContext } from '../context/DeviceTokenContext';
-import { SelectionContext } from '../context/SelectionContext';
+import { DeviceTokenContext } from '../../context/DeviceTokenContext';
+import { SelectionContext } from '../../context/SelectionContext';
 
 
 // todo add case of revoked device token and followed by re-regisration

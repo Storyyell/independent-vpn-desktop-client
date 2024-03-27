@@ -8,7 +8,7 @@ import { ServerListProvider } from './context/ServerListContext'
 import { VpnStatusMainProvider } from './context/VpnStatusMainContext'
 import { DeviceTokenProvider } from './context/DeviceTokenContext'
 import { SelectionProvider } from './context/SelectionContext'
-import Home from './pages/Home';
+import Home from './pages/Home/Home';
 
 
 
