@@ -11,28 +11,33 @@ const Header = () => {
     setMenuClick(!menuClick)
   }
 
+  const mentIconStyle = {
+    width: '32px',
+    height: '32px'
+  }
   return (
-    <Stack direction={'row'} width={'100%'} style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-      <IconButton sx={{ p: 1, m: 1 }} onClick={handleMenuClick}>
-        {menuClick ? < CloseIcon /> : <MenuIcon />}
+    <Stack direction={'row'} width={'100%'} style={{ justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px' }}>
+
+      <IconButton onClick={handleMenuClick}>
+        {menuClick ? < CloseIcon style={mentIconStyle} /> : <MenuIcon style={mentIconStyle} />}
       </IconButton>
 
       <Button
         variant="contained"
         size='small'
         sx={{
-          height: '30px',
-          borderRadius: "15px",
-          mx: 2,
-          my: 1,
-          p: 1,
+          height: '32px',
+          borderRadius: '16px',
+          background: '#CC2229',
+          backdropFilter: 'blur(2px)'
+
         }}>
-        <Typography variant="overline" sx={{ m: 1, fontSize: '9px' }}>
+        <Typography variant="overline" sx={{ fontSize: '12px', color: 'white' }}>
           Upgrade to Premium
         </Typography>
-
       </Button>
-    </Stack>
+
+    </Stack >
   )
 }
 

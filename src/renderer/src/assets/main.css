@@ -36,5 +36,5 @@ body {
 }
 
 .grad {
-  background-image: linear-gradient(to right, rgba(30, 26, 27, 1), rgba(23, 20, 20, 1));
+  background: linear-gradient(180deg, #1E1A1B 0%, #171414 100%);
 }
