@@ -8,6 +8,8 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
   user-select: none;
 }
@@ -22,4 +24,17 @@ body {
 
 .logo:hover {
   filter: drop-shadow(0 0 1.2em #6988e6aa);
+}
+
+.app {
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  flex-direction: column;
+  width: 100%;
+  flex: 1;
+}
+
+.grad {
+  background-image: linear-gradient(to right, rgba(30, 26, 27, 1), rgba(23, 20, 20, 1));
 }

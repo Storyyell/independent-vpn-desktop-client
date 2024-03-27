@@ -9,6 +9,7 @@ import { VpnStatusMainProvider } from './context/VpnStatusMainContext'
 import { DeviceTokenProvider } from './context/DeviceTokenContext'
 import { SelectionProvider } from './context/SelectionContext'
 import Home from './pages/Home/Home';
+import { Box } from '@mui/material';
 
 
 
@@ -56,7 +57,9 @@ function App() {
             <DeviceTokenProvider>
               <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <Home />
+                <Box className="app grad">
+                  <Home />
+                </Box>
               </ThemeProvider>
             </DeviceTokenProvider>
           </SelectionProvider>
