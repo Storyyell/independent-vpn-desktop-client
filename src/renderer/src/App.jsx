@@ -4,7 +4,13 @@ import { useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { VpnStatusMainContext } from './context/VpnStatusMainContext';
+import { ServerListProvider } from './context/ServerListContext'
+import { VpnStatusMainProvider } from './context/VpnStatusMainContext'
+import { DeviceTokenProvider } from './context/DeviceTokenContext'
+import { SelectionProvider } from './context/SelectionContext'
 import Home from './pages/Home';
+
+
 
 const theme = createTheme({
   palette: {
@@ -44,10 +50,18 @@ function App() {
 
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Home />
-      </ThemeProvider>
+      <ServerListProvider>
+        <VpnStatusMainProvider>
+          <SelectionProvider>
+            <DeviceTokenProvider>
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Home />
+              </ThemeProvider>
+            </DeviceTokenProvider>
+          </SelectionProvider>
+        </VpnStatusMainProvider>
+      </ServerListProvider>
     </>
   )
 }
