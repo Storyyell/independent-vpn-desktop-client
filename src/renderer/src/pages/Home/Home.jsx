@@ -12,6 +12,7 @@ import { SelectionContext } from '../../context/SelectionContext';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ConnectBtn from '../../components/ConnectBtn/ConnectBtn';
 import GeoSelection from '../../components/GeoSelection/GeoSelection';
+import VpnTraffic from '../../components/VpnTraffic/VpnTraffic';
 
 
 
@@ -136,6 +137,7 @@ function Home(props) {
 
             {/* <LocationSelection /> */}
 
+            <VpnTraffic />
             <GeoSelection
                 open={geoSelection}
                 onClose={() => setGeoSelection(false)}
