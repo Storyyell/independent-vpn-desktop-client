@@ -48,6 +48,55 @@ const GeoSelection = (props) => {
     }
   }, [deviceToken])
 
+  React.useEffect(() => {
+    if (selectedItems?.countryId && deviceToken) {
+      window.api.getCities(deviceToken, selectedItems?.countryId)
+        .then((res) => {
+          setServerList((d) => {
+            return {
+              ...d, cities: {
+                ...d.cities,
+                [selectedItems?.countryId]: res.data
+              }
+            }
+          })
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    }
+
+  }, [selectedItems?.countryId, deviceToken])
+
+
+  const handleCityChange = (cityId_) => {
+    setSelectedItems((d) => {
+      return { ...d, cityId: cityId_ }
+    })
+    if (deviceToken && selectedItems?.countryId && cityId_) {
+      window.api.getServers(deviceToken, selectedItems?.countryId, cityId_)
+        .then((res) => {
+          setServerList((d) => {
+            return {
+              ...d, servers: {
+                ...d.servers,
+                [`${selectedItems?.countryId}-${cityId_}`]: res.data
+              }
+            }
+          })
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    }
+  };
+
+  const handleCountryChange = (countryId_) => {
+    setLoadCityList(true)
+    setSelectedItems((d) => {
+      return { ...d, countryId: countryId_, cityId: '' }
+    })
+  }
 
   const DrawerList = (
     <>
@@ -92,8 +141,9 @@ const GeoSelection = (props) => {
                 serverList?.cities[selectedItems?.countryId] ?
                   serverList?.cities[selectedItems?.countryId]?.map((d, i) => {
                     return (
-                      <GeoItem key={i} data={{ ...d, code: (serverList?.countries.find(d => d.id == selectedItems?.countryId))?.code }} onClick={() => { }} />
-
+                      <GeoItem key={i} data={{ ...d, code: (serverList?.countries.find(d => d.id == selectedItems?.countryId))?.code }} onClick={(val) => {
+                        handleCityChange(val)
+                      }} />
                     )
                   }) :
 
@@ -107,10 +157,7 @@ const GeoSelection = (props) => {
                   serverList?.countries.map((d, i) => {
                     return (
                       <GeoItem key={d?.id} data={d} onClick={(val) => {
-                        setLoadCityList(true)
-                        setSelectedItems((d) => {
-                          return { ...d, countryId: val, cityId: '' }
-                        })
+                        handleCountryChange(val)
                       }} />
                     )
                   }) :
