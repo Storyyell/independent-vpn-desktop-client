@@ -134,7 +134,7 @@ function Home(props) {
                 </Typography>
             </Stack>
 
-            <LocationSelection />
+            {/* <LocationSelection /> */}
 
             <GeoSelection
                 open={geoSelection}
