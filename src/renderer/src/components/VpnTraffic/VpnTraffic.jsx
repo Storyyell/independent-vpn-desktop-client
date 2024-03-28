@@ -9,7 +9,7 @@ const VpnTraffic = () => {
       <Stack direction={'row'} justifyContent={'space-between'} sx={{ mx: '70px' }}>
         <Stack direction={'row'}>
           <Stack justifyContent={'center'} alignItems={'center'} sx={{ p: 1, m: 'auto', backgroundColor: 'whitesmoke', borderRadius: '10px' }}>
-            <ArrowCircleDownIcon fontSize='large' sx={{ color: '#232F4E' }} />
+            <ArrowCircleDownIcon fontSize='small' sx={{ color: '#232F4E' }} />
           </Stack>
           <Stack direction={'column'} sx={{ px: 2 }}>
             <Typography variant={'h6'} fontWeight={'800'}>Downlink</Typography>
@@ -18,7 +18,7 @@ const VpnTraffic = () => {
         </Stack>
         <Stack direction={'row'}>
           <Stack justifyContent={'center'} alignItems={'center'} sx={{ p: 1, m: 'auto', backgroundColor: 'whitesmoke', borderRadius: '10px' }}>
-            <ArrowCircleUpIcon fontSize='large' sx={{ color: '#232F4E' }} />
+            <ArrowCircleUpIcon fontSize='small' sx={{ color: '#232F4E' }} />
           </Stack>
           <Stack direction={'column'} sx={{ px: 2 }}>
             <Typography variant={'h6'} fontWeight={'800'}>Uplink</Typography>
