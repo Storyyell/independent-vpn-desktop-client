@@ -87,22 +87,37 @@ const GeoSelection = (props) => {
         <Box sx={{ width: '100%' }} role="presentation" >
           <List>
             {
-              loadCityList ? serverList?.cities[selectedItems?.countryId]?.map((d, i) => {
-                return (
-                  <GeoItem key={i} data={{ ...d, code: (serverList?.countries.find(d => d.id == selectedItems?.countryId))?.code }} onClick={() => { }} />
+              loadCityList ?
 
-                )
-              }) :
-                serverList?.countries.map((d, i) => {
-                  return (
-                    <GeoItem key={d?.id} data={d} onClick={(val) => {
-                      setLoadCityList(true)
-                      setSelectedItems((d) => {
-                        return { ...d, countryId: val, cityId: '' }
-                      })
-                    }} />
-                  )
-                })
+                serverList?.cities[selectedItems?.countryId] ?
+                  serverList?.cities[selectedItems?.countryId]?.map((d, i) => {
+                    return (
+                      <GeoItem key={i} data={{ ...d, code: (serverList?.countries.find(d => d.id == selectedItems?.countryId))?.code }} onClick={() => { }} />
+
+                    )
+                  }) :
+
+                  <Typography variant='subtitle2' sx={{ m: 2 }}>
+                    Loading cities list ...
+                  </Typography>
+                :
+
+                serverList?.countries ?
+
+                  serverList?.countries.map((d, i) => {
+                    return (
+                      <GeoItem key={d?.id} data={d} onClick={(val) => {
+                        setLoadCityList(true)
+                        setSelectedItems((d) => {
+                          return { ...d, countryId: val, cityId: '' }
+                        })
+                      }} />
+                    )
+                  }) :
+
+                  <Typography variant='subtitle2' sx={{ m: 2 }}>
+                    Loading country list ...
+                  </Typography>
             }
           </List>
           <Divider />
