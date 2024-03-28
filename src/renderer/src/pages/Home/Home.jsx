@@ -7,12 +7,10 @@ import Typography from '@mui/material/Typography';
 import LocationSelection from '../../components/LocationSelection/LocationSelection';
 import { ServerListContext } from '../../context/ServerListContext';
 import { VpnStatusMainContext } from '../../context/VpnStatusMainContext';
-import CircularProgress from '@mui/material/CircularProgress';
 import { DeviceTokenContext } from '../../context/DeviceTokenContext';
 import { SelectionContext } from '../../context/SelectionContext';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ConnectBtn from '../../components/ConnectBtn/ConnectBtn';
-import shadows from '@mui/material/styles/shadows';
 
 
 
@@ -80,6 +78,18 @@ function Home(props) {
         }
     }
 
+    const getObj = (type, countryId, cityId) => {
+
+        switch (type) {
+            case 'country':
+                return serverList.countries.find((c) => c.id === countryId)?.name || '----'
+            case 'city':
+                return serverList.cities[countryId].find((c) => c.id === cityId)?.name || '----'
+            default:
+                return '----'
+        }
+    }
+
     return (
         <>
             <Stack direction={'column'} spacing={3} alignItems={'center'} my={3}>
@@ -102,7 +112,7 @@ function Home(props) {
                 </Button>
 
                 <Typography variant={'h4'}>
-                    United States / Buffalo
+                    {`${selectedItems.countryId ? getObj('country', selectedItems.countryId, null) : '----'} / ${selectedItems.cityId ? getObj('city', selectedItems.countryId, selectedItems.cityId) : '----'}`}
                 </Typography>
             </Stack>
             <Box>
