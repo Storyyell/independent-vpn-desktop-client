@@ -3,43 +3,52 @@ import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
 import { Paper, Stack, TextField, Typography } from '@mui/material';
 import favIcon from '../../assets/favIcon.svg';
-import { GeoItem } from '../GeoItem/GeoItem';
+import ListItemButton from '@mui/material/ListItemButton';
 
 
 export const GeoItem = (props) => {
   const d = props.data
+
+  const mentIconStyle = {
+    width: '32px',
+    height: '32px'
+  }
+
+
+
   return (
-    <ListItem key={d.id} sx={{ px: 0 }}>
-      <Paper sx={{ width: '100%', p: 2 }}>
-        <Stack direction={'row'} justifyContent={'space-between'} width={'100%'}>
-          <Stack direction={'column'}>
-            <Stack direction={'row'} spacing={2}>
-              <img src={`https://flagcdn.com/36x27/${d?.code?.toLowerCase()}.png`} height={'20px'}></img>
-              <Typography>
-                {d.name}
-              </Typography>
+    <ListItem key={d.id} sx={{ px: 0 }} >
+      <ListItemButton onClick={() => { props.onClick(d.id) }}>
+        <Paper sx={{ width: '100%', p: 2 }}>
+          <Stack direction={'row'} justifyContent={'space-between'} width={'100%'}>
+            <Stack direction={'column'}>
+              <Stack direction={'row'} spacing={2}>
+                <img src={`https://flagcdn.com/36x27/${d?.code?.toLowerCase()}.png`} height={'20px'} loading='lazy'></img>
+                <Typography>
+                  {d.name}
+                </Typography>
+
+              </Stack>
+
+              <Box>
+                <Typography display={'inline'} sx={{ paddingRight: 1 }} variant='caption' fontSize={15}>
+                  Node:
+                </Typography>
+                <Typography display={'inline'} variant='subtitle2 ' fontSize={15}>
+                  {d.servers_available}
+                </Typography>
+              </Box>
 
             </Stack>
-
-            <Box>
-              <Typography display={'inline'} sx={{ paddingRight: 1 }} variant='caption' fontSize={15}>
-                Node:
-              </Typography>
-              <Typography display={'inline'} variant='subtitle2 ' fontSize={15}>
-                {d.servers_available}
-              </Typography>
-            </Box>
-
-
-          </Stack>
-          <Stack alignItems={'center'} justifyContent={'center'} >
-            <Stack style={mentIconStyle} alignItems={'center'} justifyContent={'center'} sx={{ backgroundColor: 'gray', borderRadius: '4px' }}>
-              <img alt="favicon" src={favIcon} style={{ fill: 'red' }} loading="lazy" width='15px' />
+            <Stack alignItems={'center'} justifyContent={'center'} >
+              <Stack style={mentIconStyle} alignItems={'center'} justifyContent={'center'} sx={{ backgroundColor: 'gray', borderRadius: '4px' }}>
+                <img alt="favicon" src={favIcon} style={{ fill: 'red' }} loading="lazy" width='15px' />
+              </Stack>
             </Stack>
           </Stack>
-        </Stack>
-        {/* <Divider /> */}
-      </Paper>
+          {/* <Divider /> */}
+        </Paper>
+      </ListItemButton>
     </ListItem>
   )
 }

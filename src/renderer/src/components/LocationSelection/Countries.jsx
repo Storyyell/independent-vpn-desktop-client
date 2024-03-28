@@ -11,18 +11,18 @@ import { SelectionContext } from '../../context/SelectionContext';
 const Countries = (props) => {
 
     const { serverList, setServerList } = React.useContext(ServerListContext);
-    const {deviceToken, setDeviceToken} = React.useContext(DeviceTokenContext);
+    const { deviceToken, setDeviceToken } = React.useContext(DeviceTokenContext);
     const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
 
 
     let countries = serverList.countries
 
-    useEffect(( ) => {
+    useEffect(() => {
         if (deviceToken) {
             window.api.getCountries(deviceToken)
                 .then((res) => {
-                    setServerList((d)=>{
-                        return {...d, countries:res.data}
+                    setServerList((d) => {
+                        return { ...d, countries: res.data }
                     })
                 })
                 .catch((e) => {
@@ -32,15 +32,15 @@ const Countries = (props) => {
     }, [deviceToken])
 
     const handleChange = (event) => {
-        setSelectedItems((d)=>{
-            return {...d, countryId: event.target.value, cityId: ''}
+        setSelectedItems((d) => {
+            return { ...d, countryId: event.target.value, cityId: '' }
         })
 
     };
 
 
     return (
-        <FormControl fullWidth sx={{py:2}}>
+        <FormControl fullWidth sx={{ py: 2 }}>
             <InputLabel id="country-select-label">country</InputLabel>
             <Select
                 labelId="country-select-label"
@@ -48,12 +48,12 @@ const Countries = (props) => {
                 value={selectedItems.countryId}
                 label="country"
                 onChange={handleChange}
-                sx={{width:"150px"}}
+                sx={{ width: "150px" }}
                 size='small'
             >
-            {countries.map((country) => (
-                <MenuItem key={country.id} value={country.id}>{country?.name}</MenuItem>
-            ))}
+                {countries.map((country) => (
+                    <MenuItem key={country.id} value={country.id}>{country?.name}</MenuItem>
+                ))}
             </Select>
         </FormControl>
     )

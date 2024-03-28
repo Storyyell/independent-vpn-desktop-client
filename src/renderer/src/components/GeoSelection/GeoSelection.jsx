@@ -17,17 +17,36 @@ import favIcon from '../../assets/favIcon.svg';
 import BoltIcon from '@mui/icons-material/Bolt';
 import { GeoItem } from '../GeoItem/GeoItem';
 import { ServerListContext } from '../../context/ServerListContext';
+import { SelectionContext } from '../../context/SelectionContext';
+import { DeviceTokenContext } from '../../context/DeviceTokenContext';
 
 
 const GeoSelection = (props) => {
 
   const [menuClick, setMenuClick] = React.useState(false)
   const { serverList, setServerList } = React.useContext(ServerListContext);
+  const { deviceToken, setDeviceToken } = React.useContext(DeviceTokenContext);
+  const [loadCityList, setLoadCityList] = React.useState(false)
+  const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
 
   const mentIconStyle = {
     width: '32px',
     height: '32px'
   }
+
+  React.useEffect(() => {
+    if (deviceToken) {
+      window.api.getCountries(deviceToken)
+        .then((res) => {
+          setServerList((d) => {
+            return { ...d, countries: res.data }
+          })
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    }
+  }, [deviceToken])
 
 
   const DrawerList = (
@@ -35,8 +54,17 @@ const GeoSelection = (props) => {
       <Stack direction={'column'} spacing={3} sx={{ mx: 4, height: '80vh' }}>
         <Stack direction={'row'} width={'100%'} style={{ justifyContent: 'space-between', alignItems: 'center', padding: '16px 0px' }}>
 
-          <IconButton onClick={() => { setMenuClick(!menuClick) }}>
-            {menuClick ? <ArrowBackIcon style={mentIconStyle} /> : <CloseIcon style={mentIconStyle} />}
+          <IconButton onClick={() => {
+            if (loadCityList) {
+              setSelectedItems((d) => {
+                return { ...d, cityId: '' }
+              })
+              setLoadCityList(false)
+            } else {
+              props.onClose()
+            }
+          }}>
+            {loadCityList ? <ArrowBackIcon style={mentIconStyle} /> : <CloseIcon style={mentIconStyle} />}
           </IconButton>
 
           <IconButton>
@@ -56,19 +84,25 @@ const GeoSelection = (props) => {
 
         <TextField id="outlined-basic" label="Search" variant="outlined" />
 
-        {/* <GeoItem /> */}
-
-        {/*  */}
-        {/*  */}
-
-        <Box sx={{ width: '100%' }} role="presentation" onClick={props.onClose}>
+        <Box sx={{ width: '100%' }} role="presentation" >
           <List>
             {
-              serverList?.countries.map((d, i) => {
+              loadCityList ? serverList?.cities[selectedItems?.countryId]?.map((d, i) => {
                 return (
-                  <GeoItem key={i} data={d} />
+                  <GeoItem key={i} data={{ ...d, code: (serverList?.countries.find(d => d.id == selectedItems?.countryId))?.code }} onClick={() => { }} />
+
                 )
-              })
+              }) :
+                serverList?.countries.map((d, i) => {
+                  return (
+                    <GeoItem key={d?.id} data={d} onClick={(val) => {
+                      setLoadCityList(true)
+                      setSelectedItems((d) => {
+                        return { ...d, countryId: val, cityId: '' }
+                      })
+                    }} />
+                  )
+                })
             }
           </List>
           <Divider />
