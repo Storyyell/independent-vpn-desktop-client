@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, IconButton, Stack } from '@mui/material';
 import electronLogo from '../../assets/electron.svg'
 import Button from '@mui/material/Button';
@@ -15,15 +15,39 @@ import ConnectBtn from '../../components/ConnectBtn/ConnectBtn';
 import shadows from '@mui/material/styles/shadows';
 
 
+
 // todo add case of revoked device token and followed by re-regisration
 
-function Home() {
+function Home(props) {
 
     const [vpnStatus, setVpnStatus] = useState("VPN disconnected");
-    const { serverList, setServerList } = React.useContext(ServerListContext);
     const { vpnStatusMain, setVpnStatusMain } = React.useContext(VpnStatusMainContext);
+    const { serverList, setServerList } = React.useContext(ServerListContext);
     const { deviceToken, setDeviceToken } = React.useContext(DeviceTokenContext);
     const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
+
+    // for vpn status listenening
+    useEffect(() => {
+        const handleConnectionStatus = (arg) => {
+            setVpnStatus(arg);
+
+            if (arg === 'VPN connection established') {
+                setVpnStatusMain('connected');
+            } else if (arg === 'VPN disconnected') {
+                setVpnStatusMain('disconnected');
+            } else {
+                setVpnStatusMain('connecting');
+            }
+
+            console.log(arg);
+        };
+
+        window.ipcRenderer.on('connectionStatus', handleConnectionStatus);
+
+        return () => {
+            window.ipcRenderer.removeAllListeners('connectionStatus');
+        };
+    }, []);
 
 
     function triggerVpnConnection() {
@@ -55,14 +79,6 @@ function Home() {
             window.api.triggerDisconnection()
         }
     }
-
-
-    function genLogoStyle() {
-        return {
-            filter: vpnStatusMain === 'connected' ? 'drop-shadow(0 0 1.2em #6988e6aa)' : 'none'
-        }
-    }
-
 
     return (
         <>
