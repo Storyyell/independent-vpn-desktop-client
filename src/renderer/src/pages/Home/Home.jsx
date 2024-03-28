@@ -11,6 +11,7 @@ import { DeviceTokenContext } from '../../context/DeviceTokenContext';
 import { SelectionContext } from '../../context/SelectionContext';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ConnectBtn from '../../components/ConnectBtn/ConnectBtn';
+import GeoSelection from '../../components/GeoSelection/GeoSelection';
 
 
 
@@ -23,6 +24,7 @@ function Home(props) {
     const { serverList, setServerList } = React.useContext(ServerListContext);
     const { deviceToken, setDeviceToken } = React.useContext(DeviceTokenContext);
     const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
+    const [geoSelection, setGeoSelection] = React.useState(false);
 
     // for vpn status listenening
     useEffect(() => {
@@ -105,12 +107,12 @@ function Home(props) {
                         backdropFilter: blur('4.5px'),
                         background: '#101921'
                     }}
-                // onClick={triggerVpnConnection}
+                    onClick={() => setGeoSelection(true)}
                 >
                     {`Quick connect `}
                     <ArrowRightIcon />
                 </Button>
-
+                {/* todo make text autoscroll */}
                 <Typography variant={'h4'}>
                     {`${selectedItems.countryId ? getObj('country', selectedItems.countryId, null) : '----'} / ${selectedItems.cityId ? getObj('city', selectedItems.countryId, selectedItems.cityId) : '----'}`}
                 </Typography>
@@ -133,6 +135,11 @@ function Home(props) {
             </Stack>
 
             <LocationSelection />
+
+            <GeoSelection
+                open={geoSelection}
+                onClose={() => setGeoSelection(false)}
+            />
         </>
     )
 }
