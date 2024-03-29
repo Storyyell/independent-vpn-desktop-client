@@ -24,7 +24,7 @@ function SettingsItem(props) {
           </Typography>
         </Stack>
       </Grid>
-      <Grid item xs={1} sx={{ textAlign: 'end' }} justifyContent={'flex-end'} alignItems={'center'} display={'flex'}>
+      <Grid item xs={2} sx={{ textAlign: 'end' }} justifyContent={'flex-end'} alignItems={'center'} display={'flex'}>
         {variant == 1 && <KeyboardArrowRightIcon fontSize='medium' />}
         {variant == 2 && <Switch defaultChecked fontSize='medium' />}
         {variant == 3 && <Select
