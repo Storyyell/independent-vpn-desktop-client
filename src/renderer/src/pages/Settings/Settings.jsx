@@ -25,6 +25,10 @@ const Settings = (props) => {
             setSettingsPage('home')
             break;
 
+          case 'support':
+            setSettingsPage('home')
+            break;
+
           default:
             setSettingsPage('home')
             props.onClick()

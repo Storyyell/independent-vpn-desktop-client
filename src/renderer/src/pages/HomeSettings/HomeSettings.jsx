@@ -66,14 +66,14 @@ const HomeSettings = (props) => {
       title: 'Logs',
       desc: 'See Connection Logs',
       variant: 1,
-      onClick: () => { props.setSettingsPage('vpnsetting') }
+      onClick: () => { }
 
     },
     {
       title: 'Subscription',
       desc: 'Your current plan is Free',
       variant: 9,
-      onClick: () => { props.setSettingsPage('vpnsetting') }
+      onClick: () => { }
 
     }]
 
@@ -127,7 +127,9 @@ const HomeSettings = (props) => {
       <Box variant='div' sx={{ width: '100%' }}>
         <List>
           <ListItem disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={() => {
+              props.setSettingsPage('support')
+            }}>
               <AppItem title={'Support'} desc={'Troubleshooting, contact support etc.'} variant={1} />
             </ListItemButton>
           </ListItem>
