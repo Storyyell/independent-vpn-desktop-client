@@ -3,47 +3,7 @@ import SettingsHeader from '../../components/SettingsHeader/SettingsHeader'
 import { Box, Button, Chip, Divider, Grid, List, ListItem, ListItemButton, MenuItem, Select, Stack, Typography } from '@mui/material'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Switch from '@mui/material/Switch';
-
-
-function AppItem(props) {
-
-  const variant = parseInt(props.variant)
-  // const variant = 1
-
-
-  return (
-    <Grid container sx={{ marginBottom: 1, display: (variant != 0 ? 'flex' : 'none') }}>
-      <Grid item xs>
-        <Stack direction="column" spacing={1}>
-          <Typography variant={'subtitle1'} sx={{ fontWeight: 600 }}>
-            {props.title}
-          </Typography>
-
-          <Typography variant={'caption'} >
-            {props.desc}
-          </Typography>
-        </Stack>
-      </Grid>
-      <Grid item xs={4} sx={{ textAlign: 'end' }} justifyContent={'flex-end'} alignItems={'center'} display={'flex'}>
-        {variant == 1 && <KeyboardArrowRightIcon fontSize='medium' />}
-        {variant == 2 && <Switch defaultChecked fontSize='medium' />}
-        {variant == 3 && <Select
-          // labelId="demo-simple-select-label"
-          // id="demo-simple-select"
-          value={'v2ray'}
-          label="Age"
-          // onChange={handleChange}
-          size='small'
-          sx={{ width: '100px' }}
-        >
-          <MenuItem value={'v2ray'}>v2ray</MenuItem>
-          <MenuItem value={'wireguard'}>wireguard</MenuItem>
-        </Select>}
-
-      </Grid>
-    </Grid>
-  )
-}
+import SettingsItem from '../../components/SettingsItem/SettingsItem';
 
 const homeSettingsJson = [
   {
@@ -101,8 +61,8 @@ const VpnSetting = () => {
               return (
                 <Box sx={{ paddingBottom: 1 }}>
                   <ListItem key={index} disablePadding>
-                    <ListItemButton>
-                      <AppItem title={item.title} desc={item.desc} variant={item.variant} />
+                    <ListItemButton sx={{ p: '3px', borderRadius: 1 }}>
+                      <SettingsItem title={item.title} desc={item.desc} variant={item.variant} />
                     </ListItemButton>
                   </ListItem>
                   <Divider variant="fullWidth" component="li" />
@@ -118,8 +78,8 @@ const VpnSetting = () => {
       <Box variant='div' sx={{ width: '100%' }}>
         <List>
           <ListItem disablePadding>
-            <ListItemButton>
-              <AppItem title={'Support'} desc={'Troubleshooting, contact support etc.'} variant={1} />
+            <ListItemButton sx={{ p: '3px', borderRadius: 1 }}>
+              <SettingsItem title={'Support'} desc={'Troubleshooting, contact support etc.'} variant={1} />
             </ListItemButton>
           </ListItem>
         </List>
