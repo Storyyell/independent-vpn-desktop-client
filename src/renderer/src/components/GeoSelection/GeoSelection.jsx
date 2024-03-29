@@ -100,7 +100,7 @@ const GeoSelection = (props) => {
 
   const DrawerList = (
     <>
-      <Stack direction={'column'} spacing={3} sx={{ mx: 4, height: '80vh' }}>
+      <Stack direction={'column'} spacing={3} sx={{ px: 4, height: '80vh' }}>
         <Stack direction={'row'} width={'100%'} style={{ justifyContent: 'space-between', alignItems: 'center', padding: '16px 0px' }}>
 
           <IconButton onClick={() => {
@@ -134,7 +134,7 @@ const GeoSelection = (props) => {
         <TextField id="outlined-basic" label="Search" variant="outlined" />
 
         <Box sx={{ width: '100%' }} role="presentation" >
-          <List>
+          <List >
             {
               loadCityList ?
 

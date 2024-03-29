@@ -6,7 +6,8 @@ import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 const VpnTraffic = () => {
   return (
     <Box sx={{ my: 8, width: '100%' }} >
-      <Stack direction={'row'} justifyContent={'space-between'} sx={{ mx: '70px' }}>
+      <Stack direction={'row'} justifyContent={'space-around'}>
+
         <Stack direction={'row'}>
           <Stack justifyContent={'center'} alignItems={'center'} sx={{ p: 1, m: 'auto', backgroundColor: 'whitesmoke', borderRadius: '10px' }}>
             <ArrowCircleDownIcon fontSize='small' sx={{ color: '#232F4E' }} />
@@ -16,6 +17,7 @@ const VpnTraffic = () => {
             <Typography variant={'h6'}>0.00 KB/s</Typography>
           </Stack>
         </Stack>
+
         <Stack direction={'row'}>
           <Stack justifyContent={'center'} alignItems={'center'} sx={{ p: 1, m: 'auto', backgroundColor: 'whitesmoke', borderRadius: '10px' }}>
             <ArrowCircleUpIcon fontSize='small' sx={{ color: '#232F4E' }} />
@@ -25,6 +27,7 @@ const VpnTraffic = () => {
             <Typography variant={'h6'}>0.00 KB/s</Typography>
           </Stack>
         </Stack>
+
       </Stack>
     </Box>
   )

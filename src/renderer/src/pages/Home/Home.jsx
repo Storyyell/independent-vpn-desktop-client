@@ -141,6 +141,7 @@ function Home(props) {
             <GeoSelection
                 open={geoSelection}
                 onClose={() => setGeoSelection(false)}
+
             />
         </>
     )
