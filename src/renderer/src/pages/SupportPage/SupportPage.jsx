@@ -4,40 +4,46 @@ import openBook from '../../assets/open_book.svg'
 import SettingsItem from '../../components/SettingsItem/SettingsItem'
 
 
-const SupportPage = () => {
+const SupportPage = (props) => {
 
   const supportSettingsJson = [
     {
       title: 'Create ticket',
       desc: 'Create and send a ticket to our support team',
-      variant: 1
+      variant: 1,
+      onClick: () => { }
     },
     {
       title: 'Telegram Community',
       desc: 'Ask Community for Help',
-      variant: 1
+      variant: 1,
+      onClick: () => { }
     },
     {
       title: 'Report a bug',
       desc: 'Found an issue in our app? Let us know and we wll ge it fixed',
-      variant: 1
+      variant: 1,
+      onClick: () => { props.setSettingsPage('report-bug') }
     },
     {
       title: 'Subscription',
       desc: 'Your current plan is Free',
-      variant: 9
+      variant: 9,
+      onClick: () => { }
     }]
 
   const generalInfoSettingsJson = [
     {
       title: 'Privacy policy',
       desc: '',
-      variant: 1
+      variant: 1,
+      onClick: () => { }
     },
     {
       title: 'Terms of service',
       desc: 'Ask Community for Help',
-      variant: 1
+      variant: 1,
+      onClick: () => { }
     }]
 
   return (
@@ -58,7 +64,7 @@ const SupportPage = () => {
             return (
               <Box sx={{ paddingBottom: 1 }} key={index}>
                 <ListItem key={index} disablePadding>
-                  <ListItemButton sx={{ p: '3px', borderRadius: 1 }}>
+                  <ListItemButton sx={{ p: '3px', borderRadius: 1 }} onClick={() => { item.onClick() }}>
                     <SettingsItem title={item.title} desc={item.desc} variant={item.variant} />
                   </ListItemButton>
                 </ListItem>
