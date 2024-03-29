@@ -23,11 +23,11 @@ const Settings = (props) => {
             props.onClick() // exits the drawer
             break;
 
-          case 'vpnsetting':
+          case 'vpn setting':
             setSettingsPage('home')
             break;
 
-          case 'appsetting':
+          case 'app setting':
             setSettingsPage('home')
             break;
 
@@ -42,8 +42,8 @@ const Settings = (props) => {
       }} />
 
       {settingsPage == 'home' && <HomeSettings setSettingsPage={setSettingsPage} />}
-      {settingsPage == 'vpnsetting' && <VpnSetting />}
-      {settingsPage == 'appsetting' && <AppSettings />}
+      {settingsPage == 'vpn setting' && <VpnSetting />}
+      {settingsPage == 'app setting' && <AppSettings />}
       {settingsPage == 'support' && <SupportPage />}
 
 

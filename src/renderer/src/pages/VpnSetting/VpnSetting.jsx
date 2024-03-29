@@ -54,29 +54,6 @@ const VpnSetting = () => {
     <>
       <Grid container spacing={1} width={'100%'}>
 
-        <Grid container sx={{ marginBottom: 1 }}>
-          <Grid item xs>
-            <Typography variant={'h5'} sx={{ fontWeight: 900 }}>
-              vpnsetting
-            </Typography>
-          </Grid>
-          <Grid item xs={6} sx={{ textAlign: 'end' }} >
-            <Chip label="FREE" color="error" variant="outlined" sx={{ px: 1 }} />
-          </Grid>
-        </Grid>
-
-        <Grid container sx={{ marginBottom: 2 }}>
-          <Grid item xs>
-            <Typography variant={'subtitle2'} >
-              Explore Settings in the App
-            </Typography>
-          </Grid>
-          <Grid item xs={6} sx={{ textAlign: 'end' }}>
-
-          </Grid>
-        </Grid>
-
-        <Divider />
         <List sx={{ width: '100%' }}>
           {
             homeSettingsJson.map((item, index) => {

@@ -15,13 +15,13 @@ const HomeSettings = (props) => {
       title: 'VPN Settings',
       desc: 'Connection and security',
       variant: 1,
-      onClick: () => { props.setSettingsPage('vpnsetting') }
+      onClick: () => { props.setSettingsPage('vpn setting') }
     },
     {
       title: 'App Settings',
       desc: 'App general features',
       variant: 1,
-      onClick: () => { props.setSettingsPage('appsetting') }
+      onClick: () => { props.setSettingsPage('app setting') }
 
     },
     {

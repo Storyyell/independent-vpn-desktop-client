@@ -8,19 +8,20 @@ import SettingsItem from '../../components/SettingsItem/SettingsItem';
 
 const homeSettingsJson = [
   {
-    title: 'VPN Settings',
-    desc: 'Connection and security',
-    variant: 1
+    title: 'App version 1.1.1.1',
+    desc: 'You are using the latest version',
+    variant: null
   },
   {
-    title: 'App Settings',
-    desc: 'App general features',
-    variant: 1
+    title: 'App appearance',
+    desc: 'Default',
+    variant: null
   },
   {
-    title: 'Logs',
-    desc: 'See Connection Logs',
-    variant: 1
+    title: 'Push notifications',
+    desc: 'Get notified about location updates, alerts, and new security features.',
+    variant: 2,
+    onClick: () => { }
   },
   {
     title: 'Subscription',
@@ -28,34 +29,26 @@ const homeSettingsJson = [
     variant: 9
   }]
 
+const generalInfoSettingsJson = [
+  {
+    title: 'Analytics',
+    desc: 'Provide anonymous app usage data.',
+    variant: 2,
+    onClick: () => { }
+  },
+  {
+    title: 'Send crash report',
+    desc: 'These don’t contain personal info and help us improve your experience.',
+    variant: 2,
+    onClick: () => { }
+  },
+]
+
 const AppSettings = () => {
   return (
     <>
       <Grid container spacing={1} width={'100%'}>
 
-        <Grid container sx={{ marginBottom: 1 }}>
-          <Grid item xs>
-            <Typography variant={'h5'} sx={{ fontWeight: 900 }}>
-              appsetting
-            </Typography>
-          </Grid>
-          <Grid item xs={6} sx={{ textAlign: 'end' }} >
-            <Chip label="FREE" color="error" variant="outlined" sx={{ px: 1 }} />
-          </Grid>
-        </Grid>
-
-        <Grid container sx={{ marginBottom: 2 }}>
-          <Grid item xs>
-            <Typography variant={'subtitle2'} >
-              Explore Settings in the App
-            </Typography>
-          </Grid>
-          <Grid item xs={6} sx={{ textAlign: 'end' }}>
-
-          </Grid>
-        </Grid>
-
-        <Divider />
         <List sx={{ width: '100%' }}>
           {
             homeSettingsJson.map((item, index) => {
@@ -73,18 +66,25 @@ const AppSettings = () => {
           }
         </List>
 
-      </Grid>
-
-      {/* // todo make below elemtny to bottom */}
-      <Box variant='div' sx={{ width: '100%' }}>
+        <Typography variant={'h6'} sx={{ mt: 1 }} fontWeight={600}>General info</Typography>
         <List>
-          <ListItem disablePadding>
-            <ListItemButton sx={{ p: '3px', borderRadius: 1 }}>
-              <SettingsItem title={'Support'} desc={'Troubleshooting, contact support etc.'} variant={1} />
-            </ListItemButton>
-          </ListItem>
+          {
+            generalInfoSettingsJson.map((item, index) => {
+              return (
+                <Box sx={{ paddingBottom: 1 }} key={index}>
+                  <ListItem key={index} disablePadding>
+                    <ListItemButton sx={{ p: '3px', borderRadius: 1 }}>
+                      <SettingsItem title={item.title} desc={item.desc} variant={item.variant} />
+                    </ListItemButton>
+                  </ListItem>
+                  <Divider variant="fullWidth" component="li" />
+                </Box>
+              )
+            })
+          }
         </List>
-      </Box>
+
+      </Grid>
 
     </>
   )
