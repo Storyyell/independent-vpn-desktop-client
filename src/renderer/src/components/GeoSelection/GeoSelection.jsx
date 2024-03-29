@@ -176,9 +176,19 @@ const GeoSelection = (props) => {
   );
   //
   return (
-    <Drawer open={props.open} onClose={props.onClose} anchor='bottom'>
+    <Drawer
+      open={props.open}
+      onClose={props.onClose}
+      anchor='bottom'
+      PaperProps={{
+        style: {
+          background: 'linear-gradient(180deg, #1E1A1B 0%, #171414 100%)',
+        }
+      }}
+    >
       {DrawerList}
     </Drawer>
+
   )
 }
 
