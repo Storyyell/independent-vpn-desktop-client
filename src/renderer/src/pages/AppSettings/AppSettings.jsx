@@ -45,38 +45,29 @@ function AppItem(props) {
   )
 }
 
+const homeSettingsJson = [
+  {
+    title: 'VPN Settings',
+    desc: 'Connection and security',
+    variant: 1
+  },
+  {
+    title: 'App Settings',
+    desc: 'App general features',
+    variant: 1
+  },
+  {
+    title: 'Logs',
+    desc: 'See Connection Logs',
+    variant: 1
+  },
+  {
+    title: 'Subscription',
+    desc: 'Your current plan is Free',
+    variant: 9
+  }]
 
-const HomeSettings = (props) => {
-
-  const homeSettingsJson = [
-    {
-      title: 'VPN Settings',
-      desc: 'Connection and security',
-      variant: 1,
-      onClick: () => { props.setSettingsPage('vpnsetting') }
-    },
-    {
-      title: 'App Settings',
-      desc: 'App general features',
-      variant: 1,
-      onClick: () => { props.setSettingsPage('appsetting') }
-
-    },
-    {
-      title: 'Logs',
-      desc: 'See Connection Logs',
-      variant: 1,
-      onClick: () => { props.setSettingsPage('vpnsetting') }
-
-    },
-    {
-      title: 'Subscription',
-      desc: 'Your current plan is Free',
-      variant: 9,
-      onClick: () => { props.setSettingsPage('vpnsetting') }
-
-    }]
-
+const AppSettings = () => {
   return (
     <>
       <Grid container spacing={1} width={'100%'}>
@@ -84,7 +75,7 @@ const HomeSettings = (props) => {
         <Grid container sx={{ marginBottom: 1 }}>
           <Grid item xs>
             <Typography variant={'h5'} sx={{ fontWeight: 900 }}>
-              User12334566
+              appsetting
             </Typography>
           </Grid>
           <Grid item xs={6} sx={{ textAlign: 'end' }} >
@@ -110,7 +101,7 @@ const HomeSettings = (props) => {
               return (
                 <Box sx={{ paddingBottom: 1 }}>
                   <ListItem key={index} disablePadding>
-                    <ListItemButton onClick={() => { item.onClick() }}>
+                    <ListItemButton>
                       <AppItem title={item.title} desc={item.desc} variant={item.variant} />
                     </ListItemButton>
                   </ListItem>
@@ -138,4 +129,4 @@ const HomeSettings = (props) => {
   )
 }
 
-export default HomeSettings
+export default AppSettings
