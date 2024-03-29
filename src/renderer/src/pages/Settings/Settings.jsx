@@ -4,12 +4,17 @@ import SettingsHeader from '../../components/SettingsHeader/SettingsHeader'
 import VpnSetting from '../VpnSetting/VpnSetting'
 import AppSettings from '../AppSettings/AppSettings'
 
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
 const Settings = (props) => {
   const [settingsPage, setSettingsPage] = React.useState('home')
 
+
   return (
     <>
-      <SettingsHeader header={settingsPage.toUpperCase()} onClick={() => {
+      <SettingsHeader header={capitalizeFirstLetter(settingsPage)} onClick={() => {
         switch (settingsPage) {
 
           case 'home':
