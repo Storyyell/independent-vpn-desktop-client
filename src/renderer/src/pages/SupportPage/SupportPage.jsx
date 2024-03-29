@@ -24,12 +24,6 @@ const SupportPage = (props) => {
       desc: 'Found an issue in our app? Let us know and we wll ge it fixed',
       variant: 1,
       onClick: () => { props.setSettingsPage('report-bug') }
-    },
-    {
-      title: 'Subscription',
-      desc: 'Your current plan is Free',
-      variant: 9,
-      onClick: () => { }
     }]
 
   const generalInfoSettingsJson = [
