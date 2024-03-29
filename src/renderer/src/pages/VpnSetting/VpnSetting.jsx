@@ -7,24 +7,46 @@ import SettingsItem from '../../components/SettingsItem/SettingsItem';
 
 const homeSettingsJson = [
   {
-    title: 'VPN Settings',
-    desc: 'Connection and security',
-    variant: 1
+    title: 'Auto-connect',
+    desc: 'Automaically reconnects if you switch networks or restart the app.',
+    variant: 2,
+    onClick: () => { props.setSettingsPage('vpnsetting') }
   },
   {
-    title: 'App Settings',
-    desc: 'App general features',
-    variant: 1
+    title: 'Protocol',
+    desc: 'Changes the VPN Protocol',
+    variant: 3,
+    options: ['V2RAY', 'WIREGUARD'],
+    onClick: () => { props.setSettingsPage('appsetting') }
+
   },
   {
-    title: 'Logs',
-    desc: 'See Connection Logs',
-    variant: 1
+    title: 'CleanWeb',
+    desc: 'Blocks ads, trackers and malware when VPN is restart.',
+    variant: 2,
+    onClick: () => { }
+
   },
   {
-    title: 'Subscription',
-    desc: 'Your current plan is Free',
-    variant: 9
+    title: 'VPN Kill Switch',
+    desc: 'Disables internet access when VPN connection drops or is turned off.',
+    variant: 2,
+    onClick: () => { }
+
+  },
+  {
+    title: 'Override GPS Location',
+    desc: 'Match your GPS location to your VPN location.',
+    variant: 2,
+    onClick: () => { }
+
+  },
+  {
+    title: 'Tray Icon',
+    desc: 'Show App in System Tray when running in background',
+    variant: 2,
+    onClick: () => { }
+
   }]
 
 const VpnSetting = () => {
@@ -73,17 +95,6 @@ const VpnSetting = () => {
         </List>
 
       </Grid>
-
-      {/* // todo make below elemtny to bottom */}
-      <Box variant='div' sx={{ width: '100%' }}>
-        <List>
-          <ListItem disablePadding>
-            <ListItemButton sx={{ p: '3px', borderRadius: 1 }}>
-              <SettingsItem title={'Support'} desc={'Troubleshooting, contact support etc.'} variant={1} />
-            </ListItemButton>
-          </ListItem>
-        </List>
-      </Box>
 
     </>
   )
