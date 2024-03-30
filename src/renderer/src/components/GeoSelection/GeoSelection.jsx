@@ -150,6 +150,9 @@ const GeoSelection = (props) => {
 
   }
 
+  const handleResetFav = ()=>{
+    setFavList({ countries: [], cities: {} })
+  }
   const DrawerList = (
     <>
       <Stack direction={'column'} spacing={3} sx={{ px: 4, height: '80vh' }}>
@@ -182,6 +185,7 @@ const GeoSelection = (props) => {
         </Button>
 
         <TextField id="outlined-basic" label="Search" variant="outlined" />
+        { favIconClick && <Stack style={{margin:'5px'}} justifyContent={'flex-end'} sx={{width:'100%'}} flexDirection={'row'}><Button variant='text' color='error' size='small' sx={{mx:2}} onClick={()=>{handleResetFav()}}>reset favourities</Button></Stack> }
 
         <Box sx={{ width: '100%' }} role="presentation" >
 
