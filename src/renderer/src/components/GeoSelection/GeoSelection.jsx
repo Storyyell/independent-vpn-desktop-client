@@ -19,6 +19,7 @@ import { GeoItem } from '../GeoItem/GeoItem';
 import { ServerListContext } from '../../context/ServerListContext';
 import { SelectionContext } from '../../context/SelectionContext';
 import { DeviceTokenContext } from '../../context/DeviceTokenContext';
+import { FavListContext } from '../../context/FavContext';
 
 
 const GeoSelection = (props) => {
@@ -28,10 +29,19 @@ const GeoSelection = (props) => {
   const { deviceToken, setDeviceToken } = React.useContext(DeviceTokenContext);
   const [loadCityList, setLoadCityList] = React.useState(false)
   const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
+  const { favList, setFavList } = React.useContext(FavListContext);
+  const [favIconClick, setFavIconClick] = React.useState(false);
+  const [countryListProcessed, setCountryListProcessed] = React.useState(serverList?.countries || [])
+  const [cityListProcessed, setCityListProcessed] = React.useState(serverList?.countries || [])
+
 
   const mentIconStyle = {
-    width: '32px',
-    height: '32px'
+    width: '40px',
+    height: '40px',
+    alignItems: 'center',
+    justifyContent: 'center',
+    display: 'flex',
+    borderRadius: '5px',
   }
 
   React.useEffect(() => {
@@ -68,6 +78,35 @@ const GeoSelection = (props) => {
 
   }, [selectedItems?.countryId, deviceToken])
 
+  React.useEffect(() => {
+
+    favIconClick ?
+      setCountryListProcessed(serverList?.countries.filter((d) => {
+        return favList?.countries?.includes(d?.id)
+      }))
+      :
+      setCountryListProcessed(serverList?.countries)
+
+  }, [serverList?.countries, favIconClick, favList?.countries])
+
+  React.useEffect(() => {
+
+    favIconClick ?
+      setCityListProcessed(serverList?.cities?.[selectedItems?.countryId].filter((d) => {
+        return favList?.cities?.[selectedItems?.countryId]?.includes(d?.id)
+      }))
+    :
+    setCityListProcessed(serverList?.cities[selectedItems?.countryId])
+
+
+
+      // setCountryListProcessed(serverList?.countries.filter((d) => {
+      //   return favList?.countries?.includes(d?.id)
+      // }))
+      // :
+      // setCountryListProcessed(serverList?.countries)
+
+  }, [serverList?.cities, favIconClick, favList?.cities])
 
   const handleCityChange = (cityId_) => {
     setSelectedItems((d) => {
@@ -98,6 +137,19 @@ const GeoSelection = (props) => {
     })
   }
 
+  const FavIcon = (props) => {
+    return (
+      <IconButton onClick={() => {
+        props?.setFavIconClick(!props?.favIconClick)
+      }} >
+        <Box style={{ ...props.mentIconStyle, backgroundColor: props.favIconClick ? 'red' : 'none' }} sx={{ b: 1 }} >
+          <img alt="favicon" src={favIcon} loading="lazy" />
+        </Box>
+      </IconButton>
+    )
+
+  }
+
   const DrawerList = (
     <>
       <Stack direction={'column'} spacing={3} sx={{ px: 4, height: '80vh' }}>
@@ -116,11 +168,7 @@ const GeoSelection = (props) => {
             {loadCityList ? <ArrowBackIcon style={mentIconStyle} /> : <CloseIcon style={mentIconStyle} />}
           </IconButton>
 
-          <IconButton>
-            <Box style={mentIconStyle}>
-              <img alt="favicon" src={favIcon} style={{ fill: 'red' }} loading="lazy" />
-            </Box>
-          </IconButton>
+          <FavIcon favIconClick={favIconClick} setFavIconClick={setFavIconClick} mentIconStyle={mentIconStyle} />
 
         </Stack>
 
@@ -134,16 +182,36 @@ const GeoSelection = (props) => {
         <TextField id="outlined-basic" label="Search" variant="outlined" />
 
         <Box sx={{ width: '100%' }} role="presentation" >
+
           <List >
-            {
+            {              
               loadCityList ?
 
                 serverList?.cities[selectedItems?.countryId] ?
-                  serverList?.cities[selectedItems?.countryId]?.map((d, i) => {
+                cityListProcessed?.map((d, i) => {
                     return (
-                      <GeoItem key={i} data={{ ...d, code: (serverList?.countries.find(d => d.id == selectedItems?.countryId))?.code }} onClick={(val) => {
+                      <GeoItem key={i} geoType='city' data={{ ...d, code: (serverList?.countries.find(d => d.id == selectedItems?.countryId))?.code }} onClick={(val) => {
                         handleCityChange(val)
-                      }} />
+                      }}
+                      onFavClick={() => {
+                        favList?.cities?.[selectedItems?.countryId]?.includes(d?.id)
+                          ?
+                          setFavList((c) => {
+                            const filteredCities = (c?.cities?.[selectedItems?.countryId]).filter((f) => f !== d.id);
+                            if (filteredCities.length === 0) {
+                              const newCities = { ...c.cities };
+                              delete newCities[selectedItems?.countryId];
+                              return { ...c, cities: newCities };
+                            } else {
+                              return { ...c, cities: { ...c.cities, [selectedItems?.countryId]: filteredCities } };
+                            }
+                          })
+                          :
+                          setFavList((c) => {
+                            return { ...c, cities: { ...c.cities, [selectedItems?.countryId]: [ ...(c?.cities?.[selectedItems?.countryId] || []), d?.id] } };
+                          })
+                      }}
+                      />
                     )
                   }) :
 
@@ -154,11 +222,23 @@ const GeoSelection = (props) => {
 
                 serverList?.countries ?
 
-                  serverList?.countries.map((d, i) => {
+                  countryListProcessed?.map((d, i) => {
                     return (
-                      <GeoItem key={d?.id} data={d} onClick={(val) => {
+                      <GeoItem key={d?.id} data={d} geoType='country' onClick={(val) => {
                         handleCountryChange(val)
-                      }} />
+                      }}
+                        onFavClick={() => {
+                          favList?.countries?.includes(d?.id)
+                            ?
+                            setFavList((c) => {
+                              return { ...c, countries: c.countries.filter((f) => f != d?.id) }
+                            })
+                            :
+                            setFavList((c) => {
+                              return { ...c, countries: [...c.countries, d?.id] }
+                            })
+                        }}
+                      />
                     )
                   }) :
 
@@ -187,7 +267,7 @@ const GeoSelection = (props) => {
       }}
     >
       {DrawerList}
-    </Drawer>
+    </Drawer >
 
   )
 }

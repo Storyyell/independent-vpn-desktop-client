@@ -1,13 +1,16 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
-import { Paper, Stack, TextField, Typography } from '@mui/material';
+import { IconButton, Paper, Stack, TextField, Typography } from '@mui/material';
 import favIcon from '../../assets/favIcon.svg';
 import ListItemButton from '@mui/material/ListItemButton';
+import { FavListContext } from '../../context/FavContext';
 
 
 export const GeoItem = (props) => {
-  const d = props.data
+  const d = props.data;
+  const { favList, setFavList } = React.useContext(FavListContext);
+
 
   const mentIconStyle = {
     width: '32px',
@@ -15,6 +18,37 @@ export const GeoItem = (props) => {
   }
 
 
+  const FavIcon = () => {
+
+    let isFav = false;
+
+    if (props.geoType == 'country') {
+      isFav = favList.countries.includes(d.id);
+    }else if(props.geoType == 'city') {
+      isFav = favList?.cities?.[d?.country_id]?.includes(d?.id)
+    }
+
+    return (
+      <IconButton style={mentIconStyle} alignItems={'center'}
+        onClick={(e) => {
+          props.onFavClick();
+          e.stopPropagation();
+        }}
+
+        sx={{
+          backgroundColor: isFav ? 'red' : 'gray',
+          borderRadius: '4px',
+          '&:hover': {
+            backgroundColor: isFav ? 'red' : 'gray',
+          },
+        }}
+      // todo prevent hover propogation
+
+      >
+        <img alt="favicon" src={favIcon} loading="lazy" width='15px' />
+      </IconButton>
+    )
+  }
 
   return (
     <ListItem key={d.id} sx={{ px: 0 }} >
@@ -41,14 +75,12 @@ export const GeoItem = (props) => {
 
             </Stack>
             <Stack alignItems={'center'} justifyContent={'center'} >
-              <Stack style={mentIconStyle} alignItems={'center'} justifyContent={'center'} sx={{ backgroundColor: 'gray', borderRadius: '4px' }}>
-                <img alt="favicon" src={favIcon} style={{ fill: 'red' }} loading="lazy" width='15px' />
-              </Stack>
+              <FavIcon />
             </Stack>
           </Stack>
           {/* <Divider /> */}
         </Paper>
       </ListItemButton>
-    </ListItem>
+    </ListItem >
   )
 }
