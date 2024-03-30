@@ -31,8 +31,9 @@ const GeoSelection = (props) => {
   const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
   const { favList, setFavList } = React.useContext(FavListContext);
   const [favIconClick, setFavIconClick] = React.useState(false);
-  const [countryListProcessed, setCountryListProcessed] = React.useState(serverList?.countries || [])
-  const [cityListProcessed, setCityListProcessed] = React.useState(serverList?.countries || [])
+  const [countryListProcessed, setCountryListProcessed] = React.useState(serverList?.countries || []);
+  const [cityListProcessed, setCityListProcessed] = React.useState(serverList?.countries || []);
+  const [searchField, setSearchField] = React.useState('');
 
 
   const mentIconStyle = {
@@ -98,14 +99,6 @@ const GeoSelection = (props) => {
     :
     setCityListProcessed(serverList?.cities[selectedItems?.countryId])
 
-
-
-      // setCountryListProcessed(serverList?.countries.filter((d) => {
-      //   return favList?.countries?.includes(d?.id)
-      // }))
-      // :
-      // setCountryListProcessed(serverList?.countries)
-
   }, [serverList?.cities, favIconClick, favList?.cities])
 
   const handleCityChange = (cityId_) => {
@@ -130,6 +123,18 @@ const GeoSelection = (props) => {
     }
   };
 
+  React.useEffect(() => {
+    if (loadCityList) {
+      setCityListProcessed((l) => {
+        return (serverList?.cities?.[selectedItems?.countryId]?.filter((d) => { return (d?.name?.toLowerCase()?.includes(searchField.toLowerCase())) }))
+      })
+    } else {
+      setCountryListProcessed(() => {
+        return (serverList?.countries?.filter((d) => { return (d?.name?.toLowerCase().includes(searchField.toLowerCase())) }))
+      })
+    }
+  }, [searchField])
+
   const handleCountryChange = (countryId_) => {
     setLoadCityList(true)
     setSelectedItems((d) => {
@@ -153,6 +158,8 @@ const GeoSelection = (props) => {
   const handleResetFav = ()=>{
     setFavList({ countries: [], cities: {} })
   }
+
+
   const DrawerList = (
     <>
       <Stack direction={'column'} spacing={3} sx={{ px: 4, height: '80vh' }}>
@@ -184,7 +191,10 @@ const GeoSelection = (props) => {
           <Typography sx={{ color: 'white' }}> Quick Connect </Typography>
         </Button>
 
-        <TextField id="outlined-basic" label="Search" variant="outlined" />
+        <TextField id="outlined-basic" label={`search ${loadCityList ? 'cities' : 'countries' }`} variant="outlined" 
+        onChange={(e)=>{
+          setSearchField(e.target.value)
+        }} />
         { favIconClick && <Stack style={{margin:'5px'}} justifyContent={'flex-end'} sx={{width:'100%'}} flexDirection={'row'}><Button variant='text' color='error' size='small' sx={{mx:2}} onClick={()=>{handleResetFav()}}>reset favourities</Button></Stack> }
 
         <Box sx={{ width: '100%' }} role="presentation" >
