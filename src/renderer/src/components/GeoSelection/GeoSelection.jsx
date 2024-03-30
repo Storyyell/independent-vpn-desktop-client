@@ -168,6 +168,8 @@ const GeoSelection = (props) => {
             {loadCityList ? <ArrowBackIcon style={mentIconStyle} /> : <CloseIcon style={mentIconStyle} />}
           </IconButton>
 
+          { favIconClick && <Typography variant='h6'>Favourites</Typography>}
+
           <FavIcon favIconClick={favIconClick} setFavIconClick={setFavIconClick} mentIconStyle={mentIconStyle} />
 
         </Stack>
