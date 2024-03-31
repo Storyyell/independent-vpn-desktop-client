@@ -40,6 +40,7 @@ function createWindow() {
   })
 
   mainWindow.on('ready-to-show', () => {
+    //todo remove this global scope of main window
     global.mainWindow = mainWindow
     mainWindow.show()
   })

@@ -12,7 +12,7 @@ import net from "net";
 import axios from 'axios';
 const https = require('https');
 import { pullServerConf } from "./ipcs";
-
+import { rendererSend } from "./utils";
 
 var vpnObj = {
     connected: false,
@@ -23,14 +23,14 @@ var vpnObj = {
     addVpnRoute: false,
     addGlobalRoute: false,
     gateway: null,
-    triggerConnection:vpnConnetFx,
-    triggerDisconnection:vpnDisconnect,
-    disconnectionProgress:false,
-    connectionProgress:false,
-    serverIp:null,
-    serverAddress:null,
-    serverPort:null,
-    serverUUID:null
+    triggerConnection: vpnConnetFx,
+    triggerDisconnection: vpnDisconnect,
+    disconnectionProgress: false,
+    connectionProgress: false,
+    serverIp: null,
+    serverAddress: null,
+    serverPort: null,
+    serverUUID: null
 }
 
 // Todo case of triggered disconnection while connection in progress and connected is true
@@ -44,22 +44,22 @@ export async function vpnConnet(serverParms) {
         const gateway = await getDefaultGateway();
         vpnObj.gateway = gateway;
         console.log("VPN connection initializing...");
-        global.mainWindow.webContents.send('connectionStatus', 'VPN connection initializing...');
-        global.mainWindow.webContents.send('connectionStatus', 'Fetching server configuration...');
+        rendererSend('connectionStatus', 'VPN connection initializing...');
+        rendererSend('connectionStatus', 'Fetching server configuration...');
         const res = await pullServerConf(serverParms.device_token, serverParms.countryCode, serverParms.cityCode, serverParms.serverId);
         const serverObj = res.data;
-        const { uuid, address:server_address, listen_port} = await saveV2rayConfig(serverObj);
-        
+        const { uuid, address: server_address, listen_port } = await saveV2rayConfig(serverObj);
+
         // updating server parms
         vpnObj.serverAddress = server_address;
         vpnObj.serverPort = listen_port;
         vpnObj.serverUUID = uuid;
-        
+
         // getting server ip
         const serverIp = await getIPv4(server_address);
         vpnObj.serverIp = serverIp;
         console.log(`server ip: ${vpnObj.serverIp}`);
-        
+
         vpnObj.triggerConnection(gateway);
 
     } catch (e) {
@@ -71,9 +71,9 @@ export async function vpnConnet(serverParms) {
 export function vpnConnetFx() {
 
     console.log(`gateway ${vpnObj.gateway}`);
-    
+
     let basePath = path.join(__dirname, "../../resources/bin/");
-    
+
     // Todo want to find a another way to use the resourcesPath from the main process in production
     if (app.isPackaged) {
         // When the app is packaged, the "resourcesPath" points to the "resources" directory adjacent to app.asar
@@ -82,7 +82,7 @@ export function vpnConnetFx() {
 
     const v2rayPath = path.join(basePath, 'v2ray.exe');
     // const configPath = path.join(basePath, 'config.json');
-    const configPath = path.join(global.sessionTempDir.path ,`${global.sessionTempDir.uuid}.json`);
+    const configPath = path.join(global.sessionTempDir.path, `${global.sessionTempDir.uuid}.json`);
 
 
     const v2ray = spawn(v2rayPath, ['-config', configPath],);
@@ -117,11 +117,11 @@ export function vpnConnetFx() {
 
     function onVpnConnected() {
         console.log("V2ray tunnel created");
-        global.mainWindow.webContents.send('connectionStatus', 'V2ray tunnel created');
+        rendererSend('connectionStatus', 'V2ray tunnel created');
         checkConnectivity('127.0.0.1', 10808)
             .then(() => {
-                    console.log("connectivity check passed");
-                    startSocksInternalTunnel();
+                console.log("connectivity check passed");
+                startSocksInternalTunnel();
             })
             .catch((e) => {
                 console.log("error in checking connectivity: " + e.message);
@@ -172,7 +172,7 @@ export function vpnConnetFx() {
 
         function onTun2SocksConnected() {
             console.log("Tun2socks tunnel created");
-            global.mainWindow.webContents.send('connectionStatus', 'adapter created');
+            rendererSend('connectionStatus', 'adapter created');
             startAnotherCommand();
         }
 
@@ -198,8 +198,8 @@ export function vpnConnetFx() {
                     vpnObj.connected = true;
                     vpnObj.connectionProgress = false;
                     console.log("vpn connection established");
-                    global.vpnConnStatus= true;
-                    global.mainWindow.webContents.send('connectionStatus', 'VPN connection established');
+                    global.vpnConnStatus = true;
+                    rendererSend('connectionStatus', 'VPN connection established');
                 })
                 .catch((e) => {
                     console.log("vpn connection error: " + e.message);
@@ -237,24 +237,24 @@ export function vpnDisconnect() {
 
     global.vpnConnStatus = false;
 
-    if( vpnObj.connectionProgress || vpnObj.connected ) {
+    if (vpnObj.connectionProgress || vpnObj.connected) {
         console.log("vpn disconnection started...");
         vpnObj.connectionProgress = false;
         vpnObj.disconnectionProgress = true;
-        setTimeout(() => {vpnObj.disconnectionProgress = false}, 5000) // 10 seconds timeout for disconnection status cleanup on error
+        setTimeout(() => { vpnObj.disconnectionProgress = false }, 5000) // 10 seconds timeout for disconnection status cleanup on error
         let keys = Object.keys(vpnObj).reverse();
         keys.forEach((key) => {
             console.log(`cleaning vpn object key :=> ${key}`);
             vpnConnCleanup(key);
         })
-        if(!vpnObj.connected) {
+        if (!vpnObj.connected) {
             console.log("vpn disconnected");
         }
-        vpnObj.connected= false;
-        global.vpnConnStatus= false;
+        vpnObj.connected = false;
+        global.vpnConnStatus = false;
         vpnObj.disconnectionProgress = false;
-        try {global.mainWindow.webContents.send('connectionStatus', 'VPN disconnected');} catch (e) {}
-    }else{
+        try { rendererSend('connectionStatus', 'VPN disconnected'); } catch (e) { }
+    } else {
         return;
     }
 }
@@ -354,7 +354,7 @@ async function checkConnectivity(proxyIp, proxyPort) {
         }
     });
 
-    global.mainWindow.webContents.send('connectionStatus', 'checking connectivity...');
+    rendererSend('connectionStatus', 'checking connectivity...');
 
     options.agent = new https.Agent({ socket: agent.socket });
 
@@ -368,7 +368,7 @@ async function checkConnectivity(proxyIp, proxyPort) {
 
             res.on('end', () => {
                 console.log('Successfully connected to www.google.com');
-                global.mainWindow.webContents.send('connectionStatus', 'internet connectivity check passed...');
+                rendererSend('connectionStatus', 'internet connectivity check passed...');
 
                 resolve(true);
             });
@@ -376,7 +376,7 @@ async function checkConnectivity(proxyIp, proxyPort) {
 
         req.on('error', (e) => {
             console.error(`Request error: ${e.message}`);
-            global.mainWindow.webContents.send('connectionStatus', 'internet connectivity check failed...');
+            rendererSend('connectionStatus', 'internet connectivity check failed...');
 
             reject('internet connectivity check failed...');
         });
@@ -384,7 +384,7 @@ async function checkConnectivity(proxyIp, proxyPort) {
         req.on('timeout', () => {
             req.end();
             console.error('Request timeout after 3 seconds.');
-            global.mainWindow.webContents.send('connectionStatus', 'internet connectivity check failed...');
+            rendererSend('connectionStatus', 'internet connectivity check failed...');
 
             reject('internet connectivity check failed...');
         });
