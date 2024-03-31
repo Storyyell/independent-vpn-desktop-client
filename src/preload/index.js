@@ -9,9 +9,10 @@ const api = {
   getCountries: (device_token) => ipcRenderer.invoke('getCountries', device_token),
   getCities: (device_token, countryCode) => ipcRenderer.invoke('getCities', device_token, countryCode),
   getServers: (device_token, countryCode, cityCode) => ipcRenderer.invoke('getServers', device_token, countryCode, cityCode),
-  getServerConf: (device_token, countryCode, cityCode, serverId) => ipcRenderer.invoke('getServerConf', device_token, countryCode, cityCode, serverId), 
-  triggerConnection: (serverObj) => ipcRenderer.invoke('triggerConnection',serverObj),
+  getServerConf: (device_token, countryCode, cityCode, serverId) => ipcRenderer.invoke('getServerConf', device_token, countryCode, cityCode, serverId),
+  triggerConnection: (serverObj) => ipcRenderer.invoke('triggerConnection', serverObj),
   triggerDisconnection: () => ipcRenderer.invoke('triggerDisconnection'),
+  sysOpen: (...url) => ipcRenderer.invoke('sysOpen', ...url),
 }
 
 
@@ -32,17 +33,17 @@ if (process.contextIsolated) {
 
 contextBridge.exposeInMainWorld(
   'ipcRenderer', {
-    send: (channel, data) => {
-      ipcRenderer.send(channel, data);
-    },
-    on: (channel, func) => {
-      ipcRenderer.on(channel, (event, ...args) => func(...args));
-    },
-    invoke: (channel, data) => {
-      return ipcRenderer.invoke(channel, data);
-    },
-    removeAllListeners: (channel) => {
-      ipcRenderer.removeAllListeners(channel);
-    }
+  send: (channel, data) => {
+    ipcRenderer.send(channel, data);
+  },
+  on: (channel, func) => {
+    ipcRenderer.on(channel, (event, ...args) => func(...args));
+  },
+  invoke: (channel, data) => {
+    return ipcRenderer.invoke(channel, data);
+  },
+  removeAllListeners: (channel) => {
+    ipcRenderer.removeAllListeners(channel);
   }
+}
 );

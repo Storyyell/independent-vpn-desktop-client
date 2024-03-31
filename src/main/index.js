@@ -84,6 +84,10 @@ function createWindow() {
     return pullServerConf(device_token, countryCode, cityCode, serverId)
   })
 
+  ipcMain.handle('sysOpen', async (event, ...url) => {
+    shell.openExternal(url[0]);
+  })
+
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {

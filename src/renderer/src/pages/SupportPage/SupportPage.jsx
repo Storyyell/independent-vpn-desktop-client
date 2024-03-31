@@ -17,7 +17,7 @@ const SupportPage = (props) => {
       title: 'Telegram Community',
       desc: 'Ask Community for Help',
       variant: 1,
-      onClick: () => { }
+      onClick: () => { window.api.sysOpen(import.meta.env.VITE_SERVER_TELEGRAM_COMMUNITY_URL) }
     },
     {
       title: 'Report a bug',
