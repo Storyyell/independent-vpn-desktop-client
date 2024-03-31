@@ -100,17 +100,18 @@ function Home(props) {
                     size="medium"
                     variant="outlined"
                     style={{
-                        width: "184px",
                         height: "46px",
                         borderRadius: "23px",
                         border: '2px solid #CC2229',
                         color: 'white',
                         backdropFilter: blur('4.5px'),
                         background: '#101921'
+
                     }}
+                    sx={{ px: 3 }}
                     onClick={() => setGeoSelection(true)}
                 >
-                    {`Quick connect `}
+                    {vpnStatusMain === 'disconnected' ? `Quick connect ` : `Change Location `}
                     <ArrowRightIcon />
                 </Button>
                 {/* todo make text autoscroll */}
