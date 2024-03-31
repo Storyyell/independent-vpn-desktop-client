@@ -40,6 +40,9 @@ const Settings = (props) => {
             setSettingsPage('support')
             break;
 
+          case 'create ticket':
+            setSettingsPage('support')
+            break;
 
           default:
             setSettingsPage('home')
@@ -52,6 +55,8 @@ const Settings = (props) => {
       {settingsPage == 'app setting' && <AppSettings />}
       {settingsPage == 'support' && <SupportPage setSettingsPage={setSettingsPage} />}
       {settingsPage == 'report-bug' && <ReportBug setSettingsPage={setSettingsPage} />}
+      {settingsPage == 'create ticket' && <ReportBug setSettingsPage={setSettingsPage} />}
+
 
     </>
   )

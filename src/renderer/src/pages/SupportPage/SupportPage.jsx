@@ -11,7 +11,7 @@ const SupportPage = (props) => {
       title: 'Create ticket',
       desc: 'Create and send a ticket to our support team',
       variant: 1,
-      onClick: () => { }
+      onClick: () => { props.setSettingsPage('create ticket') }
     },
     {
       title: 'Telegram Community',
