@@ -193,6 +193,7 @@ const GeoSelection = (props) => {
         </Button>
 
         <TextField id="outlined-basic" label={`search ${loadCityList ? 'cities' : 'countries'}`} variant="outlined"
+          value={searchField}
           onChange={(e) => {
             setSearchField(e.target.value)
           }} />
