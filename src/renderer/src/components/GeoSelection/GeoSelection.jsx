@@ -21,6 +21,7 @@ import { SelectionContext } from '../../context/SelectionContext';
 import { DeviceTokenContext } from '../../context/DeviceTokenContext';
 import { FavListContext } from '../../context/FavContext';
 
+// todo needs code cleaning here
 
 const GeoSelection = (props) => {
 
@@ -96,8 +97,8 @@ const GeoSelection = (props) => {
       setCityListProcessed(serverList?.cities?.[selectedItems?.countryId].filter((d) => {
         return favList?.cities?.[selectedItems?.countryId]?.includes(d?.id)
       }))
-    :
-    setCityListProcessed(serverList?.cities[selectedItems?.countryId])
+      :
+      setCityListProcessed(serverList?.cities[selectedItems?.countryId])
 
   }, [serverList?.cities, favIconClick, favList?.cities])
 
@@ -155,7 +156,7 @@ const GeoSelection = (props) => {
 
   }
 
-  const handleResetFav = ()=>{
+  const handleResetFav = () => {
     setFavList({ countries: [], cities: {} })
   }
 
@@ -178,7 +179,7 @@ const GeoSelection = (props) => {
             {loadCityList ? <ArrowBackIcon style={mentIconStyle} /> : <CloseIcon style={mentIconStyle} />}
           </IconButton>
 
-          { favIconClick && <Typography variant='h6'>Favourites</Typography>}
+          {favIconClick && <Typography variant='h6'>Favourites</Typography>}
 
           <FavIcon favIconClick={favIconClick} setFavIconClick={setFavIconClick} mentIconStyle={mentIconStyle} />
 
@@ -191,42 +192,42 @@ const GeoSelection = (props) => {
           <Typography sx={{ color: 'white' }}> Quick Connect </Typography>
         </Button>
 
-        <TextField id="outlined-basic" label={`search ${loadCityList ? 'cities' : 'countries' }`} variant="outlined" 
-        onChange={(e)=>{
-          setSearchField(e.target.value)
-        }} />
-        { favIconClick && <Stack style={{margin:'5px'}} justifyContent={'flex-end'} sx={{width:'100%'}} flexDirection={'row'}><Button variant='text' color='error' size='small' sx={{mx:2}} onClick={()=>{handleResetFav()}}>reset favourities</Button></Stack> }
+        <TextField id="outlined-basic" label={`search ${loadCityList ? 'cities' : 'countries'}`} variant="outlined"
+          onChange={(e) => {
+            setSearchField(e.target.value)
+          }} />
+        {favIconClick && <Stack style={{ margin: '5px' }} justifyContent={'flex-end'} sx={{ width: '100%' }} flexDirection={'row'}><Button variant='text' color='error' size='small' sx={{ mx: 2 }} onClick={() => { handleResetFav() }}>reset favourities</Button></Stack>}
 
         <Box sx={{ width: '100%' }} role="presentation" >
 
           <List >
-            {              
+            {
               loadCityList ?
 
                 serverList?.cities[selectedItems?.countryId] ?
-                cityListProcessed?.map((d, i) => {
+                  cityListProcessed?.map((d, i) => {
                     return (
                       <GeoItem key={i} geoType='city' data={{ ...d, code: (serverList?.countries.find(d => d.id == selectedItems?.countryId))?.code }} onClick={(val) => {
                         handleCityChange(val)
                       }}
-                      onFavClick={() => {
-                        favList?.cities?.[selectedItems?.countryId]?.includes(d?.id)
-                          ?
-                          setFavList((c) => {
-                            const filteredCities = (c?.cities?.[selectedItems?.countryId]).filter((f) => f !== d.id);
-                            if (filteredCities.length === 0) {
-                              const newCities = { ...c.cities };
-                              delete newCities[selectedItems?.countryId];
-                              return { ...c, cities: newCities };
-                            } else {
-                              return { ...c, cities: { ...c.cities, [selectedItems?.countryId]: filteredCities } };
-                            }
-                          })
-                          :
-                          setFavList((c) => {
-                            return { ...c, cities: { ...c.cities, [selectedItems?.countryId]: [ ...(c?.cities?.[selectedItems?.countryId] || []), d?.id] } };
-                          })
-                      }}
+                        onFavClick={() => {
+                          favList?.cities?.[selectedItems?.countryId]?.includes(d?.id)
+                            ?
+                            setFavList((c) => {
+                              const filteredCities = (c?.cities?.[selectedItems?.countryId]).filter((f) => f !== d.id);
+                              if (filteredCities.length === 0) {
+                                const newCities = { ...c.cities };
+                                delete newCities[selectedItems?.countryId];
+                                return { ...c, cities: newCities };
+                              } else {
+                                return { ...c, cities: { ...c.cities, [selectedItems?.countryId]: filteredCities } };
+                              }
+                            })
+                            :
+                            setFavList((c) => {
+                              return { ...c, cities: { ...c.cities, [selectedItems?.countryId]: [...(c?.cities?.[selectedItems?.countryId] || []), d?.id] } };
+                            })
+                        }}
                       />
                     )
                   }) :
