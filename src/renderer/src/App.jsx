@@ -18,6 +18,9 @@ const theme = createTheme({
   palette: {
     mode: 'dark',
   },
+  typography: {
+    fontFamily: 'Segoe UI Regular',
+  },
 });
 
 // todo add case of revoed device token and followed by re-regisration

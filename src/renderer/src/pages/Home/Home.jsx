@@ -95,12 +95,12 @@ function Home(props) {
 
     return (
         <>
-            <Stack direction={'column'} spacing={3} alignItems={'center'} my={0}>
+            <Stack direction={'column'} spacing={3} alignItems={'center'} my={2}>
                 <Button
                     size="medium"
                     variant="outlined"
                     style={{
-                        height: "46px",
+                        height: "32px",
                         borderRadius: "23px",
                         border: '2px solid #CC2229',
                         color: 'white',
