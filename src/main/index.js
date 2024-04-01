@@ -25,11 +25,11 @@ function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     minWidth: 380,
-    minHeight: 640,
+    minHeight: 540,
     width: 380,
-    height: 640,
+    height: 540,
     x: screen_size.width - 380 - 40,
-    y: screen_size.height - 640 - 50,
+    y: screen_size.height - 540 - 50,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),

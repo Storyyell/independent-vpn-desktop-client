@@ -1,17 +1,19 @@
 .btnStyle {
   display: flex;
-  width: 210px;
-  height: 210px;
-  padding: 24px;
+  width: 131.683px;
+  height: 131.683px;
+  padding: 15.05px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 6.271px;
   flex-shrink: 0;
-  border-radius: 139px;
-  border: 2px solid #CC2229;
+  border-radius: 87.162px;
+  border: 1.254px solid #CC2229;
   background: #101921;
+
 }
+
 
 @keyframes shadow-pulse {
   0% {

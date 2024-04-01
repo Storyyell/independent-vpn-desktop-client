@@ -95,27 +95,27 @@ function Home(props) {
 
     return (
         <>
-            <Stack direction={'column'} spacing={3} alignItems={'center'} my={2}>
+            <Stack direction={'column'} spacing={1} alignItems={'center'} my={2}>
                 <Button
                     size="medium"
                     variant="outlined"
                     style={{
-                        height: "32px",
-                        borderRadius: "23px",
-                        border: '2px solid #CC2229',
+                        height: "30px",
+                        borderRadius: "14px",
+                        border: '1px solid #CC2229',
                         color: 'white',
                         backdropFilter: blur('4.5px'),
                         background: '#101921'
-
                     }}
-                    sx={{ px: 3 }}
                     onClick={() => setGeoSelection(true)}
                 >
-                    {vpnStatusMain === 'disconnected' ? `Quick connect ` : `Change Location `}
+                    <Typography style={{ color: 'white', fontSize: '10px' }}>
+                        {vpnStatusMain === 'disconnected' ? `Quick connect ` : `Change Location `}
+                    </Typography>
                     <ArrowRightIcon />
                 </Button>
                 {/* todo make text autoscroll */}
-                <Typography variant={'h4'}>
+                <Typography style={{ fontSize: "20px" }}>
                     {`${selectedItems.countryId ? getObj('country', selectedItems.countryId, null) : '----'} / ${selectedItems.cityId ? getObj('city', selectedItems.countryId, selectedItems.cityId) : '----'}`}
                 </Typography>
             </Stack>
@@ -126,12 +126,11 @@ function Home(props) {
                 />
 
             </Box>
-
-            <Stack direction="row" spacing={1} style={{ paddingTop: "8px", alignItems: 'center' }} >
-                <Typography variant="overline" display="block" gutterBottom>
+            <Stack direction="row" spacing={1} style={{ alignItems: 'center', justifyContent: 'center', margin: "10px" }} >
+                <Typography style={{ fontSize: '12px', fontWeight: '800' }}>
                     {`status :`}
                 </Typography>
-                <Typography variant="caption" display="block" gutterBottom >
+                <Typography style={{ fontSize: '12px' }} >
                     {vpnStatus ? vpnStatus : 'VPN disconnected'}
                 </Typography>
             </Stack>
@@ -142,7 +141,6 @@ function Home(props) {
             <GeoSelection
                 open={geoSelection}
                 onClose={() => setGeoSelection(false)}
-
             />
         </>
     )
