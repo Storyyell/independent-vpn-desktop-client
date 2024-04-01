@@ -37,18 +37,22 @@ const Header = () => {
           </Box>
         </Drawer>
 
-        {/* <Button
+        <Button
           variant="outlined"
           size='small'
           color='error'
           sx={{
             color: 'white',
-            borderRadius: '20px',
-          }}>
-          <Typography variant="overline" sx={{ fontSize: '12px', color: 'white' }}>
+          }}
+          style={{
+            height: '24px',
+            borderRadius: '12px',
+          }}
+        >
+          <Typography variant="overline" sx={{ fontSize: '8px', color: 'white' }}>
             Upgrade to Premium
           </Typography>
-        </Button> */}
+        </Button>
 
       </Stack>
     </Box>

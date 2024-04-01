@@ -95,7 +95,7 @@ function Home(props) {
 
     return (
         <>
-            <Stack direction={'column'} spacing={3} alignItems={'center'} my={3}>
+            <Stack direction={'column'} spacing={3} alignItems={'center'} my={0}>
                 <Button
                     size="medium"
                     variant="outlined"
