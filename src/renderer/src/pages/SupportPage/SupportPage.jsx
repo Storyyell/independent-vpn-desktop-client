@@ -42,16 +42,19 @@ const SupportPage = (props) => {
 
   return (
     <>
-      <Stack direction="column" spacing={0.5} alignItems={'center'} width={'100%'}>
+      <Stack direction="column" spacing={1} alignItems={'center'} width={'100%'} >
+
         <Box>
-          <img src={openBook} alt="Support" width={40} />
+          <img src={openBook} alt="Support" width={25} />
         </Box>
-        <Typography variant={'h5'} fontWeight={'600'}>Have a question</Typography>
-        <Typography variant={'caption'} >We migh have the answer in our help section</Typography>
-        <Button variant="contained" color="error" size="small" sx={{ px: 8 }}>Browse Guides</Button>
+        <Typography fontSize={'12px'} fontWeight={'600'} >Have a question</Typography>
+        <Typography fontSize={'10px'} fontWeight={'400'} >We migh have the answer in our help section</Typography>
+        <Button variant="contained" color="error" size="small" sx={{ px: 5 }}> <Typography style={{ fontSize: '10px', fontWeight: '600' }}>Browse Guides</Typography> </Button>
+
       </Stack>
 
-      <Typography variant={'h6'} sx={{ mt: 3 }} fontWeight={600}>Troubleshooting</Typography>
+      <Typography fontSize={'14px'} fontWeight={600} sx={{ mt: 1 }}>Troubleshooting</Typography>
+
       <List>
         {
           supportSettingsJson.map((item, index) => {
@@ -69,7 +72,8 @@ const SupportPage = (props) => {
         }
       </List>
 
-      <Typography variant={'h6'} sx={{ mt: 1 }} fontWeight={600}>General info</Typography>
+
+      <Typography fontSize={'14px'} fontWeight={600} sx={{ mt: 1 }} >General info</Typography>
       <List>
         {
           generalInfoSettingsJson.map((item, index) => {
