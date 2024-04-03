@@ -153,6 +153,7 @@ const GeoSelection = (props) => {
                     deviceToken={deviceToken}
                     setServerList={setServerList}
                     setSelectedItems={setSelectedItems}
+                    onClose={props.onClose}
 
                   />
                   :

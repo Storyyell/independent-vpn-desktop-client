@@ -48,6 +48,7 @@ const CityList = (props) => {
             return (
               <GeoItem key={i} geoType='city' data={{ ...d, code: (serverList?.countries.find(d => d.id == selectedItems?.countryId))?.code }} onClick={(val) => {
                 handleCityChange(val)
+                props.onClose()
               }}
                 onFavClick={() => {
                   favList?.cities?.[selectedItems?.countryId]?.includes(d?.id)
