@@ -98,6 +98,7 @@ const GeoSelection = (props) => {
 
   }, [serverList?.cities, favIconClick, favList?.cities, processListUpdate])
 
+  // for search functionality
   React.useEffect(() => {
     if (loadCityList) {
       setCityListProcessed((l) => {
@@ -109,9 +110,6 @@ const GeoSelection = (props) => {
       })
     }
   }, [searchField])
-
-
-
 
   const DrawerList = (
     <>

@@ -19,7 +19,23 @@ const theme = createTheme({
     mode: 'dark',
   },
   typography: {
-    fontFamily: 'Segoe UI Regular',
+    fontFamily: 'Segoe UI',
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        '*::-webkit-scrollbar': {
+          width: '6px',
+        },
+        '*::-webkit-scrollbar-track': {
+          background: '#1E1A1B',
+        },
+        '*::-webkit-scrollbar-thumb': {
+          background: '#1D388F61',
+          borderRadius: '2px',
+        },
+      },
+    },
   },
 });
 
