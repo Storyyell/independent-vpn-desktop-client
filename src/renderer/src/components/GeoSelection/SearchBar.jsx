@@ -15,6 +15,7 @@ const SearchBar = (props) => {
   let loadCityList = props.loadCityList
   let favIconClick = props.favIconClick
   let setFavList = props.setFavList
+  let setLoadCityList = props.setLoadCityList
 
   const handleResetFav = () => {
     setFavList({ countries: [], cities: {} })
@@ -23,6 +24,7 @@ const SearchBar = (props) => {
   const handleQuickSelect = () => {
     props.onClose()
     setSelectedItems({ countryId: null, cityId: null })
+    setLoadCityList(false)
   }
 
   return (

@@ -132,6 +132,7 @@ const GeoSelection = (props) => {
           favIconClick={favIconClick}
           setFavList={setFavList}
           onClose={props.onClose}
+          setLoadCityList={setLoadCityList}
         />
 
         <Stack direction={'column'} spacing={2} style={{ margin: '8px' }}>
