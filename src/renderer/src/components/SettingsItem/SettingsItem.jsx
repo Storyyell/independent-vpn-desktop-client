@@ -25,8 +25,8 @@ function SettingsItem(props) {
         </Stack>
       </Grid>
       <Grid item xs={2} sx={{ textAlign: 'end' }} justifyContent={'flex-end'} alignItems={'center'} display={'flex'}>
-        {variant == 1 && <KeyboardArrowRightIcon fontSize='medium' />}
-        {variant == 2 && <Switch defaultChecked fontSize='medium' />}
+        {variant == 1 && <KeyboardArrowRightIcon fontSize='small' />}
+        {variant == 2 && <Switch defaultChecked size='small' />}
         {variant == 3 && <Select
           // labelId="demo-simple-select-label"
           // id="demo-simple-select"
@@ -34,9 +34,9 @@ function SettingsItem(props) {
           label="Age"
           // onChange={handleChange}
           size='small'
-          sx={{ width: '100px' }}
+          sx={{ width: '100px', }}
         >
-          <MenuItem value={'v2ray'}>v2ray</MenuItem>
+          <MenuItem value={'v2ray'} >v2ray</MenuItem>
           <MenuItem value={'wireguard'}>wireguard</MenuItem>
         </Select>}
 
