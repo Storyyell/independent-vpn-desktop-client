@@ -47,7 +47,7 @@ const generalInfoSettingsJson = [
 const AppSettings = () => {
   return (
     <>
-      <Grid container spacing={1} width={'100%'}>
+      <Stack spacing={1} width={'100%'}>
 
         <List sx={{ width: '100%' }}>
           {
@@ -66,7 +66,8 @@ const AppSettings = () => {
           }
         </List>
 
-        <Typography variant={'h6'} sx={{ mt: 1 }} fontWeight={600}>General info</Typography>
+        <Typography fontSize={'14px'} fontWeight={600} sx={{ mt: 1 }}>Help us improve</Typography>
+
         <List>
           {
             generalInfoSettingsJson.map((item, index) => {
@@ -84,7 +85,7 @@ const AppSettings = () => {
           }
         </List>
 
-      </Grid>
+      </Stack>
 
     </>
   )
