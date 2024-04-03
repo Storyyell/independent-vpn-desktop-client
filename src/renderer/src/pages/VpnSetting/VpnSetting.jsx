@@ -52,7 +52,7 @@ const homeSettingsJson = [
 const VpnSetting = () => {
   return (
     <>
-      <Grid container spacing={1} width={'100%'}>
+      <Stack spacing={1} width={'100%'}>
 
         <List sx={{ width: '100%' }}>
           {
@@ -71,7 +71,7 @@ const VpnSetting = () => {
           }
         </List>
 
-      </Grid>
+      </Stack>
 
     </>
   )
