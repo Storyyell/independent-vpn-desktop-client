@@ -73,14 +73,14 @@ const Textarea = styled(BaseTextareaAutosize)(
 const ReportBug = () => {
   return (
     <>
-      <Stack direction="column" spacing={2} alignItems={'center'} width={'100%'}>
-        <Typography variant={'h6'} sx={{ mt: 1 }} fontWeight={600}>{content.title}</Typography>
-        <Stack width={'100%'} sx={{ paddingTop: 6 }} spacing={3}>
-          <Typography variant={'caption'} fontWeight={600} >{content.matter}</Typography>
+      <Stack direction="column" spacing={1} alignItems={'center'} width={'100%'}>
+        <Typography fontSize={'13px'} sx={{ mt: 1 }} fontWeight={600}>{content.title}</Typography>
+        <Stack width={'100%'} sx={{ paddingTop: 2 }} spacing={3}>
+          <Typography fontSize={'11px'} fontWeight={600} >{content.matter}</Typography>
           <Textarea aria-label="minimum height" minRows={3} placeholder="Minimum 3 rows" />
-          <Typography variant={'subtitle2'} align='justify' fontWeight={600} sx={{ p: 1 }}>{content.message}</Typography>
+          <Typography fontSize={'11px'} align='justify' fontWeight={600} sx={{ p: 1 }}>{content.message}</Typography>
         </Stack>
-        <Button variant="contained" color="error" size="small" sx={{ px: 9 }}>{content.button}</Button>
+        <Button variant="contained" color="error" size="small" sx={{ px: 7 }}>{content.button}</Button>
       </Stack>
     </>
   )
