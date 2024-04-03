@@ -30,6 +30,7 @@ function createWindow() {
     height: 540,
     x: screen_size.width - 380 - 40,
     y: screen_size.height - 540 - 50,
+    backgroundColor: '#1E1A1B',
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
