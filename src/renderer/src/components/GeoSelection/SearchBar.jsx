@@ -10,8 +10,11 @@ const SearchBar = (props) => {
   let setSearchField = props.setSearchField
   let loadCityList = props.loadCityList
   let favIconClick = props.favIconClick
-  let handleResetFav = props.handleResetFav
+  let setFavList = props.setFavList
 
+  const handleResetFav = () => {
+    setFavList({ countries: [], cities: {} })
+  }
 
   return (
     <>

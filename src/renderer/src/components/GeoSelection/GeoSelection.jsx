@@ -23,9 +23,9 @@ const GeoSelection = (props) => {
   const { favList, setFavList } = React.useContext(FavListContext);
   const [favIconClick, setFavIconClick] = React.useState(false);
   const [countryListProcessed, setCountryListProcessed] = React.useState(serverList?.countries || []);
-  const [cityListProcessed, setCityListProcessed] = React.useState(serverList?.countries || []);
+  const [cityListProcessed, setCityListProcessed] = React.useState(serverList?.cities?.[selectedItems?.countryId] || []);
   const [searchField, setSearchField] = React.useState('');
-
+  const [processListUpdate, setProcessListUpdate] = React.useState(false)
 
   const mentIconStyle = {
     width: '30px',
@@ -36,6 +36,8 @@ const GeoSelection = (props) => {
     borderRadius: '5px',
   }
 
+
+  // for refreshing the country list
   React.useEffect(() => {
     if (deviceToken) {
       window.api.getCountries(deviceToken)
@@ -50,6 +52,8 @@ const GeoSelection = (props) => {
     }
   }, [deviceToken])
 
+
+  // for refreshing the city list
   React.useEffect(() => {
     if (selectedItems?.countryId && deviceToken) {
       window.api.getCities(deviceToken, selectedItems?.countryId)
@@ -70,8 +74,9 @@ const GeoSelection = (props) => {
 
   }, [selectedItems?.countryId, deviceToken])
 
-  React.useEffect(() => {
 
+  // for refreshing the processed country list
+  React.useEffect(() => {
     favIconClick ?
       setCountryListProcessed(serverList?.countries.filter((d) => {
         return favList?.countries?.includes(d?.id)
@@ -81,6 +86,7 @@ const GeoSelection = (props) => {
 
   }, [serverList?.countries, favIconClick, favList?.countries])
 
+  // for refreshing the processed city list
   React.useEffect(() => {
 
     favIconClick ?
@@ -90,29 +96,7 @@ const GeoSelection = (props) => {
       :
       setCityListProcessed(serverList?.cities[selectedItems?.countryId])
 
-  }, [serverList?.cities, favIconClick, favList?.cities])
-
-  const handleCityChange = (cityId_) => {
-    setSelectedItems((d) => {
-      return { ...d, cityId: cityId_ }
-    })
-    if (deviceToken && selectedItems?.countryId && cityId_) {
-      window.api.getServers(deviceToken, selectedItems?.countryId, cityId_)
-        .then((res) => {
-          setServerList((d) => {
-            return {
-              ...d, servers: {
-                ...d.servers,
-                [`${selectedItems?.countryId}-${cityId_}`]: res.data
-              }
-            }
-          })
-        })
-        .catch((e) => {
-          console.log(e)
-        })
-    }
-  };
+  }, [serverList?.cities, favIconClick, favList?.cities, processListUpdate])
 
   React.useEffect(() => {
     if (loadCityList) {
@@ -126,18 +110,7 @@ const GeoSelection = (props) => {
     }
   }, [searchField])
 
-  const handleCountryChange = (countryId_) => {
-    setLoadCityList(true)
-    setSelectedItems((d) => {
-      return { ...d, countryId: countryId_, cityId: '' }
-    })
-  }
 
-
-
-  const handleResetFav = () => {
-    setFavList({ countries: [], cities: {} })
-  }
 
 
   const DrawerList = (
@@ -159,7 +132,7 @@ const GeoSelection = (props) => {
           setSearchField={setSearchField}
           loadCityList={loadCityList}
           favIconClick={favIconClick}
-          handleResetFav={handleResetFav}
+          setFavList={setFavList}
         />
 
         <Stack direction={'column'} spacing={2} style={{ margin: '8px' }}>
@@ -168,7 +141,8 @@ const GeoSelection = (props) => {
 
             <List >
               {
-                loadCityList ?
+                loadCityList
+                  ?
 
                   <CityList
                     serverList={serverList}
@@ -176,7 +150,10 @@ const GeoSelection = (props) => {
                     selectedItems={selectedItems}
                     favList={favList}
                     setFavList={setFavList}
-                    handleCityChange={handleCityChange}
+                    deviceToken={deviceToken}
+                    setServerList={setServerList}
+                    setSelectedItems={setSelectedItems}
+
                   />
                   :
 
@@ -185,7 +162,10 @@ const GeoSelection = (props) => {
                     countryListProcessed={countryListProcessed}
                     favList={favList}
                     setFavList={setFavList}
-                    handleCountryChange={handleCountryChange} />
+                    setLoadCityList={setLoadCityList}
+                    setSelectedItems={setSelectedItems}
+                    setProcessListUpdate={setProcessListUpdate}
+                  />
               }
             </List>
             <Divider />

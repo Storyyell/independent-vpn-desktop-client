@@ -9,12 +9,25 @@ const CountryList = (props) => {
   let countryListProcessed = props.countryListProcessed
   let favList = props.favList
   let setFavList = props.setFavList
-  let handleCountryChange = props.handleCountryChange
+  let setLoadCityList = props.setLoadCityList
+  let setSelectedItems = props.setSelectedItems
+  let setProcessListUpdate = props.setProcessListUpdate
+
+  const handleCountryChange = (countryId_) => {
+    setProcessListUpdate(d => !d)
+    setLoadCityList(true)
+    setSelectedItems((d) => {
+      return { ...d, countryId: countryId_, cityId: '' }
+    })
+  }
+
 
   return (
     <>
       {
-        serverList?.countries ?
+        serverList?.countries
+
+          ?
 
           countryListProcessed?.map((d, i) => {
             return (
@@ -34,7 +47,9 @@ const CountryList = (props) => {
                 }}
               />
             )
-          }) :
+          })
+
+          :
 
           <Typography variant='subtitle2' sx={{ m: 2 }}>
             Loading country list ...
