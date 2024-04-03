@@ -38,8 +38,8 @@ const GeoSelection = (props) => {
 
 
   const mentIconStyle = {
-    width: '40px',
-    height: '40px',
+    width: '30px',
+    height: '30px',
     alignItems: 'center',
     justifyContent: 'center',
     display: 'flex',
@@ -149,7 +149,7 @@ const GeoSelection = (props) => {
         props?.setFavIconClick(!props?.favIconClick)
       }} >
         <Box style={{ ...props.mentIconStyle, backgroundColor: props.favIconClick ? 'red' : 'none' }} sx={{ b: 1 }} >
-          <img alt="favicon" src={favIcon} loading="lazy" />
+          <img alt="favicon" src={favIcon} loading="lazy" width={'19px'} />
         </Box>
       </IconButton>
     )
@@ -163,8 +163,8 @@ const GeoSelection = (props) => {
 
   const DrawerList = (
     <>
-      <Stack direction={'column'} spacing={3} sx={{ px: 4, height: '80vh' }}>
-        <Stack direction={'row'} width={'100%'} style={{ justifyContent: 'space-between', alignItems: 'center', padding: '16px 0px' }}>
+      <Stack direction={'column'} spacing={1} sx={{ height: '80vh', margin: '10px 10px' }}>
+        <Stack direction={'row'} width={'100%'} style={{ justifyContent: 'space-between', alignItems: 'center', }}>
 
           <IconButton onClick={() => {
             if (loadCityList) {
@@ -176,10 +176,10 @@ const GeoSelection = (props) => {
               props.onClose()
             }
           }}>
-            {loadCityList ? <ArrowBackIcon style={mentIconStyle} /> : <CloseIcon style={mentIconStyle} />}
+            {loadCityList ? <ArrowBackIcon /> : <CloseIcon />}
           </IconButton>
 
-          {favIconClick && <Typography variant='h6'>Favourites</Typography>}
+          {favIconClick && <Typography style={{ fontSize: '16px' }}>Favourites</Typography>}
 
           <FavIcon favIconClick={favIconClick} setFavIconClick={setFavIconClick} mentIconStyle={mentIconStyle} />
 
@@ -187,87 +187,92 @@ const GeoSelection = (props) => {
 
         {/* //todo change the button color */}
 
-        <Button variant='contained' size='large' color='error'>
-          <BoltIcon sx={{ color: 'white' }} />
-          <Typography sx={{ color: 'white' }}> Quick Connect </Typography>
-        </Button>
+        <Stack direction={'column'} spacing={2} style={{ margin: '8px' }}>
 
-        <TextField id="outlined-basic" label={`search ${loadCityList ? 'cities' : 'countries'}`} variant="outlined"
-          value={searchField}
-          onChange={(e) => {
-            setSearchField(e.target.value)
-          }} />
-        {favIconClick && <Stack style={{ margin: '5px' }} justifyContent={'flex-end'} sx={{ width: '100%' }} flexDirection={'row'}><Button variant='text' color='error' size='small' sx={{ mx: 2 }} onClick={() => { handleResetFav() }}>reset favourities</Button></Stack>}
+          <Button variant='contained' size='small' color='error'>
+            <BoltIcon color='white' fontSize='small' />
+            <Typography sx={{ color: 'white' }} style={{ fontSize: '15px' }}> Quick Select </Typography>
+          </Button>
 
-        <Box sx={{ width: '100%' }} role="presentation" >
+          <TextField id="search" label={`search ${loadCityList ? 'cities' : 'countries'}`} variant="outlined"
+            value={searchField}
+            size='small'
+            onChange={(e) => {
+              setSearchField(e.target.value)
+            }} />
 
-          <List >
-            {
-              loadCityList ?
+          {favIconClick && <Stack style={{ margin: '5px' }} justifyContent={'flex-end'} sx={{ width: '100%' }} flexDirection={'row'}><Button variant='text' color='error' size='small' sx={{ mx: 2 }} onClick={() => { handleResetFav() }}>reset favourities</Button></Stack>}
 
-                serverList?.cities[selectedItems?.countryId] ?
-                  cityListProcessed?.map((d, i) => {
-                    return (
-                      <GeoItem key={i} geoType='city' data={{ ...d, code: (serverList?.countries.find(d => d.id == selectedItems?.countryId))?.code }} onClick={(val) => {
-                        handleCityChange(val)
-                      }}
-                        onFavClick={() => {
-                          favList?.cities?.[selectedItems?.countryId]?.includes(d?.id)
-                            ?
-                            setFavList((c) => {
-                              const filteredCities = (c?.cities?.[selectedItems?.countryId]).filter((f) => f !== d.id);
-                              if (filteredCities.length === 0) {
-                                const newCities = { ...c.cities };
-                                delete newCities[selectedItems?.countryId];
-                                return { ...c, cities: newCities };
-                              } else {
-                                return { ...c, cities: { ...c.cities, [selectedItems?.countryId]: filteredCities } };
-                              }
-                            })
-                            :
-                            setFavList((c) => {
-                              return { ...c, cities: { ...c.cities, [selectedItems?.countryId]: [...(c?.cities?.[selectedItems?.countryId] || []), d?.id] } };
-                            })
+          <Box sx={{ width: '100%' }} role="presentation" >
+
+            <List >
+              {
+                loadCityList ?
+
+                  serverList?.cities[selectedItems?.countryId] ?
+                    cityListProcessed?.map((d, i) => {
+                      return (
+                        <GeoItem key={i} geoType='city' data={{ ...d, code: (serverList?.countries.find(d => d.id == selectedItems?.countryId))?.code }} onClick={(val) => {
+                          handleCityChange(val)
                         }}
-                      />
-                    )
-                  }) :
+                          onFavClick={() => {
+                            favList?.cities?.[selectedItems?.countryId]?.includes(d?.id)
+                              ?
+                              setFavList((c) => {
+                                const filteredCities = (c?.cities?.[selectedItems?.countryId]).filter((f) => f !== d.id);
+                                if (filteredCities.length === 0) {
+                                  const newCities = { ...c.cities };
+                                  delete newCities[selectedItems?.countryId];
+                                  return { ...c, cities: newCities };
+                                } else {
+                                  return { ...c, cities: { ...c.cities, [selectedItems?.countryId]: filteredCities } };
+                                }
+                              })
+                              :
+                              setFavList((c) => {
+                                return { ...c, cities: { ...c.cities, [selectedItems?.countryId]: [...(c?.cities?.[selectedItems?.countryId] || []), d?.id] } };
+                              })
+                          }}
+                        />
+                      )
+                    }) :
 
-                  <Typography variant='subtitle2' sx={{ m: 2 }}>
-                    Loading cities list ...
-                  </Typography>
-                :
+                    <Typography variant='subtitle2' sx={{ m: 2 }}>
+                      Loading cities list ...
+                    </Typography>
+                  :
 
-                serverList?.countries ?
+                  serverList?.countries ?
 
-                  countryListProcessed?.map((d, i) => {
-                    return (
-                      <GeoItem key={d?.id} data={d} geoType='country' onClick={(val) => {
-                        handleCountryChange(val)
-                      }}
-                        onFavClick={() => {
-                          favList?.countries?.includes(d?.id)
-                            ?
-                            setFavList((c) => {
-                              return { ...c, countries: c.countries.filter((f) => f != d?.id) }
-                            })
-                            :
-                            setFavList((c) => {
-                              return { ...c, countries: [...c.countries, d?.id] }
-                            })
+                    countryListProcessed?.map((d, i) => {
+                      return (
+                        <GeoItem key={d?.id} data={d} geoType='country' onClick={(val) => {
+                          handleCountryChange(val)
                         }}
-                      />
-                    )
-                  }) :
+                          onFavClick={() => {
+                            favList?.countries?.includes(d?.id)
+                              ?
+                              setFavList((c) => {
+                                return { ...c, countries: c.countries.filter((f) => f != d?.id) }
+                              })
+                              :
+                              setFavList((c) => {
+                                return { ...c, countries: [...c.countries, d?.id] }
+                              })
+                          }}
+                        />
+                      )
+                    }) :
 
-                  <Typography variant='subtitle2' sx={{ m: 2 }}>
-                    Loading country list ...
-                  </Typography>
-            }
-          </List>
-          <Divider />
-        </Box>
+                    <Typography variant='subtitle2' sx={{ m: 2 }}>
+                      Loading country list ...
+                    </Typography>
+              }
+            </List>
+            <Divider />
+          </Box>
 
+        </Stack>
       </Stack>
 
     </>

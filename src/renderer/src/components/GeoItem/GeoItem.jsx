@@ -13,8 +13,8 @@ export const GeoItem = (props) => {
 
 
   const mentIconStyle = {
-    width: '32px',
-    height: '32px'
+    width: '28px',
+    height: '28px'
   }
 
 
@@ -24,7 +24,7 @@ export const GeoItem = (props) => {
 
     if (props.geoType == 'country') {
       isFav = favList.countries.includes(d.id);
-    }else if(props.geoType == 'city') {
+    } else if (props.geoType == 'city') {
       isFav = favList?.cities?.[d?.country_id]?.includes(d?.id)
     }
 
@@ -45,30 +45,30 @@ export const GeoItem = (props) => {
       // todo prevent hover propogation
 
       >
-        <img alt="favicon" src={favIcon} loading="lazy" width='15px' />
+        <img alt="favicon" src={favIcon} loading="lazy" width='14px' />
       </IconButton>
     )
   }
 
   return (
-    <ListItem key={d.id} sx={{ px: 0 }} >
-      <ListItemButton onClick={() => { props.onClick(d.id) }}>
-        <Paper sx={{ width: '100%', p: 2 }}>
+    <ListItem key={d.id} sx={{ p: 0 }} >
+      <ListItemButton onClick={() => { props.onClick(d.id) }} sx={{ p: 0.7 }}>
+        <Paper sx={{ width: '100%', p: 1 }}>
           <Stack direction={'row'} justifyContent={'space-between'} width={'100%'}>
             <Stack direction={'column'}>
               <Stack direction={'row'} spacing={2}>
                 <img src={`https://flagcdn.com/36x27/${d?.code?.toLowerCase()}.png`} height={'20px'} loading='lazy'></img>
-                <Typography>
+                <Typography fontSize={'16px'}>
                   {d.name}
                 </Typography>
 
               </Stack>
 
               <Box>
-                <Typography display={'inline'} sx={{ paddingRight: 1 }} variant='caption' fontSize={15}>
+                <Typography display={'inline'} sx={{ paddingRight: 1 }} variant='caption' fontSize={'12px'}>
                   Node:
                 </Typography>
-                <Typography display={'inline'} variant='subtitle2 ' fontSize={15}>
+                <Typography display={'inline'} variant='subtitle2 ' fontSize={'12px'}>
                   {d.servers_available}
                 </Typography>
               </Box>
