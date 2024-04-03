@@ -1,10 +1,14 @@
 import { Button, Stack, TextField, Typography } from '@mui/material'
 import React from 'react'
 import BoltIcon from '@mui/icons-material/Bolt';
+import { SelectionContext } from '../../context/SelectionContext';
 
 
 
 const SearchBar = (props) => {
+
+  const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
+
 
   let searchField = props.searchField
   let setSearchField = props.setSearchField
@@ -16,9 +20,16 @@ const SearchBar = (props) => {
     setFavList({ countries: [], cities: {} })
   }
 
+  const handleQuickSelect = () => {
+    props.onClose()
+    setSelectedItems({ countryId: null, cityId: null })
+  }
+
   return (
     <>
-      <Button variant='contained' size='small' color='error'>
+      <Button variant='contained' size='small' color='error'
+        onClick={() => { handleQuickSelect() }}
+      >
         <BoltIcon color='white' fontSize='small' />
         <Typography sx={{ color: 'white' }} style={{ fontSize: '15px' }}> Quick Select </Typography>
       </Button>
