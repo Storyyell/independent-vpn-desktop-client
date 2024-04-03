@@ -12,14 +12,14 @@ function SettingsItem(props) {
 
 
   return (
-    <Grid container sx={{ marginBottom: 1, display: (variant != 0 ? 'flex' : 'none') }}>
+    <Grid container sx={{ marginBottom: 0.5, display: (variant != 0 ? 'flex' : 'none') }}>
       <Grid item xs>
         <Stack direction="column" spacing={1}>
-          <Typography variant={'subtitle1'} sx={{ fontWeight: 600 }} fontSize={16}>
+          <Typography fontSize={11} sx={{ fontWeight: 600 }} >
             {props.title}
           </Typography>
 
-          <Typography variant={'caption'} fontSize={'14px'}>
+          <Typography fontSize={9}>
             {props.desc}
           </Typography>
         </Stack>

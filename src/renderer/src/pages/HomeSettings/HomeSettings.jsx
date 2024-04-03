@@ -41,22 +41,28 @@ const HomeSettings = (props) => {
 
   return (
     <>
-      <Grid container spacing={1} width={'100%'}>
+      <Stack spacing={1} width={'100%'}>
 
         <Grid container sx={{ marginBottom: 1 }}>
           <Grid item xs>
-            <Typography variant={'h5'} sx={{ fontWeight: 900 }}>
+            <Typography fontSize={16} sx={{ fontWeight: 900 }}>
               User12334566
             </Typography>
           </Grid>
           <Grid item xs={6} sx={{ textAlign: 'end' }} >
-            <Chip label="FREE" color="error" variant="outlined" sx={{ px: 1 }} />
+            <Chip size="small" label="FREE" color="error" variant="outlined"
+              sx={{
+                height: 'auto',
+                '& .MuiChip-label': {
+                  fontSize: '9px'
+                },
+              }} />
           </Grid>
         </Grid>
 
         <Grid container sx={{ marginBottom: 2 }}>
           <Grid item xs>
-            <Typography variant={'subtitle2'} >
+            <Typography fontSize={11}>
               Explore Settings in the App
             </Typography>
           </Grid>
@@ -83,20 +89,25 @@ const HomeSettings = (props) => {
           }
         </List>
 
-      </Grid>
+      </Stack>
 
       {/* // todo make below elemtny to bottom */}
-      <Box variant='div' sx={{ width: '100%' }}>
-        <List>
+
+      <Stack sx={{ width: '100%' }}>
+        <List  >
           <ListItem disablePadding>
-            <ListItemButton onClick={() => {
-              props.setSettingsPage('support')
-            }} sx={{ p: '3px', borderRadius: 1 }}>
+            <ListItemButton
+
+              onClick={() => {
+                props.setSettingsPage('support')
+              }}
+
+              sx={{ p: '3px', borderRadius: 1 }}>
               <SettingsItem title={'Support'} desc={'Troubleshooting, contact support etc.'} variant={1} />
             </ListItemButton>
           </ListItem>
         </List>
-      </Box>
+      </Stack>
 
     </>
   )

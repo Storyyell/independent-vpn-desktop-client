@@ -5,6 +5,7 @@ import VpnSetting from '../VpnSetting/VpnSetting'
 import AppSettings from '../AppSettings/AppSettings'
 import SupportPage from '../SupportPage/SupportPage'
 import ReportBug from '../ReportBug/ReportBug'
+import { Box } from '@mui/material'
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
@@ -50,13 +51,14 @@ const Settings = (props) => {
         }
       }} />
 
-      {settingsPage == 'home' && <HomeSettings setSettingsPage={setSettingsPage} />}
-      {settingsPage == 'vpn setting' && <VpnSetting />}
-      {settingsPage == 'app setting' && <AppSettings />}
-      {settingsPage == 'support' && <SupportPage setSettingsPage={setSettingsPage} />}
-      {settingsPage == 'report-bug' && <ReportBug setSettingsPage={setSettingsPage} />}
-      {settingsPage == 'create ticket' && <ReportBug setSettingsPage={setSettingsPage} />}
-
+      <Box sx={{ m: 1 }}>
+        {settingsPage == 'home' && <HomeSettings setSettingsPage={setSettingsPage} />}
+        {settingsPage == 'vpn setting' && <VpnSetting />}
+        {settingsPage == 'app setting' && <AppSettings />}
+        {settingsPage == 'support' && <SupportPage setSettingsPage={setSettingsPage} />}
+        {settingsPage == 'report-bug' && <ReportBug setSettingsPage={setSettingsPage} />}
+        {settingsPage == 'create ticket' && <ReportBug setSettingsPage={setSettingsPage} />}
+      </Box>
 
     </>
   )

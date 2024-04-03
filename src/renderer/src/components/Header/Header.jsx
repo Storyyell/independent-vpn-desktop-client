@@ -28,11 +28,13 @@ const Header = () => {
 
         {/* side drawer */}
 
-        <Drawer open={menuClick} onClose={() => { setMenuClick(false) }} >
-          <Box sx={{ width: '90vw', p: 4, height: '100vh' }} role="presentation"
-            style={{
-              background: 'linear-gradient(180deg, #1E1A1B 0%, #171414 100%)'
-            }}>
+        <Drawer open={menuClick} onClose={() => { setMenuClick(false) }}
+          PaperProps={{
+            style: {
+              background: 'linear-gradient(180deg, #1E1A1B 0%, #171414 100%)',
+            }
+          }}>
+          <Box sx={{ width: '90vw', m: 1, height: '100vh' }} role="presentation">
             <Settings onClick={() => { setMenuClick(false) }} />
           </Box>
         </Drawer>
@@ -55,7 +57,7 @@ const Header = () => {
         </Button>
 
       </Stack>
-    </Box>
+    </Box >
 
   )
 }
