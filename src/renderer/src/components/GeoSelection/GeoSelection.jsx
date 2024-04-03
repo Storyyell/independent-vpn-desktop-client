@@ -1,33 +1,23 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import { IconButton, Paper, Stack, TextField, Typography } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import favIcon from '../../assets/favIcon.svg';
-import BoltIcon from '@mui/icons-material/Bolt';
-import { GeoItem } from '../GeoItem/GeoItem';
+import { Stack } from '@mui/material';
 import { ServerListContext } from '../../context/ServerListContext';
 import { SelectionContext } from '../../context/SelectionContext';
 import { DeviceTokenContext } from '../../context/DeviceTokenContext';
 import { FavListContext } from '../../context/FavContext';
+import CountryList from './CountryList';
+import CityList from './CityList';
+import GeoSelHeader from './GeoSelHeader';
+import SearchBar from './SearchBar';
 
-// todo needs code cleaning here
 
 const GeoSelection = (props) => {
 
-  const [menuClick, setMenuClick] = React.useState(false)
   const { serverList, setServerList } = React.useContext(ServerListContext);
-  const { deviceToken, setDeviceToken } = React.useContext(DeviceTokenContext);
+  const { deviceToken } = React.useContext(DeviceTokenContext);
   const [loadCityList, setLoadCityList] = React.useState(false)
   const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
   const { favList, setFavList } = React.useContext(FavListContext);
@@ -143,18 +133,7 @@ const GeoSelection = (props) => {
     })
   }
 
-  const FavIcon = (props) => {
-    return (
-      <IconButton onClick={() => {
-        props?.setFavIconClick(!props?.favIconClick)
-      }} >
-        <Box style={{ ...props.mentIconStyle, backgroundColor: props.favIconClick ? 'red' : 'none' }} sx={{ b: 1 }} >
-          <img alt="favicon" src={favIcon} loading="lazy" width={'19px'} />
-        </Box>
-      </IconButton>
-    )
 
-  }
 
   const handleResetFav = () => {
     setFavList({ countries: [], cities: {} })
@@ -164,44 +143,26 @@ const GeoSelection = (props) => {
   const DrawerList = (
     <>
       <Stack direction={'column'} spacing={1} sx={{ height: '80vh', margin: '10px 10px' }}>
-        <Stack direction={'row'} width={'100%'} style={{ justifyContent: 'space-between', alignItems: 'center', }}>
 
-          <IconButton onClick={() => {
-            if (loadCityList) {
-              setSelectedItems((d) => {
-                return { ...d, cityId: '' }
-              })
-              setLoadCityList(false)
-            } else {
-              props.onClose()
-            }
-          }}>
-            {loadCityList ? <ArrowBackIcon /> : <CloseIcon />}
-          </IconButton>
+        <GeoSelHeader
+          favIconClick={favIconClick}
+          setFavIconClick={setFavIconClick}
+          mentIconStyle={mentIconStyle}
+          loadCityList={loadCityList}
+          setLoadCityList={setLoadCityList}
+          setSelectedItems={setSelectedItems}
+          onClose={props.onClose}
+        />
 
-          {favIconClick && <Typography style={{ fontSize: '16px' }}>Favourites</Typography>}
-
-          <FavIcon favIconClick={favIconClick} setFavIconClick={setFavIconClick} mentIconStyle={mentIconStyle} />
-
-        </Stack>
-
-        {/* //todo change the button color */}
+        <SearchBar
+          searchField={searchField}
+          setSearchField={setSearchField}
+          loadCityList={loadCityList}
+          favIconClick={favIconClick}
+          handleResetFav={handleResetFav}
+        />
 
         <Stack direction={'column'} spacing={2} style={{ margin: '8px' }}>
-
-          <Button variant='contained' size='small' color='error'>
-            <BoltIcon color='white' fontSize='small' />
-            <Typography sx={{ color: 'white' }} style={{ fontSize: '15px' }}> Quick Select </Typography>
-          </Button>
-
-          <TextField id="search" label={`search ${loadCityList ? 'cities' : 'countries'}`} variant="outlined"
-            value={searchField}
-            size='small'
-            onChange={(e) => {
-              setSearchField(e.target.value)
-            }} />
-
-          {favIconClick && <Stack style={{ margin: '5px' }} justifyContent={'flex-end'} sx={{ width: '100%' }} flexDirection={'row'}><Button variant='text' color='error' size='small' sx={{ mx: 2 }} onClick={() => { handleResetFav() }}>reset favourities</Button></Stack>}
 
           <Box sx={{ width: '100%' }} role="presentation" >
 
@@ -209,64 +170,22 @@ const GeoSelection = (props) => {
               {
                 loadCityList ?
 
-                  serverList?.cities[selectedItems?.countryId] ?
-                    cityListProcessed?.map((d, i) => {
-                      return (
-                        <GeoItem key={i} geoType='city' data={{ ...d, code: (serverList?.countries.find(d => d.id == selectedItems?.countryId))?.code }} onClick={(val) => {
-                          handleCityChange(val)
-                        }}
-                          onFavClick={() => {
-                            favList?.cities?.[selectedItems?.countryId]?.includes(d?.id)
-                              ?
-                              setFavList((c) => {
-                                const filteredCities = (c?.cities?.[selectedItems?.countryId]).filter((f) => f !== d.id);
-                                if (filteredCities.length === 0) {
-                                  const newCities = { ...c.cities };
-                                  delete newCities[selectedItems?.countryId];
-                                  return { ...c, cities: newCities };
-                                } else {
-                                  return { ...c, cities: { ...c.cities, [selectedItems?.countryId]: filteredCities } };
-                                }
-                              })
-                              :
-                              setFavList((c) => {
-                                return { ...c, cities: { ...c.cities, [selectedItems?.countryId]: [...(c?.cities?.[selectedItems?.countryId] || []), d?.id] } };
-                              })
-                          }}
-                        />
-                      )
-                    }) :
-
-                    <Typography variant='subtitle2' sx={{ m: 2 }}>
-                      Loading cities list ...
-                    </Typography>
+                  <CityList
+                    serverList={serverList}
+                    cityListProcessed={cityListProcessed}
+                    selectedItems={selectedItems}
+                    favList={favList}
+                    setFavList={setFavList}
+                    handleCityChange={handleCityChange}
+                  />
                   :
 
-                  serverList?.countries ?
-
-                    countryListProcessed?.map((d, i) => {
-                      return (
-                        <GeoItem key={d?.id} data={d} geoType='country' onClick={(val) => {
-                          handleCountryChange(val)
-                        }}
-                          onFavClick={() => {
-                            favList?.countries?.includes(d?.id)
-                              ?
-                              setFavList((c) => {
-                                return { ...c, countries: c.countries.filter((f) => f != d?.id) }
-                              })
-                              :
-                              setFavList((c) => {
-                                return { ...c, countries: [...c.countries, d?.id] }
-                              })
-                          }}
-                        />
-                      )
-                    }) :
-
-                    <Typography variant='subtitle2' sx={{ m: 2 }}>
-                      Loading country list ...
-                    </Typography>
+                  <CountryList
+                    serverList={serverList}
+                    countryListProcessed={countryListProcessed}
+                    favList={favList}
+                    setFavList={setFavList}
+                    handleCountryChange={handleCountryChange} />
               }
             </List>
             <Divider />
@@ -290,7 +209,7 @@ const GeoSelection = (props) => {
       }}
     >
       {DrawerList}
-    </Drawer >
+    </Drawer>
 
   )
 }
