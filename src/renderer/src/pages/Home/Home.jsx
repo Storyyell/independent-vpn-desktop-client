@@ -30,17 +30,18 @@ function Home(props) {
     // for vpn status listenening
     useEffect(() => {
         const handleConnectionStatus = (arg) => {
-            setVpnStatus(arg);
+            const message = arg.message;
 
-            if (arg === 'VPN connection established') {
+            setVpnStatus(message);
+            if (message === 'VPN connection established') {
                 setVpnStatusMain('connected');
-            } else if (arg === 'VPN disconnected') {
+            } else if (message === 'VPN disconnected') {
                 setVpnStatusMain('disconnected');
             } else {
                 setVpnStatusMain('connecting');
             }
 
-            console.log(arg);
+            console.log(message);
         };
 
         window.ipcRenderer.on('connectionStatus', handleConnectionStatus);
