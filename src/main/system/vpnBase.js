@@ -32,15 +32,16 @@ var vpnObj = {
     serverPort: null,
     serverUUID: null,
 
-    statusObj: {
-        connected: false,
-        connectionProgress: false,
-        disconnectionProgress: false,
-        // serverIp: null,
-        // serverAddress: null,
-        // serverPort: null,
-        // serverUUID: null
-
+    statusObj: function () {
+        return {
+            connected: this.connected,
+            connectionProgress: this.connectionProgress,
+            disconnectionProgress: this.disconnectionProgress,
+            // serverIp: this.serverIp,
+            // serverAddress: this.serverAddress,
+            // serverPort: this.serverPort,
+            // serverUUID: this.serverUUID
+        }
     }
 }
 
