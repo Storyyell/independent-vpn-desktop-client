@@ -13,16 +13,16 @@ function refreshCountryList(deviceToken, setServerList) {
   }
 }
 
-function refreshCityList(selectedItems, deviceToken, setServerList) {
+function refreshCityList(countryId, deviceToken, setServerList) {
 
-  if (selectedItems?.countryId && deviceToken) {
-    window.api.getCities(deviceToken, selectedItems?.countryId)
+  if (countryId && deviceToken) {
+    window.api.getCities(deviceToken, countryId)
       .then((res) => {
         setServerList((d) => {
           return {
             ...d, cities: {
               ...d.cities,
-              [selectedItems?.countryId]: res.data
+              [countryId]: res.data
             }
           }
         })
@@ -31,6 +31,7 @@ function refreshCityList(selectedItems, deviceToken, setServerList) {
         console.log(e)
       })
   }
+
 }
 
 export {
