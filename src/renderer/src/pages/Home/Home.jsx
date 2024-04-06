@@ -4,7 +4,6 @@ import { Box, IconButton, Stack } from '@mui/material';
 import electronLogo from '../../assets/electron.svg'
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import LocationSelection from '../../components/LocationSelection/LocationSelection';
 import { ServerListContext } from '../../context/ServerListContext';
 import { VpnStatusMainContext } from '../../context/VpnStatusMainContext';
 import { DeviceTokenContext } from '../../context/DeviceTokenContext';
@@ -111,7 +110,6 @@ function Home(props) {
                 </Typography>
             </Stack>
 
-            {/* <LocationSelection /> */}
 
             <VpnTraffic />
             <GeoSelection
