@@ -13,6 +13,7 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ConnectBtn from '../../components/ConnectBtn/ConnectBtn';
 import GeoSelection from '../../components/GeoSelection/GeoSelection';
 import VpnTraffic from '../../components/VpnTraffic/VpnTraffic';
+import { handleVpnConnTrigger } from './ConnectionTrigger';
 
 
 
@@ -53,33 +54,7 @@ function Home(props) {
 
 
     function triggerVpnConnection() {
-        if (vpnStatusMain !== 'connected') {
-
-            console.log("vpn connection triggered fron renderer");
-            let sl = serverList.servers?.[`${selectedItems.countryId}-${selectedItems.cityId}`] || []
-            if (sl.length > 0) {
-
-                const randomIndex = Math.floor(Math.random() * sl.length);
-                const server = sl[randomIndex]
-                console.log(server);
-
-                let serverParms = {
-                    device_token: deviceToken,
-                    countryCode: selectedItems.countryId,
-                    cityCode: selectedItems.cityId,
-                    serverId: server.id
-                }
-
-                window.api.triggerConnection(serverParms);
-
-            } else {
-                setVpnStatus("fetching server list...")
-                // Todo handle this case properly
-                setTimeout(() => { setVpnStatus("VPN disconnected") }, 2000);
-            }
-        } else {
-            window.api.triggerDisconnection()
-        }
+        handleVpnConnTrigger(deviceToken, selectedItems, serverList, setVpnStatus, vpnStatusMain)
     }
 
     const getObj = (type, countryId, cityId) => {

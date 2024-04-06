@@ -90,7 +90,7 @@ const GeoSelection = (props) => {
   React.useEffect(() => {
 
     favIconClick ?
-      setCityListProcessed(serverList?.cities?.[selectedItems?.countryId].filter((d) => {
+      setCityListProcessed(serverList?.cities?.[selectedItems?.countryId]?.filter((d) => {
         return favList?.cities?.[selectedItems?.countryId]?.includes(d?.id)
       }))
       :
