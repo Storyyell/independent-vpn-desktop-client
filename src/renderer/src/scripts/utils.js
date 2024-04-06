@@ -5,22 +5,15 @@ async function refreshCountryList(deviceToken, serverList, setServerList) {
 
   const lastRefreshTimestamp = serverList?.countries?.timestamp; // new Date()
 
-  const refresh = () => {
-
-    window.api.getCountries(deviceToken)
-      .then((res) => {
-        setServerList((d) => {
-          return { ...d, countries: { data: res.data, timestamp: new Date() } }
-        })
-      })
-      .catch((e) => {
-        console.log(e)
-      })
-
-  }
-
   if (deviceToken && (!lastRefreshTimestamp || (now - lastRefreshTimestamp) >= dataValidityPeroid)) {
-    refresh();
+    try {
+      const res = await window.api.getCountries(deviceToken);
+      setServerList((d) => {
+        return { ...d, countries: { data: res.data, timestamp: new Date() } }
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
 
