@@ -1,4 +1,27 @@
-function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setVpnStatus, vpnStatusMain, setServerList) {
+import { refreshServerList } from "../../scripts/utils";
+
+const retryServerNo = 3;
+
+function selectRandomItems(array, count) {
+  const randomItems = [];
+  const arrayLength = array.length;
+  const maxCount = Math.min(count, arrayLength);
+  const selectedIndexes = new Set();
+
+  while (randomItems.length < maxCount) {
+    const randomIndex = Math.floor(Math.random() * arrayLength);
+    if (!selectedIndexes.has(randomIndex)) {
+      selectedIndexes.add(randomIndex);
+      randomItems.push(array[randomIndex]);
+    }
+  }
+
+  return randomItems;
+}
+
+
+
+async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setVpnStatus, vpnStatusMain, setServerList) {
 
   console.log('handleVpnConnTrigger');
 
@@ -17,6 +40,16 @@ function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setVpnStat
     case (selectedItems.cityId !== null && selectedItems.countryId !== null):
 
       console.log('selectedItems.cityId !== null && selectedItems.countryId !== null');
+      // console.log(`${selectedItems.countryId}-${selectedItems.cityId}`);
+
+      const slc = await refreshServerList(selectedItems?.countryId, selectedItems?.cityId, setServerList, serverList, deviceToken);
+      const slObj = (slc.servers?.[`${selectedItems.countryId}-${selectedItems.cityId}`]);
+      const sl = selectRandomItems(slObj.data, retryServerNo);
+      console.log(sl);
+      if (sl.length > 0) {
+        window.api.triggerConnection(sl[0]);
+      }
+
       break
 
     default:
@@ -57,5 +90,6 @@ function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setVpnStat
 
 
 }
+
 
 export { handleVpnConnTrigger }

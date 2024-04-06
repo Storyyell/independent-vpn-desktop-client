@@ -18,6 +18,7 @@ async function refreshCountryList(deviceToken, serverList, setServerList) {
       console.log(e);
     }
   }
+  return serverList;
 }
 
 async function refreshCityList(countryId, deviceToken, serverList, setServerList) {
@@ -42,6 +43,7 @@ async function refreshCityList(countryId, deviceToken, serverList, setServerList
       console.log(e);
     }
   }
+  return serverList;
 
 }
 
@@ -68,6 +70,7 @@ async function refreshServerList(countryId, cityId, setServerList, serverList, d
       console.log(e);
     }
   }
+  return serverList;
 
 }
 

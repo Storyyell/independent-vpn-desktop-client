@@ -2,7 +2,8 @@ import * as React from 'react';
 import { GeoItem } from '../GeoItem/GeoItem';
 import { Typography } from '@mui/material';
 import { refreshServerList } from '../../scripts/utils';
-
+import { handleVpnConnTrigger } from '../../pages/Home/ConnectionTrigger';
+import { VpnStatusMainContext } from '../../context/VpnStatusMainContext';
 
 
 const CityList = (props) => {
@@ -16,6 +17,8 @@ const CityList = (props) => {
   let deviceToken = props.deviceToken
   let setServerList = props.setServerList
 
+  const { vpnStatusMain, setVpnStatusMain } = React.useContext(VpnStatusMainContext);
+
 
   const handleCityChange = (cityId_) => {
 
@@ -23,7 +26,10 @@ const CityList = (props) => {
       return { ...d, cityId: cityId_ }
     })
 
-    refreshServerList(selectedItems?.countryId, cityId_, setServerList, serverList, deviceToken);
+    // refreshServerList(selectedItems?.countryId, cityId_, setServerList, serverList, deviceToken);
+
+    handleVpnConnTrigger(deviceToken, { ...selectedItems, cityId: cityId_ }, serverList, vpnStatusMain, vpnStatusMain, setServerList)
+
   };
 
   return (
