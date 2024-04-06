@@ -43,8 +43,8 @@ const SearchBar = (props) => {
           setSearchField(e.target.value)
         }} />
 
-      {favIconClick && <Stack style={{ margin: '5px' }} justifyContent={'flex-end'} sx={{ width: '100%' }} flexDirection={'row'}>
-        <Button variant='text' color='error' size='small' sx={{ mx: 2 }}
+      {favIconClick && <Stack style={{ padding: '5px' }} justifyContent={'flex-end'} sx={{ width: '100%' }} flexDirection={'row'}>
+        <Button variant='text' color='error' size='small' sx={{ px: 2 }}
           onClick={() => { handleResetFav() }}>
           reset favourities
         </Button>
