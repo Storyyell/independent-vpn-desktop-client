@@ -40,8 +40,10 @@ const GeoSelection = (props) => {
 
   // for refreshing the country list
   React.useEffect(() => {
-    refreshCountryList(deviceToken, setServerList);
-  }, [deviceToken])
+    if (props.open) {
+      refreshCountryList(deviceToken, serverList, setServerList);
+    }
+  }, [deviceToken, props.open])
 
 
   // for refreshing the city list
