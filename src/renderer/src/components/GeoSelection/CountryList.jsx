@@ -17,7 +17,7 @@ const CountryList = (props) => {
     setProcessListUpdate(d => !d)
     setLoadCityList(true)
     setSelectedItems((d) => {
-      return { ...d, countryId: countryId_, cityId: '' }
+      return { ...d, countryId: countryId_, cityId: null }
     })
   }
 
