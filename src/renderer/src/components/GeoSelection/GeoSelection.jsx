@@ -90,7 +90,7 @@ const GeoSelection = (props) => {
 
   const DrawerList = (
     <>
-      <Stack direction={'column'} spacing={1} sx={{ height: '80vh', margin: '10px 10px' }}>
+      <Stack direction={'column'} spacing={1} sx={{ height: '80vh', margin: '10px 10px' }} style={{ overflowY: 'scroll' }}>
 
         <GeoSelHeader
           favIconClick={favIconClick}
