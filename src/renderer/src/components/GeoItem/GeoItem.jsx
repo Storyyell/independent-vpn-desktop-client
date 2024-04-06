@@ -29,7 +29,7 @@ export const GeoItem = (props) => {
     }
 
     return (
-      <IconButton style={mentIconStyle} alignItems={'center'}
+      <IconButton style={mentIconStyle}
         onClick={(e) => {
           props.onFavClick();
           e.stopPropagation();
