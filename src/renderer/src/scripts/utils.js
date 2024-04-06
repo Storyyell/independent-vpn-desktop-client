@@ -1,7 +1,6 @@
 const dataValidityPeroid = 10 * 60 * 1000 // 10minutes
 
 async function refreshCountryList(deviceToken, serverList, setServerList) {
-  console.log('invoked refreshCountryList');
   const now = Date.now();
 
   const lastRefreshTimestamp = serverList?.countries?.timestamp; // new Date()
@@ -25,9 +24,13 @@ async function refreshCountryList(deviceToken, serverList, setServerList) {
   }
 }
 
-function refreshCityList(countryId, deviceToken, setServerList) {
+function refreshCityList(countryId, deviceToken, serverList, setServerList) {
 
-  if (countryId && deviceToken) {
+  const now = Date.now();
+
+  const lastRefreshTimestamp = serverList?.cities?.countryId?.timestamp; // new Date()
+
+  if ((!lastRefreshTimestamp || now - lastRefreshTimestamp > dataValidityPeroid) && countryId && deviceToken) {
     window.api.getCities(deviceToken, countryId)
       .then((res) => {
         setServerList((d) => {
