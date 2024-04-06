@@ -7,6 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { ServerListContext } from '../../context/ServerListContext';
 import { DeviceTokenContext } from '../../context/DeviceTokenContext';
 import { SelectionContext } from '../../context/SelectionContext';
+import { refreshCountryList } from '../../scripts/utils';
 
 const Countries = (props) => {
 
@@ -18,17 +19,7 @@ const Countries = (props) => {
     let countries = serverList.countries
 
     useEffect(() => {
-        if (deviceToken) {
-            window.api.getCountries(deviceToken)
-                .then((res) => {
-                    setServerList((d) => {
-                        return { ...d, countries: res.data }
-                    })
-                })
-                .catch((e) => {
-                    console.log(e)
-                })
-        }
+        refreshCountryList(deviceToken, setServerList);
     }, [deviceToken])
 
     const handleChange = (event) => {

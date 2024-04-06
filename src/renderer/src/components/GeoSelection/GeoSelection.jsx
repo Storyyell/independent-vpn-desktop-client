@@ -12,6 +12,7 @@ import CountryList from './CountryList';
 import CityList from './CityList';
 import GeoSelHeader from './GeoSelHeader';
 import SearchBar from './SearchBar';
+import { refreshCountryList } from '../../scripts/utils';
 
 
 const GeoSelection = (props) => {
@@ -39,17 +40,7 @@ const GeoSelection = (props) => {
 
   // for refreshing the country list
   React.useEffect(() => {
-    if (deviceToken) {
-      window.api.getCountries(deviceToken)
-        .then((res) => {
-          setServerList((d) => {
-            return { ...d, countries: res.data }
-          })
-        })
-        .catch((e) => {
-          console.log(e)
-        })
-    }
+    refreshCountryList(deviceToken, setServerList);
   }, [deviceToken])
 
 
