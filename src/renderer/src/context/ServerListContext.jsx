@@ -7,7 +7,13 @@ function ServerListProvider({ children }) {
     const [serverList, setServerList] = useState(initialState);
 
     useEffect(() => {
-        localStorage.setItem('server_list', JSON.stringify(serverList));
+        try {
+            const jsonStr = JSON.stringify(serverList);
+            localStorage.setItem('server_list', jsonStr);
+
+        } catch (error) {
+            // console.error('Error saving to local storage', error);
+        }
     }, [serverList]);
 
     return (
