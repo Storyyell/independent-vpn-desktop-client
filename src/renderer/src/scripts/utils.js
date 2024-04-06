@@ -49,9 +49,14 @@ function refreshCityList(countryId, deviceToken, serverList, setServerList) {
 
 }
 
-function refreshServerList(countryId, cityId, setServerList, deviceToken) {
+function refreshServerList(countryId, cityId, setServerList, serverList, deviceToken) {
 
-  if (deviceToken && countryId && cityId) {
+  const now = Date.now();
+
+  const lastRefreshTimestamp = serverList?.servers?.[`${countryId}-${cityId}`]?.timestamp; // new Date()
+
+
+  if ((!lastRefreshTimestamp || now - lastRefreshTimestamp > dataValidityPeroid) && deviceToken && countryId && cityId) {
     window.api.getServers(deviceToken, countryId, cityId)
       .then((res) => {
         setServerList((d) => {
@@ -67,6 +72,7 @@ function refreshServerList(countryId, cityId, setServerList, deviceToken) {
         console.log(e)
       })
   }
+
 }
 
 export {

@@ -23,7 +23,7 @@ const CityList = (props) => {
       return { ...d, cityId: cityId_ }
     })
 
-    refreshServerList(selectedItems?.countryId, cityId_, setServerList, deviceToken);
+    refreshServerList(selectedItems?.countryId, cityId_, setServerList, serverList, deviceToken);
   };
 
   return (
