@@ -23,8 +23,8 @@ const GeoSelection = (props) => {
   const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
   const { favList, setFavList } = React.useContext(FavListContext);
   const [favIconClick, setFavIconClick] = React.useState(false);
-  const [countryListProcessed, setCountryListProcessed] = React.useState(serverList?.countries || []);
-  const [cityListProcessed, setCityListProcessed] = React.useState(serverList?.cities?.[selectedItems?.countryId] || []);
+  const [countryListProcessed, setCountryListProcessed] = React.useState(serverList?.countries?.data || []);
+  const [cityListProcessed, setCityListProcessed] = React.useState(serverList?.cities?.[selectedItems?.countryId]?.data || []);
   const [searchField, setSearchField] = React.useState('');
   const [processListUpdate, setProcessListUpdate] = React.useState(false)
 
@@ -53,11 +53,11 @@ const GeoSelection = (props) => {
   // for refreshing the processed country list
   React.useEffect(() => {
     favIconClick ?
-      setCountryListProcessed(serverList?.countries.filter((d) => {
+      setCountryListProcessed(serverList?.countries?.data?.filter((d) => {
         return favList?.countries?.includes(d?.id)
       }))
       :
-      setCountryListProcessed(serverList?.countries)
+      setCountryListProcessed(serverList?.countries?.data || [])
 
   }, [serverList?.countries, favIconClick, favList?.countries])
 
@@ -65,11 +65,11 @@ const GeoSelection = (props) => {
   React.useEffect(() => {
 
     favIconClick ?
-      setCityListProcessed(serverList?.cities?.[selectedItems?.countryId]?.filter((d) => {
+      setCityListProcessed(serverList?.cities?.[selectedItems?.countryId]?.data?.filter((d) => {
         return favList?.cities?.[selectedItems?.countryId]?.includes(d?.id)
       }))
       :
-      setCityListProcessed(serverList?.cities[selectedItems?.countryId])
+      setCityListProcessed(serverList?.cities[selectedItems?.countryId]?.data || [])
 
   }, [serverList?.cities, favIconClick, favList?.cities, processListUpdate])
 
@@ -77,11 +77,11 @@ const GeoSelection = (props) => {
   React.useEffect(() => {
     if (loadCityList) {
       setCityListProcessed((l) => {
-        return (serverList?.cities?.[selectedItems?.countryId]?.filter((d) => { return (d?.name?.toLowerCase()?.includes(searchField.toLowerCase())) }))
+        return (serverList?.cities?.[selectedItems?.countryId]?.data?.filter((d) => { return (d?.name?.toLowerCase()?.includes(searchField.toLowerCase())) }))
       })
     } else {
       setCountryListProcessed(() => {
-        return (serverList?.countries?.filter((d) => { return (d?.name?.toLowerCase().includes(searchField.toLowerCase())) }))
+        return (serverList?.countries?.data?.filter((d) => { return (d?.name?.toLowerCase().includes(searchField.toLowerCase())) }))
       })
     }
   }, [searchField])

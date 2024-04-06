@@ -60,9 +60,9 @@ function Home(props) {
 
         switch (type) {
             case 'country':
-                return serverList.countries?.find((c) => c.id === countryId)?.name || '----'
+                return serverList.countries?.data?.find((c) => c.id === countryId)?.name || '----'
             case 'city':
-                return serverList.cities[countryId]?.find((c) => c.id === cityId)?.name || '----'
+                return serverList.cities[countryId]?.data?.find((c) => c.id === cityId)?.name || '----'
             default:
                 return '----'
         }

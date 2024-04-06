@@ -29,10 +29,10 @@ const CityList = (props) => {
   return (
     <>
       {
-        serverList?.cities[selectedItems?.countryId] ?
+        serverList?.cities[selectedItems?.countryId]?.data ?
           cityListProcessed?.map((d, i) => {
             return (
-              <GeoItem key={i} geoType='city' data={{ ...d, code: (serverList?.countries.find(d => d.id == selectedItems?.countryId))?.code }} onClick={(val) => {
+              <GeoItem key={i} geoType='city' data={{ ...d, code: (serverList?.countries?.data?.find(d => d.id == selectedItems?.countryId))?.code }} onClick={(val) => {
                 handleCityChange(val)
                 props.onClose()
               }}

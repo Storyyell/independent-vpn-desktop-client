@@ -4,7 +4,7 @@ function refreshCountryList(deviceToken, setServerList) {
     window.api.getCountries(deviceToken)
       .then((res) => {
         setServerList((d) => {
-          return { ...d, countries: res.data }
+          return { ...d, countries: { data: res.data, timestamp: new Date() } }
         })
       })
       .catch((e) => {
@@ -22,7 +22,7 @@ function refreshCityList(countryId, deviceToken, setServerList) {
           return {
             ...d, cities: {
               ...d.cities,
-              [countryId]: res.data
+              [countryId]: { data: res.data, timestamp: new Date() }
             }
           }
         })
@@ -43,7 +43,7 @@ function refreshServerList(countryId, cityId, setServerList, deviceToken) {
           return {
             ...d, servers: {
               ...d.servers,
-              [`${countryId}-${cityId}`]: res.data
+              [`${countryId}-${cityId}`]: { data: res.data, timestamp: new Date() }
             }
           }
         })
