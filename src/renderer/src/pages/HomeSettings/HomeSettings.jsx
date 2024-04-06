@@ -76,7 +76,7 @@ const HomeSettings = (props) => {
           {
             homeSettingsJson.map((item, index) => {
               return (
-                <Box sx={{ paddingBottom: 1 }}>
+                <Box sx={{ paddingBottom: 1 }} key={index}>
                   <ListItem key={index} disablePadding>
                     <ListItemButton onClick={() => { item.onClick() }} sx={{ p: '3px', borderRadius: 1 }}>
                       <SettingsItem title={item.title} desc={item.desc} variant={item.variant} />
