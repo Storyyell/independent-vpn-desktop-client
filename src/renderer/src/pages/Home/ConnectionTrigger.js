@@ -47,7 +47,14 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
       const sl = selectRandomItems(slObj.data, retryServerNo);
       console.log(sl);
       if (sl.length > 0) {
-        window.api.triggerConnection(sl[0]);
+        window.api.triggerConnection(sl[0])
+          // for testing
+          .then((res) => {
+            console.log('promise resolved');
+          })
+          .catch((err) => {
+            console.log('promise rejected');
+          })
       }
 
       break

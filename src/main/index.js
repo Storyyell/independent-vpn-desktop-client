@@ -51,9 +51,9 @@ function createWindow() {
     return { action: 'deny' }
   })
 
-  ipcMain.handle('triggerConnection', (event, serverParms) => {
+  ipcMain.handle('triggerConnection', async (event, serverParms) => {
     console.log('vpn connection trigger on main process')
-    vpnConnet(serverParms)
+    await vpnConnet(serverParms);
   })
 
   ipcMain.handle('triggerDisconnection', (event) => {
