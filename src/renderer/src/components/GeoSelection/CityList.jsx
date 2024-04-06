@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { GeoItem } from '../GeoItem/GeoItem';
 import { Typography } from '@mui/material';
+import { refreshServerList } from '../../scripts/utils';
 
 
 
@@ -22,22 +23,7 @@ const CityList = (props) => {
       return { ...d, cityId: cityId_ }
     })
 
-    if (deviceToken && selectedItems?.countryId && cityId_) {
-      window.api.getServers(deviceToken, selectedItems?.countryId, cityId_)
-        .then((res) => {
-          setServerList((d) => {
-            return {
-              ...d, servers: {
-                ...d.servers,
-                [`${selectedItems?.countryId}-${cityId_}`]: res.data
-              }
-            }
-          })
-        })
-        .catch((e) => {
-          console.log(e)
-        })
-    }
+    refreshServerList(selectedItems?.countryId, cityId_, setServerList, deviceToken);
   };
 
   return (

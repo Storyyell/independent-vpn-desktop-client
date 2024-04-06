@@ -34,9 +34,30 @@ function refreshCityList(countryId, deviceToken, setServerList) {
 
 }
 
+function refreshServerList(countryId, cityId, setServerList, deviceToken) {
+
+  if (deviceToken && countryId && cityId) {
+    window.api.getServers(deviceToken, countryId, cityId)
+      .then((res) => {
+        setServerList((d) => {
+          return {
+            ...d, servers: {
+              ...d.servers,
+              [`${countryId}-${cityId}`]: res.data
+            }
+          }
+        })
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  }
+}
+
 export {
   refreshCountryList,
-  refreshCityList
+  refreshCityList,
+  refreshServerList
 
 };
 

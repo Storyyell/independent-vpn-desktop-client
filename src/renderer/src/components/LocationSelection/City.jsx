@@ -7,7 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { ServerListContext } from '../../context/ServerListContext';
 import { DeviceTokenContext } from '../../context/DeviceTokenContext';
 import { SelectionContext } from '../../context/SelectionContext';
-import { refreshCityList } from '../../scripts/utils';
+import { refreshCityList, refreshServerList } from '../../scripts/utils';
 
 const City = (props) => {
 
@@ -27,22 +27,9 @@ const City = (props) => {
         setSelectedItems((d) => {
             return { ...d, cityId: event.target.value }
         })
-        if (deviceToken && selectedItems?.countryId && event.target.value) {
-            window.api.getServers(deviceToken, selectedItems?.countryId, event.target.value)
-                .then((res) => {
-                    setServerList((d) => {
-                        return {
-                            ...d, servers: {
-                                ...d.servers,
-                                [`${selectedItems?.countryId}-${event.target.value}`]: res.data
-                            }
-                        }
-                    })
-                })
-                .catch((e) => {
-                    console.log(e)
-                })
-        }
+
+        refreshServerList(selectedItems?.countryId, event.target.value, setServerList, deviceToken);
+
     };
 
     return (
