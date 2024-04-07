@@ -70,15 +70,27 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
         case 'connected':
           console.log('Already connected. Disconnecting...');
           await disconnectServer();
-          break
-        case 'connecting':
-          console.log('Currently connecting...');
-          if (!(selectedItems?.countryId == window?.currentLocation?.country_id && selectedItems?.cityId == window?.currentLocation?.city_id)) {
+
+          if ((selectedItems?.countryId == window?.currentLocation?.country_id && selectedItems?.cityId == window?.currentLocation?.city_id)) {
+            console.log('Same location. Disconnecting...');
+            await disconnectServer()
+          } else {
             console.log('Different location. Disconnecting...');
             await disconnectServer()
             console.log('Connecting to new location...');
             await connnet();
           }
+
+
+          break
+        case 'connecting':
+          console.log('Currently connecting...');
+          // if (!(selectedItems?.countryId == window?.currentLocation?.country_id && selectedItems?.cityId == window?.currentLocation?.city_id)) {
+          //   console.log('Different location. Disconnecting...');
+          //   await disconnectServer()
+          //   console.log('Connecting to new location...');
+          //   await connnet();
+          // }
           break
 
         case 'disconnected':
@@ -136,7 +148,6 @@ async function connectServer(deviceToken, server, setVpnStatusMain) {
 async function disconnectServer() {
   try {
     await window.api.triggerDisconnection();
-    setVpnStatusMain('disconnected');
   } catch (error) {
     console.log(error);
   }
