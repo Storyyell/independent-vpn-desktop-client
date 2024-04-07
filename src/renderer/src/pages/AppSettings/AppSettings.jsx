@@ -6,9 +6,9 @@ import Switch from '@mui/material/Switch';
 import SettingsItem from '../../components/SettingsItem/SettingsItem';
 
 
-const homeSettingsJson = [
+let homeSettingsJson = [
   {
-    title: 'App version 1.1.1.1',
+    title: 'App version -.-.-',
     desc: 'You are using the latest version',
     variant: null
   },
@@ -45,6 +45,19 @@ const generalInfoSettingsJson = [
 ]
 
 const AppSettings = () => {
+
+  const [appVersion, setAppVersion] = React.useState('');
+
+  React.useEffect(() => {
+    window.api.appVersion().then((res) => {
+      setAppVersion(res)
+      homeSettingsJson[0].title = `App version ${res}`
+    })
+      .catch((err) => console.log(err))
+
+  }, [])
+
+
   return (
     <>
       <Stack spacing={1} width={'100%'}>

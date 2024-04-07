@@ -13,6 +13,7 @@ const api = {
   triggerConnection: (serverObj) => ipcRenderer.invoke('triggerConnection', serverObj),
   triggerDisconnection: () => ipcRenderer.invoke('triggerDisconnection'),
   getIp: (device_token) => ipcRenderer.invoke('getIp', device_token),
+  appVersion: () => ipcRenderer.invoke('appVersion'),
 
   sysOpen: (...url) => ipcRenderer.invoke('sysOpen', ...url),
 }

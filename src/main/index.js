@@ -96,6 +96,11 @@ function createWindow() {
     return getIp(device_token);
   })
 
+  ipcMain.handle('appVersion', async (event) => {
+    let appVersion = app.getVersion();
+    return appVersion;
+  })
+
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
