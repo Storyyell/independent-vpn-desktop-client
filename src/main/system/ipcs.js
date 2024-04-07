@@ -59,56 +59,56 @@ export async function pullCountryList(device_token) {
 export async function pullCityList(device_token, countryCode) {
     // console.log(`countryCode: ${countryCode}`);
 
-const appkey = import.meta.env.VITE_SERVER_APP_KEY
-const apiUrl = import.meta.env.VITE_SERVER_API_URL
+    const appkey = import.meta.env.VITE_SERVER_APP_KEY
+    const apiUrl = import.meta.env.VITE_SERVER_API_URL
 
-let config = {
-    method: 'get',
-    maxBodyLength: Infinity,
-    url: `https://${apiUrl}/countries/${countryCode}/cities?protocol=V2RAY`,
-    headers: {
-        'x-app-token': appkey,
-        'x-device-token': device_token
-    }
-};
+    let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `https://${apiUrl}/countries/${countryCode}/cities?protocol=V2RAY`,
+        headers: {
+            'x-app-token': appkey,
+            'x-device-token': device_token
+        }
+    };
 
-return new Promise((resolve, reject) => {
-    axios.request(config)
-        .then((response) => {
-            resolve(response.data);
-        })
-        .catch((error) => {
-            console.log(error);
-            reject(error)
-        });
-})
+    return new Promise((resolve, reject) => {
+        axios.request(config)
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+                reject(error)
+            });
+    })
 }
 
 export async function pullServerList(device_token, countryCode, cityCode) {
 
-const appkey = import.meta.env.VITE_SERVER_APP_KEY
-const apiUrl = import.meta.env.VITE_SERVER_API_URL
+    const appkey = import.meta.env.VITE_SERVER_APP_KEY
+    const apiUrl = import.meta.env.VITE_SERVER_API_URL
 
-let config = {
-  method: 'get',
-  maxBodyLength: Infinity,
-  url: `https://${apiUrl}/countries/${countryCode}/cities/${cityCode}/servers?sortyBy=CURRENT_LOAD&offset=0&limit=10&protocol=V2RAY`,
-  headers: {
-        'x-app-token': appkey,
-        'x-device-token': device_token
-    }
-};
+    let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `https://${apiUrl}/countries/${countryCode}/cities/${cityCode}/servers?sortyBy=CURRENT_LOAD&offset=0&limit=10&protocol=V2RAY`,
+        headers: {
+            'x-app-token': appkey,
+            'x-device-token': device_token
+        }
+    };
 
-return new Promise((resolve, reject) => {
-    axios.request(config)
-        .then((response) => {
-            resolve(response.data);
-        })
-        .catch((error) => {
-            console.log(error);
-            reject(error)
-        });
-})
+    return new Promise((resolve, reject) => {
+        axios.request(config)
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+                reject(error)
+            });
+    })
 }
 
 // pullServerConf
@@ -133,5 +133,29 @@ export async function pullServerConf(device_token, countryCode, cityCode, server
     } catch (error) {
         console.log(error);
         throw new Error('server config fetch failed');
+    }
+}
+
+
+export async function getIp(device_token) {
+    const appkey = import.meta.env.VITE_SERVER_APP_KEY;
+    const apiUrl = import.meta.env.VITE_SERVER_API_URL;
+
+    let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `https://${apiUrl}/ip`,
+        headers: {
+            'x-app-token': appkey,
+            'x-device-token': device_token
+        }
+
+    };
+
+    try {
+        const response = await axios.request(config);
+        return response.data;
+    } catch (error) {
+        throw new Error('ipfetch failed');
     }
 }

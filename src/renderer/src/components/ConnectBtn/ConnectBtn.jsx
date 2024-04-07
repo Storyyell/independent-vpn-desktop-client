@@ -54,7 +54,7 @@ const ConnectBtn = (props) => {
           {props.statusText === 'connecting' && 'connecting...'}
         </Typography>
         <Typography sx={{ color: '#888888', fontSize: '8.779px', fontWeight: '6pp' }}>
-          180.179.194.63
+          {props.ip}
         </Typography>
       </Stack>
     </>

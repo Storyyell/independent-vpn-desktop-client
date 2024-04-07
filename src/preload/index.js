@@ -12,6 +12,8 @@ const api = {
   getServerConf: (device_token, countryCode, cityCode, serverId) => ipcRenderer.invoke('getServerConf', device_token, countryCode, cityCode, serverId),
   triggerConnection: (serverObj) => ipcRenderer.invoke('triggerConnection', serverObj),
   triggerDisconnection: () => ipcRenderer.invoke('triggerDisconnection'),
+  getIp: (device_token) => ipcRenderer.invoke('getIp', device_token),
+
   sysOpen: (...url) => ipcRenderer.invoke('sysOpen', ...url),
 }
 

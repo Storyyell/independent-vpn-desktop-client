@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs'
 import path from 'path'
 import { vpnObj } from './system/vpnBase.js'
-import { registerDevice, pullCountryList, pullCityList, pullServerList, pullServerConf } from './system/ipcs.js'
+import { registerDevice, pullCountryList, pullCityList, pullServerList, pullServerConf, getIp } from './system/ipcs.js'
 
 let sessionTempDir = {
   path: '',
@@ -90,6 +90,10 @@ function createWindow() {
 
   ipcMain.handle('sysOpen', async (event, ...url) => {
     shell.openExternal(url[0]);
+  })
+
+  ipcMain.handle('getIp', async (event, device_token) => {
+    return getIp(device_token);
   })
 
   // HMR for renderer base on electron-vite cli.

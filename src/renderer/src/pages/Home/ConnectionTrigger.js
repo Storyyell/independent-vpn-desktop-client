@@ -1,4 +1,3 @@
-import { toFormData } from "axios";
 import { refreshCountryList, refreshServerList } from "../../scripts/utils";
 import { refreshCityList } from "../../scripts/utils";
 
@@ -33,6 +32,7 @@ function shuffleArray(array) {
 async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setVpnStatus, vpnStatusMain, setServerList, setVpnStatusMain, setSelectedItems) {
 
   console.log('handleVpnConnTrigger');
+  setVpnStatusMain('connecting');
 
   switch (true) {
     case (selectedItems.cityId === null && selectedItems.countryId === null):
@@ -41,7 +41,7 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
 
         console.log('selectedItems.cityId === null && selectedItems.countryId === null');
 
-        const countryList = serverList?.countries?.data;
+        let countryList = serverList?.countries?.data;
 
         if (!countryList) {
           console.log('Fetching country list...');

@@ -26,6 +26,7 @@ function Home(props) {
     const { deviceToken, setDeviceToken } = React.useContext(DeviceTokenContext);
     const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
     const [geoSelection, setGeoSelection] = React.useState(false);
+    const [ip, setIp] = useState('--.--.--.--');
 
     // for vpn status listenening
     useEffect(() => {
@@ -50,6 +51,25 @@ function Home(props) {
             window.ipcRenderer.removeAllListeners('connectionStatus');
         };
     }, []);
+
+
+    React.useEffect(() => {
+        const getIp = async () => {
+            if (deviceToken) {
+                setTimeout(async () => {
+                    try {
+                        const res = await window.api.getIp(deviceToken);
+                        setIp(res?.data?.ip || '--.--.--.--');
+                    } catch (error) {
+                        setIp('--.--.--.--');
+                    }
+                }, 1000);
+
+            }
+        };
+
+        getIp();
+    }, [vpnStatusMain, deviceToken]);
 
 
     function triggerVpnConnection() {
@@ -98,6 +118,7 @@ function Home(props) {
                 <ConnectBtn
                     onClick={triggerVpnConnection}
                     statusText={vpnStatusMain}
+                    ip={ip}
                 />
 
             </Box>
