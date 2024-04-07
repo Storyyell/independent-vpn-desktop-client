@@ -28,7 +28,7 @@ const CityList = (props) => {
 
     // refreshServerList(selectedItems?.countryId, cityId_, setServerList, serverList, deviceToken);
 
-    handleVpnConnTrigger(deviceToken, { ...selectedItems, cityId: cityId_ }, serverList, vpnStatusMain, vpnStatusMain, setServerList)
+    handleVpnConnTrigger(deviceToken, { ...selectedItems, cityId: cityId_ }, serverList, vpnStatusMain, vpnStatusMain, setServerList, setVpnStatusMain)
 
   };
 

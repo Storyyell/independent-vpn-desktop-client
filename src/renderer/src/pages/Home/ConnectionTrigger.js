@@ -20,7 +20,6 @@ function selectRandomItems(array, count) {
 }
 
 
-
 async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setVpnStatus, vpnStatusMain, setServerList, setVpnStatusMain) {
 
   console.log('handleVpnConnTrigger');
@@ -49,24 +48,17 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
         const sl = selectRandomItems(slObj.data, retryServerNo);
         console.log(sl);
         if (sl.length > 0) {
-          const server = sl[0];
-          let serverParms = {
-            device_token: deviceToken,
-            countryCode: server.country_id,
-            cityCode: server.city_id,
-            serverId: server.id
-          };
-          const res = await window.api.triggerConnection(serverParms);
-          if (res) {
-            console.log('promise resolved');
-            setVpnStatusMain('connected');
-          } else {
-            console.log('promise rejected');
-            setVpnStatusMain('disconnected');
+
+          for (let i = 0; i < sl.length; i++) {
+            i > 0 && setVpnStatus(`retrying  ${i}...`);
+            if (await connectServer(deviceToken, sl[i], setVpnStatusMain)) {
+              break;
+            }
           }
+
         }
       } catch (error) {
-        console.log('promise rejected');
+        console.log(error);
         setVpnStatusMain('disconnected');
       }
 
@@ -111,5 +103,30 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
 
 }
 
+
+async function connectServer(deviceToken, server, setVpnStatusMain) {
+
+  try {
+    setVpnStatusMain('connecting');
+    let serverParms = {
+      device_token: deviceToken,
+      countryCode: server.country_id,
+      cityCode: server.city_id,
+      serverId: server.id
+    };
+    const res = await window.api.triggerConnection(serverParms);
+    if (res) {
+      setVpnStatusMain('connected');
+      return true;
+    } else {
+      setVpnStatusMain('disconnected');
+      return false;
+    }
+  } catch (error) {
+    setVpnStatusMain('disconnected');
+    return false;
+  }
+
+}
 
 export { handleVpnConnTrigger }
