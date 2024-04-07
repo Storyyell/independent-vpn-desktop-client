@@ -46,7 +46,7 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
       console.log('selectedItems.cityId === null && selectedItems.countryId !== null');
       // handle the case of during city list fetching
       let cityList = serverList?.cities?.[countryId]?.data;
-      if (!(cityList)) {
+      if (!cityList) {
         console.log('Fetching city list...');
         await refreshCityList(selectedItems?.countryId, deviceToken, serverList, setServerList);
         cityList = serverList?.cities?.[countryId]?.data;
@@ -72,7 +72,6 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
         }
       });
 
-
       let sl = [];
 
       await Promise.all(cityList.map(async (city) => {
@@ -81,14 +80,11 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
       }));
 
       try { sl = sl.slice(0, NoOfServerOriginal); } catch (error) { }
-      // serverList
-      // console.log(sl);
+
       const retryLogic = async (sl) => {
         try {
           if (sl.length > 0) {
-
             for (let i = 0; i < sl.length; i++) {
-              // todo add a abort mechanism
               i > 0 && setVpnStatus(`retrying  ${i}...`);
               console.log(`Connecting to server ${i + 1}`);
               if (await connectServer(deviceToken, sl[i], setVpnStatusMain)) {
@@ -102,13 +98,12 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
         }
       }
 
-
       switch (vpnStatusMain) {
         case 'connected':
           console.log('Already connected. Disconnecting...');
           await disconnectServer(setVpnStatusMain);
 
-          if ((selectedItems?.countryId == window?.currentLocation?.country_id)) {
+          if (selectedItems?.countryId == window?.currentLocation?.country_id) {
             console.log('Same location. Disconnecting...');
           } else {
             console.log('Different location. Disconnecting...');
@@ -145,7 +140,6 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
           const sl = selectRandomItems(slObj.data, retryServerNo);
           console.log(sl);
           if (sl.length > 0) {
-
             for (let i = 0; i < sl.length; i++) {
               // todo add a abort mechanism
               i > 0 && setVpnStatus(`retrying  ${i}...`);
@@ -154,13 +148,11 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
                 break;
               }
             }
-
           }
         } catch (error) {
           console.log(error);
           await disconnectServer(setVpnStatusMain)
         }
-
       }
 
       switch (vpnStatusMain) {
@@ -175,32 +167,24 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
             console.log('Connecting to new location...');
             await connnet();
           }
+          break;
 
-
-          break
         case 'connecting':
           console.log('Currently connecting...');
-          // if (!(selectedItems?.countryId == window?.currentLocation?.country_id && selectedItems?.cityId == window?.currentLocation?.city_id)) {
-          //   console.log('Different location. Disconnecting...');
-          //   await disconnectServer(setVpnStatusMain)
-          //   console.log('Connecting to new location...');
-          //   await connnet();
-          // }
-
-          setSelectedItems((d) => { return { countryId: window.currentLocation.country_id, cityId: window.currentLocation.city_id } })
-          break
+          setSelectedItems((d) => { return { countryId: window.currentLocation.country_id, cityId: window.currentLocation.city_id } });
+          break;
 
         case 'disconnected':
           console.log('Disconnected. Connecting to new location...');
           await connnet();
-          break
+          break;
 
         default:
-          await disconnectServer(setVpnStatusMain)
-          break
+          await disconnectServer(setVpnStatusMain);
+          break;
       }
 
-      break
+      break;
 
     default:
 
