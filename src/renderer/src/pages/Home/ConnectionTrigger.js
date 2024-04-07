@@ -61,7 +61,7 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
           }
         } catch (error) {
           console.log(error);
-          await disconnectServer()
+          await disconnectServer(setVpnStatusMain)
         }
 
       }
@@ -69,14 +69,14 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
       switch (vpnStatusMain) {
         case 'connected':
           console.log('Already connected. Disconnecting...');
-          await disconnectServer();
+          await disconnectServer(setVpnStatusMain);
 
           if ((selectedItems?.countryId == window?.currentLocation?.country_id && selectedItems?.cityId == window?.currentLocation?.city_id)) {
             console.log('Same location. Disconnecting...');
-            await disconnectServer()
+            await disconnectServer(setVpnStatusMain)
           } else {
             console.log('Different location. Disconnecting...');
-            await disconnectServer()
+            await disconnectServer(setVpnStatusMain)
             console.log('Connecting to new location...');
             await connnet();
           }
@@ -87,7 +87,7 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
           console.log('Currently connecting...');
           // if (!(selectedItems?.countryId == window?.currentLocation?.country_id && selectedItems?.cityId == window?.currentLocation?.city_id)) {
           //   console.log('Different location. Disconnecting...');
-          //   await disconnectServer()
+          //   await disconnectServer(setVpnStatusMain)
           //   console.log('Connecting to new location...');
           //   await connnet();
           // }
@@ -99,7 +99,7 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
           break
 
         default:
-          await disconnectServer()
+          await disconnectServer(setVpnStatusMain)
           break
       }
 
@@ -107,7 +107,7 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
 
     default:
 
-      await disconnectServer()
+      await disconnectServer(setVpnStatusMain)
       break
   }
 }
@@ -139,13 +139,13 @@ async function connectServer(deviceToken, server, setVpnStatusMain) {
       return false;
     }
   } catch (error) {
-    await disconnectServer()
+    await disconnectServer(setVpnStatusMain)
     return false;
   }
 
 }
 
-async function disconnectServer() {
+async function disconnectServer(setVpnStatusMain) {
   try {
     await window.api.triggerDisconnection();
   } catch (error) {
