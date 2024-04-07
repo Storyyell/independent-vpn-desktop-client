@@ -50,176 +50,212 @@ var vpnObj = {
 // Todo integrate vpn spawn  into vpnObj variable
 
 export async function vpnConnet(serverParms) {
-    vpnObj.connectionProgress = true;
-    console.log(global.sessionTempDir.path);
-    try {
-        const gateway = await getDefaultGateway();
-        vpnObj.gateway = gateway;
-        console.log("VPN connection initializing...");
-        rendererSend({ message: 'VPN connection initializing...', statusObj: vpnObj.statusObj });
-        rendererSend({ message: 'Fetching server configuration...', statusObj: vpnObj.statusObj });
-        const res = await pullServerConf(serverParms.device_token, serverParms.countryCode, serverParms.cityCode, serverParms.serverId);
-        const serverObj = res.data;
-        const { uuid, address: server_address, listen_port } = await saveV2rayConfig(serverObj);
+    return new Promise(async (resolve, reject) => {
+        vpnObj.connectionProgress = true;
+        console.log(global.sessionTempDir.path);
+        try {
+            const gateway = await getDefaultGateway();
+            vpnObj.gateway = gateway;
+            console.log("VPN connection initializing...");
+            rendererSend({ message: 'VPN connection initializing...', statusObj: vpnObj.statusObj });
+            rendererSend({ message: 'Fetching server configuration...', statusObj: vpnObj.statusObj });
+            const res = await pullServerConf(serverParms.device_token, serverParms.countryCode, serverParms.cityCode, serverParms.serverId);
+            const serverObj = res.data;
+            const { uuid, address: server_address, listen_port } = await saveV2rayConfig(serverObj);
 
-        // updating server parms
-        vpnObj.serverAddress = server_address;
-        vpnObj.serverPort = listen_port;
-        vpnObj.serverUUID = uuid;
+            // updating server parms
+            vpnObj.serverAddress = server_address;
+            vpnObj.serverPort = listen_port;
+            vpnObj.serverUUID = uuid;
 
-        // getting server ip
-        const serverIp = await getIPv4(server_address);
-        vpnObj.serverIp = serverIp;
-        console.log(`server ip: ${vpnObj.serverIp}`);
-
-        vpnObj.triggerConnection(gateway);
-
-    } catch (e) {
-        console.log("error in VPN connection: " + e.message);
-        vpnObj.triggerDisconnection();
-    }
+            // getting server ip
+            const serverIp = await getIPv4(server_address);
+            vpnObj.serverIp = serverIp;
+            console.log(`server ip: ${vpnObj.serverIp}`);
+            try {
+                await vpnObj.triggerConnection(gateway);
+                resolve(true);
+            } catch (error) {
+                reject(false);
+            }
+        } catch (e) {
+            console.log("error in VPN connection: " + e.message);
+            vpnObj.triggerDisconnection();
+            reject(false);
+        }
+    });
 }
 
-export function vpnConnetFx() {
+export async function vpnConnetFx() {
 
-    console.log(`gateway ${vpnObj.gateway}`);
+    return new Promise((resolve, reject) => {
 
-    let basePath = path.join(__dirname, "../../resources/bin/");
+        console.log(`gateway ${vpnObj.gateway}`);
 
-    // Todo want to find a another way to use the resourcesPath from the main process in production
-    if (app.isPackaged) {
-        // When the app is packaged, the "resourcesPath" points to the "resources" directory adjacent to app.asar
-        basePath = path.join(process.resourcesPath, 'app.asar.unpacked/resources/bin');
-    }
+        let basePath = path.join(__dirname, "../../resources/bin/");
 
-    const v2rayPath = path.join(basePath, 'v2ray.exe');
-    // const configPath = path.join(basePath, 'config.json');
-    const configPath = path.join(global.sessionTempDir.path, `${global.sessionTempDir.uuid}.json`);
-
-
-    const v2ray = spawn(v2rayPath, ['-config', configPath],);
-
-    v2ray.on('error', (error) => {
-        console.error(`Failed to start v2ray process: ${error.message}`);
-        vpnObj.triggerDisconnection();
-    });
-
-    v2ray.on('close', (code) => {
-        console.log(`v2ray process exited with code ${code}`);
-        vpnObj.triggerDisconnection();
-
-    });
-
-    function onDataReceived(data) {
-        const output = data.toString();
-        console.log(`child stdout:\n${output}`);
-
-        if (output.includes('started')) {
-            v2ray.stdout.removeListener('data', onDataReceived);
-            vpnObj.v2ray = v2ray;
-            onVpnConnected();
+        // Todo want to find a another way to use the resourcesPath from the main process in production
+        if (app.isPackaged) {
+            // When the app is packaged, the "resourcesPath" points to the "resources" directory adjacent to app.asar
+            basePath = path.join(process.resourcesPath, 'app.asar.unpacked/resources/bin');
         }
-    }
 
-    v2ray.stdout.on('data', onDataReceived);
-
-    // v2ray.stderr.on('data', (data) => {
-    //     console.error(`child stderr:\n${data}`);
-    // });
-
-    function onVpnConnected() {
-        console.log("V2ray tunnel created");
-        rendererSend({ message: 'V2ray tunnel created', statusObj: vpnObj.statusObj });
-        checkConnectivity('127.0.0.1', 10808)
-            .then(() => {
-                console.log("connectivity check passed");
-                startSocksInternalTunnel();
-            })
-            .catch((e) => {
-                console.log("error in checking connectivity: " + e.message);
-                vpnObj.triggerDisconnection();
-            });
-    }
+        const v2rayPath = path.join(basePath, 'v2ray.exe');
+        // const configPath = path.join(basePath, 'config.json');
+        const configPath = path.join(global.sessionTempDir.path, `${global.sessionTempDir.uuid}.json`);
 
 
-    function startSocksInternalTunnel() {
-        console.log("starting socks internal tunnel");
+        const v2ray = spawn(v2rayPath, ['-config', configPath],);
 
-        const tun2socksPath = path.join(basePath, 'tun2socks.exe');
-
-        const tun2socks = spawn(tun2socksPath, [
-            '-tcp-auto-tuning',
-            '-device', 'tun://sentinel_vpn',
-            '-proxy', 'socks5://127.0.0.1:10808'
-        ]);
-
-        tun2socks.on('error', (error) => {
-            console.error(`Failed to start tun2socks process: ${error.message}`);
+        v2ray.on('error', (error) => {
+            console.error(`Failed to start v2ray process: ${error.message}`);
             vpnObj.triggerDisconnection();
+            reject(false);
         });
 
-        tun2socks.on('close', (code) => {
-            console.log(`tun2socks process exited with code ${code}`);
-            vpnObj.connected = false;
+        v2ray.on('close', (code) => {
+            console.log(`v2ray process exited with code ${code}`);
             vpnObj.triggerDisconnection();
-
+            reject(false);
         });
 
-        function onDataReceived(data) {
+        async function onDataReceived(data) {
             const output = data.toString();
             console.log(`child stdout:\n${output}`);
 
-            if (output.includes('level=info msg="[STACK] tun://sentinel_vpn <-> socks5://127.0.0.1:10808')) {
-                vpnObj.tun2socks = tun2socks
-                tun2socks.stdout.removeListener('data', onDataReceived);
-                onTun2SocksConnected();
+            if (output.includes('started')) {
+                v2ray.stdout.removeListener('data', onDataReceived);
+                vpnObj.v2ray = v2ray;
+                try {
+                    await onVpnConnected();
+                    resolve(true);
+                } catch (error) {
+                    reject(false);
+                }
             }
         }
 
-        tun2socks.stdout.on('data', onDataReceived);
+        v2ray.stdout.on('data', onDataReceived);
 
-        // tun2socks.stderr.on('data', (data) => {
+        // v2ray.stderr.on('data', (data) => {
         //     console.error(`child stderr:\n${data}`);
         // });
 
-        function onTun2SocksConnected() {
-            console.log("Tun2socks tunnel created");
-            rendererSend({ message: 'adapter created', statusObj: vpnObj.statusObj });
-            startAnotherCommand();
+        async function onVpnConnected() {
+            return new Promise((resolve, reject) => {
+                console.log("V2ray tunnel created");
+                rendererSend({ message: 'V2ray tunnel created', statusObj: vpnObj.statusObj });
+                checkConnectivity('127.0.0.1', 10808)
+                    .then(async () => {
+                        console.log("connectivity check passed");
+                        try {
+                            await startSocksInternalTunnel();
+                            resolve(true);
+                        } catch (error) {
+                            reject(false);
+                        }
+                    })
+                    .catch((e) => {
+                        console.log("error in checking connectivity: " + e.message);
+                        vpnObj.triggerDisconnection();
+                        reject(false);
+                    });
+            })
         }
 
-        function startAnotherCommand() {
-            console.log("Starting command post tun2socks...");
-            setStaticIP()
-                .then(() => {
-                    vpnObj.setStaticIP = true;
-                    return setDnsServer()
-                })
-                .then(() => {
-                    vpnObj.setDnsServer = true;
 
-                    return addVpnRoute(vpnObj.gateway)
-                })
-                .then(() => {
-                    vpnObj.addVpnRoute = true;
+        async function startSocksInternalTunnel() {
+            return new Promise((resolve, reject) => {
+                console.log("starting socks internal tunnel");
 
-                    return addGlobalRoute()
-                })
-                .then(() => {
-                    vpnObj.addGlobalRoute = true;
-                    vpnObj.connected = true;
-                    vpnObj.connectionProgress = false;
-                    console.log("vpn connection established");
-                    global.vpnConnStatus = true;
-                    rendererSend({ message: 'VPN connection established', statusObj: vpnObj.statusObj });
-                })
-                .catch((e) => {
-                    console.log("vpn connection error: " + e.message);
+                const tun2socksPath = path.join(basePath, 'tun2socks.exe');
+
+                const tun2socks = spawn(tun2socksPath, [
+                    '-tcp-auto-tuning',
+                    '-device', 'tun://sentinel_vpn',
+                    '-proxy', 'socks5://127.0.0.1:10808'
+                ]);
+
+                tun2socks.on('error', (error) => {
+                    console.error(`Failed to start tun2socks process: ${error.message}`);
                     vpnObj.triggerDisconnection();
+                    reject(false);
                 });
-        }
 
-    }
+                tun2socks.on('close', (code) => {
+                    console.log(`tun2socks process exited with code ${code}`);
+                    vpnObj.connected = false;
+                    vpnObj.triggerDisconnection();
+                    reject(false);
+
+                });
+
+                async function onDataReceived(data) {
+                    const output = data.toString();
+                    console.log(`child stdout:\n${output}`);
+
+                    if (output.includes('level=info msg="[STACK] tun://sentinel_vpn <-> socks5://127.0.0.1:10808')) {
+                        vpnObj.tun2socks = tun2socks
+                        tun2socks.stdout.removeListener('data', onDataReceived);
+                        try {
+
+                            await onTun2SocksConnected();
+                            resolve(true);
+                        } catch (error) {
+                            reject(false);
+                        }
+                    }
+                }
+
+                tun2socks.stdout.on('data', onDataReceived);
+
+                // tun2socks.stderr.on('data', (data) => {
+                //     console.error(`child stderr:\n${data}`);
+                // });
+
+                async function onTun2SocksConnected() {
+                    console.log("Tun2socks tunnel created");
+                    rendererSend({ message: 'adapter created', statusObj: vpnObj.statusObj });
+                    return await startAnotherCommand();
+                }
+
+                async function startAnotherCommand() {
+                    return new Promise((resolve, reject) => {
+                        console.log("Starting command post tun2socks...");
+                        setStaticIP()
+                            .then(() => {
+                                vpnObj.setStaticIP = true;
+                                return setDnsServer()
+                            })
+                            .then(() => {
+                                vpnObj.setDnsServer = true;
+
+                                return addVpnRoute(vpnObj.gateway)
+                            })
+                            .then(() => {
+                                vpnObj.addVpnRoute = true;
+
+                                return addGlobalRoute()
+                            })
+                            .then(() => {
+                                vpnObj.addGlobalRoute = true;
+                                vpnObj.connected = true;
+                                vpnObj.connectionProgress = false;
+                                console.log("vpn connection established");
+                                global.vpnConnStatus = true;
+                                rendererSend({ message: 'VPN connection established', statusObj: vpnObj.statusObj });
+                                resolve(true);
+                            })
+                            .catch((e) => {
+                                console.log("vpn connection error: " + e.message);
+                                vpnObj.triggerDisconnection();
+                                reject(false);
+                            });
+                    });
+                }
+            });
+        }
+    })
 
 }
 
