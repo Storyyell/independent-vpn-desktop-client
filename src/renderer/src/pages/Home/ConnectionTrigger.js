@@ -47,7 +47,16 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
       const sl = selectRandomItems(slObj.data, retryServerNo);
       console.log(sl);
       if (sl.length > 0) {
-        window.api.triggerConnection(sl[0])
+
+        const server = sl[0]
+        let serverParms = {
+          device_token: deviceToken,
+          countryCode: server.country_id,
+          cityCode: server.city_id,
+          serverId: server.id
+        }
+
+        window.api.triggerConnection(serverParms)
           // for testing
           .then((res) => {
             console.log('promise resolved');
