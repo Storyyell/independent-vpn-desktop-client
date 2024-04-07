@@ -80,7 +80,7 @@ export async function vpnConnet(serverParms) {
             }
         } catch (e) {
             console.log("error in VPN connection: " + e.message);
-            vpnObj.triggerDisconnection();
+            await vpnObj.triggerDisconnection();
             reject(false);
         }
     });
@@ -107,15 +107,15 @@ export async function vpnConnetFx() {
 
         const v2ray = spawn(v2rayPath, ['-config', configPath],);
 
-        v2ray.on('error', (error) => {
+        v2ray.on('error', async (error) => {
             console.error(`Failed to start v2ray process: ${error.message}`);
-            vpnObj.triggerDisconnection();
+            await vpnObj.triggerDisconnection();
             reject(false);
         });
 
-        v2ray.on('close', (code) => {
+        v2ray.on('close', async (code) => {
             console.log(`v2ray process exited with code ${code}`);
-            vpnObj.triggerDisconnection();
+            await vpnObj.triggerDisconnection();
             reject(false);
         });
 
@@ -155,9 +155,9 @@ export async function vpnConnetFx() {
                             reject(false);
                         }
                     })
-                    .catch((e) => {
+                    .catch(async (e) => {
                         console.log("error in checking connectivity: " + e.message);
-                        vpnObj.triggerDisconnection();
+                        await vpnObj.triggerDisconnection();
                         reject(false);
                     });
             })
@@ -176,16 +176,16 @@ export async function vpnConnetFx() {
                     '-proxy', 'socks5://127.0.0.1:10808'
                 ]);
 
-                tun2socks.on('error', (error) => {
+                tun2socks.on('error', async (error) => {
                     console.error(`Failed to start tun2socks process: ${error.message}`);
-                    vpnObj.triggerDisconnection();
+                    await vpnObj.triggerDisconnection();
                     reject(false);
                 });
 
-                tun2socks.on('close', (code) => {
+                tun2socks.on('close', async (code) => {
                     console.log(`tun2socks process exited with code ${code}`);
                     vpnObj.connected = false;
-                    vpnObj.triggerDisconnection();
+                    await vpnObj.triggerDisconnection();
                     reject(false);
 
                 });
@@ -246,9 +246,9 @@ export async function vpnConnetFx() {
                                 rendererSend({ message: 'VPN connection established', statusObj: vpnObj.statusObj });
                                 resolve(true);
                             })
-                            .catch((e) => {
+                            .catch(async (e) => {
                                 console.log("vpn connection error: " + e.message);
-                                vpnObj.triggerDisconnection();
+                                await vpnObj.triggerDisconnection();
                                 reject(false);
                             });
                     });
@@ -281,7 +281,7 @@ function addVpnRoute(gateway) {
     return exec(`route add ${vpnObj.serverIp} mask 255.255.255.255 ${gateway}`);
 }
 
-export function vpnDisconnect() {
+export async function vpnDisconnect() {
 
     global.vpnConnStatus = false;
 
@@ -291,9 +291,9 @@ export function vpnDisconnect() {
         vpnObj.disconnectionProgress = true;
         setTimeout(() => { vpnObj.disconnectionProgress = false }, 5000) // 10 seconds timeout for disconnection status cleanup on error
         let keys = Object.keys(vpnObj).reverse();
-        keys.forEach((key) => {
+        keys.forEach(async (key) => {
             console.log(`cleaning vpn object key :=> ${key}`);
-            vpnConnCleanup(key);
+            await vpnConnCleanup(key);
         })
         if (!vpnObj.connected) {
             console.log("vpn disconnected");
@@ -307,13 +307,13 @@ export function vpnDisconnect() {
     }
 }
 
-function vpnConnCleanup(key) {
+async function vpnConnCleanup(key) {
 
     switch (key) {
         case "addGlobalRoute":
             if (vpnObj["setStaticIP"]) {
 
-                child_process.exec('netsh interface ipv4 delete route 0.0.0.0/0 "sentinel_vpn" 192.168.123.1', (err, result) => {
+                return child_process.exec('netsh interface ipv4 delete route 0.0.0.0/0 "sentinel_vpn" 192.168.123.1', (err, result) => {
                     if (!err) {
                         vpnObj["addGlobalRoute"] = false;
                     }
@@ -323,7 +323,7 @@ function vpnConnCleanup(key) {
         case "addVpnRoute":
             if (vpnObj["addVpnRoute"]) {
 
-                child_process.exec(`route delete ${vpnObj.serverIp}`, (err, result) => {
+                return child_process.exec(`route delete ${vpnObj.serverIp}`, (err, result) => {
                     if (!err) {
                         vpnObj["addVpnRoute"] = false;
                     }
@@ -334,7 +334,7 @@ function vpnConnCleanup(key) {
         case "setDnsServer":
             if (vpnObj["setDnsServer"]) {
 
-                child_process.exec('netsh interface ipv4 set dnsservers name="sentinel_vpn" source=dhcp', (err, result) => {
+                return child_process.exec('netsh interface ipv4 set dnsservers name="sentinel_vpn" source=dhcp', (err, result) => {
                     if (!err) {
                         vpnObj["setDnsServer"] = false;
                     }
@@ -343,7 +343,7 @@ function vpnConnCleanup(key) {
             break;
         case "setStaticIP":
             if (vpnObj["setStaticIP"]) {
-                child_process.exec('netsh interface ipv4 set address name="sentinel_vpn" source=dhcp', (err, result) => {
+                return child_process.exec('netsh interface ipv4 set address name="sentinel_vpn" source=dhcp', (err, result) => {
                     if (!err) {
                         vpnObj["setStaticIP"] = false;
                     }
@@ -352,13 +352,13 @@ function vpnConnCleanup(key) {
             break;
         case "tun2socks":
             if (vpnObj["tun2socks"] != null) {
-                vpnObj.tun2socks.kill();
+                await vpnObj.tun2socks.kill();
                 vpnObj.tun2socks = null;
             }
             break;
         case "v2ray":
             if (vpnObj["v2ray"] != null) {
-                vpnObj.v2ray.kill();
+                await vpnObj.v2ray.kill();
                 vpnObj.v2ray = null;
             }
             break;
