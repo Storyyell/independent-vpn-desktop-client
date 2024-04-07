@@ -4,11 +4,23 @@ import { Box, Button, Chip, Divider, Grid, List, ListItem, ListItemButton, MenuI
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Switch from '@mui/material/Switch';
 import SettingsItem from '../../components/SettingsItem/SettingsItem';
+import { DeviceTokenContext } from '../../context/DeviceTokenContext';
 
 
+function stringToUniqueNumber(input) {
+  let hash = 0;
+  for (let i = 0; i < input.length; i++) {
+    const character = input.charCodeAt(i);
+    hash = ((hash << 5) - hash) + character;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash % 1000000000);
+}
 
+stringToUniqueNumber("YourString");
 
 const HomeSettings = (props) => {
+  const { deviceToken } = React.useContext(DeviceTokenContext);
 
   const homeSettingsJson = [
     {
@@ -45,8 +57,8 @@ const HomeSettings = (props) => {
 
         <Grid container sx={{ marginBottom: 1 }}>
           <Grid item xs>
-            <Typography fontSize={16} sx={{ fontWeight: 900 }}>
-              User12334566
+            <Typography fontSize={17} sx={{ fontWeight: 800 }}>
+              {`User - ${stringToUniqueNumber(deviceToken)}`}
             </Typography>
           </Grid>
           <Grid item xs={6} sx={{ textAlign: 'end' }} >
