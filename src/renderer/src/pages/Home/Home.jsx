@@ -63,7 +63,7 @@ function Home(props) {
                     } catch (error) {
                         setIp('--.--.--.--');
                     }
-                }, 1000);
+                }, 3000);
 
             }
         };
