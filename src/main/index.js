@@ -53,12 +53,12 @@ function createWindow() {
 
   ipcMain.handle('triggerConnection', async (event, serverParms) => {
     console.log('vpn connection trigger on main process')
-    await vpnConnet(serverParms);
+    return await vpnConnet(serverParms);
   })
 
-  ipcMain.handle('triggerDisconnection', (event) => {
+  ipcMain.handle('triggerDisconnection', async (event) => {
     console.log('vpn disconnection trigger on main process')
-    vpnDisconnect()
+    return await vpnDisconnect()
   })
 
   ipcMain.handle('vpnConnStatus', (event, serverObj) => {
@@ -175,8 +175,8 @@ app.on('ready', () => {
 
 })
 
-app.on('will-quit', () => {
-  vpnObj.triggerDisconnection();
+app.on('will-quit', async () => {
+  await vpnObj.triggerDisconnection();
 
   //Todo: remove file just after connection and use protobuff to store the data
   if (global.sessionTempDir.path) {
