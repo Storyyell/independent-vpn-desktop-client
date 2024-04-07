@@ -53,7 +53,7 @@ function Home(props) {
 
 
     function triggerVpnConnection() {
-        handleVpnConnTrigger(deviceToken, selectedItems, serverList, setVpnStatus, vpnStatusMain, setServerList, setVpnStatusMain)
+        handleVpnConnTrigger(deviceToken, selectedItems, serverList, setVpnStatus, vpnStatusMain, setServerList, setVpnStatusMain, setSelectedItems)
     }
 
     const getObj = (type, countryId, cityId) => {
