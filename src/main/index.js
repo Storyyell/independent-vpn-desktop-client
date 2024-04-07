@@ -40,6 +40,8 @@ function createWindow() {
     }
   })
 
+  // mainWindow.webContents.openDevTools();
+
   mainWindow.on('ready-to-show', () => {
     //todo remove this global scope of main window
     global.mainWindow = mainWindow

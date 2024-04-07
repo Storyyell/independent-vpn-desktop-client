@@ -39,74 +39,78 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
     case (selectedItems.cityId !== null && selectedItems.countryId !== null):
 
       console.log('selectedItems.cityId !== null && selectedItems.countryId !== null');
-      // console.log(`${selectedItems.countryId}-${selectedItems.cityId}`);
 
-      try {
-        setVpnStatusMain('connecting');
-        const slc = await refreshServerList(selectedItems?.countryId, selectedItems?.cityId, setServerList, serverList, deviceToken);
-        const slObj = slc.servers?.[`${selectedItems.countryId}-${selectedItems.cityId}`];
-        const sl = selectRandomItems(slObj.data, retryServerNo);
-        console.log(sl);
-        if (sl.length > 0) {
+      const connnet = async () => {
+        try {
+          setVpnStatusMain('connecting');
+          const slc = await refreshServerList(selectedItems?.countryId, selectedItems?.cityId, setServerList, serverList, deviceToken);
+          const slObj = slc.servers?.[`${selectedItems.countryId}-${selectedItems.cityId}`];
+          const sl = selectRandomItems(slObj.data, retryServerNo);
+          console.log(sl);
+          if (sl.length > 0) {
 
-          for (let i = 0; i < sl.length; i++) {
-            i > 0 && setVpnStatus(`retrying  ${i}...`);
-            if (await connectServer(deviceToken, sl[i], setVpnStatusMain)) {
-              break;
+            for (let i = 0; i < sl.length; i++) {
+              // todo add a abort mechanism
+              i > 0 && setVpnStatus(`retrying  ${i}...`);
+              console.log(`Connecting to server ${i + 1}`);
+              if (await connectServer(deviceToken, sl[i], setVpnStatusMain)) {
+                break;
+              }
             }
-          }
 
+          }
+        } catch (error) {
+          console.log(error);
+          await disconnectServer()
         }
-      } catch (error) {
-        console.log(error);
-        setVpnStatusMain('disconnected');
+
+      }
+
+      switch (vpnStatusMain) {
+        case 'connected':
+          console.log('Already connected. Disconnecting...');
+          await disconnectServer();
+          break
+        case 'connecting':
+          console.log('Currently connecting...');
+          if (!(selectedItems?.countryId == window?.currentLocation?.country_id && selectedItems?.cityId == window?.currentLocation?.city_id)) {
+            console.log('Different location. Disconnecting...');
+            await disconnectServer()
+            console.log('Connecting to new location...');
+            await connnet();
+          }
+          break
+
+        case 'disconnected':
+          console.log('Disconnected. Connecting to new location...');
+          await connnet();
+          break
+
+        default:
+          await disconnectServer()
+          break
       }
 
       break
 
     default:
 
-      console.log('default');
+      await disconnectServer()
       break
   }
-
-
-  // if (vpnStatusMain !== 'connected') {
-
-  //   console.log("vpn connection triggered fron renderer");
-  //   let sl = serverList.servers?.[`${selectedItems.countryId}-${selectedItems.cityId}`] || []
-  //   if (sl.length > 0) {
-
-  //     const randomIndex = Math.floor(Math.random() * sl.length);
-  //     const server = sl[randomIndex]
-  //     console.log(server);
-
-  //     let serverParms = {
-  //       device_token: deviceToken,
-  //       countryCode: selectedItems.countryId,
-  //       cityCode: selectedItems.cityId,
-  //       serverId: server.id
-  //     }
-
-  //     window.api.triggerConnection(serverParms);
-
-  //   } else {
-  //     setVpnStatus("fetching server list...")
-  //     // Todo handle this case properly
-  //     setTimeout(() => { setVpnStatus("VPN disconnected") }, 2000);
-  //   }
-  // } else {
-  //   window.api.triggerDisconnection()
-  // }
-
-
-
 }
 
 
 async function connectServer(deviceToken, server, setVpnStatusMain) {
 
   try {
+
+    window.currentLocation = {
+      country_id: server.country_id,
+      city_id: server.city_id,
+      server_id: server.id
+    };
+
     setVpnStatusMain('connecting');
     let serverParms = {
       device_token: deviceToken,
@@ -123,9 +127,20 @@ async function connectServer(deviceToken, server, setVpnStatusMain) {
       return false;
     }
   } catch (error) {
-    setVpnStatusMain('disconnected');
+    await disconnectServer()
     return false;
   }
+
+}
+
+async function disconnectServer() {
+  try {
+    await window.api.triggerDisconnection();
+    setVpnStatusMain('disconnected');
+  } catch (error) {
+    console.log(error);
+  }
+  setVpnStatusMain('disconnected');
 
 }
 
