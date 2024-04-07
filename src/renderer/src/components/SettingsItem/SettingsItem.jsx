@@ -37,7 +37,7 @@ function SettingsItem(props) {
           sx={{ width: '100px', }}
         >
           <MenuItem value={'v2ray'} >v2ray</MenuItem>
-          <MenuItem value={'wireguard'}>wireguard</MenuItem>
+          <MenuItem value={'wireguard'} disabled>wireguard</MenuItem>
         </Select>}
 
       </Grid>
