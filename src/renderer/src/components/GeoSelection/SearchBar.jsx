@@ -2,12 +2,15 @@ import { Button, Stack, TextField, Typography } from '@mui/material'
 import React from 'react'
 import BoltIcon from '@mui/icons-material/Bolt';
 import { SelectionContext } from '../../context/SelectionContext';
+import { handleVpnConnTrigger } from '../../pages/Home/ConnectionTrigger';
+import { VpnStatusMainContext } from '../../context/VpnStatusMainContext';
 
 
 
 const SearchBar = (props) => {
 
   const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
+  const { vpnStatusMain, setVpnStatusMain } = React.useContext(VpnStatusMainContext);
 
 
   let searchField = props.searchField
@@ -17,6 +20,12 @@ const SearchBar = (props) => {
   let setFavList = props.setFavList
   let setLoadCityList = props.setLoadCityList
 
+  let serverList = props.serverList
+  let deviceToken = props.deviceToken
+  let setServerList = props.setServerList
+
+
+
   const handleResetFav = () => {
     setFavList({ countries: [], cities: {} })
   }
@@ -25,6 +34,7 @@ const SearchBar = (props) => {
     props.onClose()
     setSelectedItems({ countryId: null, cityId: null })
     setLoadCityList(false)
+    handleVpnConnTrigger(deviceToken, selectedItems, serverList, () => { }, vpnStatusMain, setServerList, setVpnStatusMain, setSelectedItems)
   }
 
   return (

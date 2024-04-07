@@ -110,6 +110,10 @@ const GeoSelection = (props) => {
           setFavList={setFavList}
           onClose={props.onClose}
           setLoadCityList={setLoadCityList}
+          serverList={serverList}
+          deviceToken={deviceToken}
+          setServerList={setServerList}
+
         />
 
         <Stack direction={'column'} spacing={2} style={{ margin: '8px' }}>
