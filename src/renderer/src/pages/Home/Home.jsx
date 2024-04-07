@@ -33,13 +33,13 @@ function Home(props) {
             const message = arg.message;
 
             setVpnStatus(message);
-            if (message === 'VPN connection established') {
-                setVpnStatusMain('connected');
-            } else if (message === 'VPN disconnected') {
-                setVpnStatusMain('disconnected');
-            } else {
-                setVpnStatusMain('connecting');
-            }
+            // if (message === 'VPN connection established') {
+            //     setVpnStatusMain('connected');
+            // } else if (message === 'VPN disconnected') {
+            //     setVpnStatusMain('disconnected');
+            // } else {
+            //     setVpnStatusMain('connecting');
+            // }
 
             console.log(message);
         };
@@ -53,7 +53,7 @@ function Home(props) {
 
 
     function triggerVpnConnection() {
-        handleVpnConnTrigger(deviceToken, selectedItems, serverList, setVpnStatus, vpnStatusMain, setServerList)
+        handleVpnConnTrigger(deviceToken, selectedItems, serverList, setVpnStatus, vpnStatusMain, setServerList, setVpnStatusMain)
     }
 
     const getObj = (type, countryId, cityId) => {

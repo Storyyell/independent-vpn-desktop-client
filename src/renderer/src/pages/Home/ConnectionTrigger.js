@@ -21,7 +21,7 @@ function selectRandomItems(array, count) {
 
 
 
-async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setVpnStatus, vpnStatusMain, setServerList) {
+async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setVpnStatus, vpnStatusMain, setServerList, setVpnStatusMain) {
 
   console.log('handleVpnConnTrigger');
 
@@ -42,28 +42,32 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
       console.log('selectedItems.cityId !== null && selectedItems.countryId !== null');
       // console.log(`${selectedItems.countryId}-${selectedItems.cityId}`);
 
-      const slc = await refreshServerList(selectedItems?.countryId, selectedItems?.cityId, setServerList, serverList, deviceToken);
-      const slObj = (slc.servers?.[`${selectedItems.countryId}-${selectedItems.cityId}`]);
-      const sl = selectRandomItems(slObj.data, retryServerNo);
-      console.log(sl);
-      if (sl.length > 0) {
-
-        const server = sl[0]
-        let serverParms = {
-          device_token: deviceToken,
-          countryCode: server.country_id,
-          cityCode: server.city_id,
-          serverId: server.id
-        }
-
-        window.api.triggerConnection(serverParms)
-          // for testing
-          .then((res) => {
+      try {
+        setVpnStatusMain('connecting');
+        const slc = await refreshServerList(selectedItems?.countryId, selectedItems?.cityId, setServerList, serverList, deviceToken);
+        const slObj = slc.servers?.[`${selectedItems.countryId}-${selectedItems.cityId}`];
+        const sl = selectRandomItems(slObj.data, retryServerNo);
+        console.log(sl);
+        if (sl.length > 0) {
+          const server = sl[0];
+          let serverParms = {
+            device_token: deviceToken,
+            countryCode: server.country_id,
+            cityCode: server.city_id,
+            serverId: server.id
+          };
+          const res = await window.api.triggerConnection(serverParms);
+          if (res) {
             console.log('promise resolved');
-          })
-          .catch((err) => {
+            setVpnStatusMain('connected');
+          } else {
             console.log('promise rejected');
-          })
+            setVpnStatusMain('disconnected');
+          }
+        }
+      } catch (error) {
+        console.log('promise rejected');
+        setVpnStatusMain('disconnected');
       }
 
       break
