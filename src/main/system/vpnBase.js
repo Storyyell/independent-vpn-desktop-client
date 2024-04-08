@@ -260,9 +260,10 @@ export async function vpnConnetFx() {
 }
 
 
-function setStaticIP() {
+async function setStaticIP() {
     console.log("assigning static ip to internal adapter");
-    return exec('netsh interface ipv4 set address name="sentinel_vpn" source=static addr=192.168.123.1 mask=255.255.255.0');
+    await exec('netsh interface ipv4 set address name="sentinel_vpn" source=static addr=192.168.123.1 mask=255.255.255.0');
+    await exec('netsh interface ipv6 set address name="sentinel_vpn" source=static addr=2001:0db8:85a3:0000:0000:8a2e:0370:7334 mask=ffff:ffff:ffff:ffff:ffff:ffff:ffff:0000');
 }
 
 function setDnsServer() {
