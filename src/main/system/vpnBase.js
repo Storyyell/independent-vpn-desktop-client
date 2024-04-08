@@ -344,12 +344,15 @@ async function vpnConnCleanup(key) {
             break;
         case "setStaticIP":
             if (vpnObj["setStaticIP"]) {
-                return child_process.exec('netsh interface ipv4 set address name="sentinel_vpn" source=dhcp', (err, result) => {
-                    if (!err) {
-                        vpnObj["setStaticIP"] = false;
-                    }
-                })
+                try {
+                    await child_process.exec('netsh interface ipv4 set address name="sentinel_vpn" source=dhcp');
+                    await child_process.exec('netsh interface ipv6 set address name="sentinel_vpn" source=dhcp');
+                    vpnObj["setStaticIP"] = false;
+                } catch (error) {
+                    throw error;
+                }
             }
+
             break;
         case "tun2socks":
             if (vpnObj["tun2socks"] != null) {
