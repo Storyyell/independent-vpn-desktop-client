@@ -1,6 +1,8 @@
 import { Box, Stack, Typography } from '@mui/material'
 import React from 'react'
 import './ConnectBtn.css'
+import CircularProgress from '@mui/material/CircularProgress';
+import { VpnStatusMainContext } from '../../context/VpnStatusMainContext';
 
 const PowerBtn = () => {
   return (
@@ -13,6 +15,8 @@ const PowerBtn = () => {
 }
 
 const ConnectBtn = (props) => {
+  const { vpnStatusMain } = React.useContext(VpnStatusMainContext);
+
 
   let btnStyle = {}
 
@@ -47,7 +51,9 @@ const ConnectBtn = (props) => {
             transform: 'scale(1.05)'
           },
         }}>
-        <PowerBtn />
+        {
+          vpnStatusMain == 'connecting' ? <CircularProgress size={41} sx={{ p: 1 }} color='error' /> : <PowerBtn />
+        }
         <Typography style={{ fontSize: '10px', fontWeight: '600' }}>
           {props.statusText === 'connected' && 'Connected'}
           {props.statusText === 'disconnected' && 'Tap to connect'}
