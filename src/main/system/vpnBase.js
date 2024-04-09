@@ -272,11 +272,10 @@ function setDnsServer() {
 
 }
 
-function addGlobalRoute() {
+async function addGlobalRoute() {
     console.log("global traffic routing rule ");
-    return exec('netsh interface ipv4 add route 0.0.0.0/0 "sentinel_vpn" 192.168.123.1 metric=1');
-    return exec('netsh interface ipv6 add route ::/0 "sentinel_vpn" 2001:0db8:85a3:0000:0000:8a2e:0370:7334 metric=1');
-
+    await exec('netsh interface ipv4 add route 0.0.0.0/0 "sentinel_vpn" 192.168.123.1 metric=1');
+    await exec('netsh interface ipv6 add route ::/0 "sentinel_vpn" 2001:0db8:85a3:0000:0000:8a2e:0370:7334 metric=1');
 }
 
 function addVpnRoute(gateway) {
@@ -313,42 +312,32 @@ export async function vpnDisconnect() {
 async function vpnConnCleanup(key) {
 
     switch (key) {
+
         case "addGlobalRoute":
             if (vpnObj["setStaticIP"]) {
-
-                return child_process.exec('netsh interface ipv4 delete route 0.0.0.0/0 "sentinel_vpn" 192.168.123.1', (err, result) => {
-                    if (!err) {
-                        vpnObj["addGlobalRoute"] = false;
-                    }
-                })
+                await exec('netsh interface ipv4 delete route 0.0.0.0/0 "sentinel_vpn" 192.168.123.1')
+                await exec('netsh interface ipv6 delete route ::/0 "sentinel_vpn" 2001:0db8:85a3:0000:0000:8a2e:0370:7334')
+                vpnObj["addGlobalRoute"] = false;
             }
             break;
         case "addVpnRoute":
             if (vpnObj["addVpnRoute"]) {
-
-                return child_process.exec(`route delete ${vpnObj.serverIp}`, (err, result) => {
-                    if (!err) {
-                        vpnObj["addVpnRoute"] = false;
-                    }
-
-                })
+                await exec(`route delete ${vpnObj.serverIp}`)
+                vpnObj["addVpnRoute"] = false;
             }
             break;
         case "setDnsServer":
             if (vpnObj["setDnsServer"]) {
+                await exec('netsh interface ipv4 set dnsservers name="sentinel_vpn" source=dhcp')
+                vpnObj["setDnsServer"] = false;
 
-                return child_process.exec('netsh interface ipv4 set dnsservers name="sentinel_vpn" source=dhcp', (err, result) => {
-                    if (!err) {
-                        vpnObj["setDnsServer"] = false;
-                    }
-                })
             }
             break;
         case "setStaticIP":
             if (vpnObj["setStaticIP"]) {
                 try {
-                    await child_process.exec('netsh interface ipv4 set address name="sentinel_vpn" source=dhcp');
-                    await child_process.exec('netsh interface ipv6 set address name="sentinel_vpn" source=dhcp');
+                    await exec('netsh interface ipv4 set address name="sentinel_vpn" source=dhcp');
+                    await exec('netsh interface ipv6 set address name="sentinel_vpn" source=dhcp');
                     vpnObj["setStaticIP"] = false;
                 } catch (error) {
                     throw error;
