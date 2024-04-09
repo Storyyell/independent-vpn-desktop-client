@@ -275,6 +275,8 @@ function setDnsServer() {
 function addGlobalRoute() {
     console.log("global traffic routing rule ");
     return exec('netsh interface ipv4 add route 0.0.0.0/0 "sentinel_vpn" 192.168.123.1 metric=1');
+    return exec('netsh interface ipv6 add route ::/0 "sentinel_vpn" 2001:0db8:85a3:0000:0000:8a2e:0370:7334 metric=1');
+
 }
 
 function addVpnRoute(gateway) {
