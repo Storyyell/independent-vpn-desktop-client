@@ -18,7 +18,9 @@ const GeoSelHeader = (props) => {
     return (
       <IconButton onClick={() => {
         props?.setFavIconClick(!props?.favIconClick)
-      }} >
+      }}
+        sx={{ visibility: props?.loadCityList ? 'hidden' : 'visible' }}
+      >
         <Box style={{ ...props.mentIconStyle, backgroundColor: props.favIconClick ? 'red' : 'none' }} sx={{ b: 1 }} >
           <img alt="favicon" src={favIcon} loading="lazy" width={'19px'} />
         </Box>
@@ -48,7 +50,7 @@ const GeoSelHeader = (props) => {
 
         {favIconClick && <Typography style={{ fontSize: '16px' }}>Favourites</Typography>}
 
-        <FavIcon favIconClick={favIconClick} setFavIconClick={setFavIconClick} mentIconStyle={mentIconStyle} />
+        {<FavIcon favIconClick={favIconClick} setFavIconClick={setFavIconClick} mentIconStyle={mentIconStyle} loadCityList={loadCityList} />}
 
       </Stack>
     </>
