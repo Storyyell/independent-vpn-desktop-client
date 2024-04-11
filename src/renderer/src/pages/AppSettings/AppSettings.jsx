@@ -66,8 +66,8 @@ const AppSettings = () => {
           {
             homeSettingsJson.map((item, index) => {
               return (
-                <Box sx={{ paddingBottom: 1 }}>
-                  <ListItem key={index} disablePadding>
+                <Box key={index} sx={{ paddingBottom: 1 }}>
+                  <ListItem disablePadding>
                     <ListItemButton sx={{ p: '3px', borderRadius: 1 }}>
                       <SettingsItem title={item.title} desc={item.desc} variant={item.variant} />
                     </ListItemButton>
@@ -85,8 +85,8 @@ const AppSettings = () => {
           {
             generalInfoSettingsJson.map((item, index) => {
               return (
-                <Box sx={{ paddingBottom: 1 }} key={index}>
-                  <ListItem key={index} disablePadding>
+                <Box key={index} sx={{ paddingBottom: 1 }} key={index}>
+                  <ListItem disablePadding>
                     <ListItemButton sx={{ p: '3px', borderRadius: 1 }}>
                       <SettingsItem title={item.title} desc={item.desc} variant={item.variant} />
                     </ListItemButton>

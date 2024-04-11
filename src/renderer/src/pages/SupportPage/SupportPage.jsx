@@ -60,7 +60,7 @@ const SupportPage = (props) => {
           supportSettingsJson.map((item, index) => {
             return (
               <Box sx={{ paddingBottom: 1 }} key={index}>
-                <ListItem key={index} disablePadding>
+                <ListItem disablePadding>
                   <ListItemButton sx={{ p: '3px', borderRadius: 1 }} onClick={() => { item.onClick() }}>
                     <SettingsItem title={item.title} desc={item.desc} variant={item.variant} />
                   </ListItemButton>
@@ -79,7 +79,7 @@ const SupportPage = (props) => {
           generalInfoSettingsJson.map((item, index) => {
             return (
               <Box key={index}>
-                <ListItem key={index} disablePadding>
+                <ListItem disablePadding>
                   <ListItemButton sx={{ p: '3px', borderRadius: 1 }}>
                     <SettingsItem title={item.title} desc={item.desc} variant={item.variant} />
                   </ListItemButton>
