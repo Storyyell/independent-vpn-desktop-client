@@ -39,7 +39,7 @@ const Header = () => {
           </Box>
         </Drawer>
 
-        <Button
+        {/* <Button
           variant="outlined"
           size='small'
           color='error'
@@ -54,7 +54,7 @@ const Header = () => {
           <Typography sx={{ fontSize: '8px', color: 'white' }}>
             Upgrade to Premium
           </Typography>
-        </Button>
+        </Button> */}
 
       </Stack>
     </Box >
