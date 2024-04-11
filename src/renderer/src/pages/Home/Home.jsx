@@ -39,15 +39,15 @@ function Home(props) {
 
             setVpnStatus(message);
 
-            if (connected) {
-                setVpnTunnelStatus('connected');
-            } else if (connectionProgress) {
-                setVpnTunnelStatus('connecting');
-            } else if (disconnectionProgress) {
-                setVpnTunnelStatus('disconnecting');
-            } else {
-                setVpnTunnelStatus('disconnected');
-            }
+            // if (connected) {
+            //     setVpnTunnelStatus('connected');
+            // } else if (connectionProgress) {
+            //     setVpnTunnelStatus('connecting');
+            // } else if (disconnectionProgress) {
+            //     setVpnTunnelStatus('disconnecting');
+            // } else {
+            //     setVpnTunnelStatus('disconnected');
+            // }
         };
 
         window.ipcRenderer.on('connectionStatus', handleConnectionStatus);
@@ -121,7 +121,6 @@ function Home(props) {
             <Box>
                 <ConnectBtn
                     onClick={triggerVpnConnection}
-                    statusText={vpnStatusMain}
                     ip={ip}
                 />
 

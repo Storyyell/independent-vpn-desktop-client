@@ -20,7 +20,7 @@ const ConnectBtn = (props) => {
 
   let btnStyle = {}
 
-  switch (props.statusText) {
+  switch (vpnStatusMain) {
 
     case 'connected':
       btnStyle = {
@@ -57,13 +57,13 @@ const ConnectBtn = (props) => {
           },
         }}>
         {
-          vpnStatusMain == 'connecting' ? <CircularProgress size={41} sx={{ p: 1 }} color='error' /> : <PowerBtn />
+          ((vpnStatusMain == 'connecting') || (vpnStatusMain == 'disconnecting')) ? <CircularProgress size={41} sx={{ p: 1 }} color='error' /> : <PowerBtn />
         }
         <Typography style={{ fontSize: '10px', fontWeight: '600' }}>
-          {props.statusText === 'connected' && 'Connected'}
-          {props.statusText === 'disconnected' && 'Tap to connect'}
-          {props.statusText === 'connecting' && 'connecting...'}
-          {props.statusText === 'disconnecting' && 'disconnecting...'}
+          {vpnStatusMain === 'connected' && 'Connected'}
+          {vpnStatusMain === 'disconnected' && 'Tap to connect'}
+          {vpnStatusMain === 'connecting' && 'connecting...'}
+          {vpnStatusMain === 'disconnecting' && 'disconnecting...'}
         </Typography>
         <Typography sx={{ color: '#888888', fontSize: '8.779px', fontWeight: '6pp' }}>
           {props.ip}
