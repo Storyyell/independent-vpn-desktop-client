@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Box, IconButton, Stack } from '@mui/material';
+import { Box, IconButton, SliderValueLabel, Stack } from '@mui/material';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { ServerListContext } from '../../context/ServerListContext';
@@ -12,10 +12,14 @@ import ConnectBtn from '../../components/ConnectBtn/ConnectBtn';
 import GeoSelection from '../../components/GeoSelection/GeoSelection';
 import VpnTraffic from '../../components/VpnTraffic/VpnTraffic';
 import { handleVpnConnTrigger } from './ConnectionTrigger';
+import { VpnTunnelStatusContext } from '../../context/VpnTunnelStatusContext';
 
 
 
 // todo add case of revoked device token and followed by re-regisration
+
+
+
 
 function Home(props) {
 
@@ -25,22 +29,26 @@ function Home(props) {
     const { deviceToken, setDeviceToken } = React.useContext(DeviceTokenContext);
     const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
     const [geoSelection, setGeoSelection] = React.useState(false);
+    const { vpnTunnelStatus, setVpnTunnelStatus } = React.useContext(VpnTunnelStatusContext);
     const [ip, setIp] = useState('--.--.--.--');
 
-    // for vpn status listenening
+
     useEffect(() => {
         const handleConnectionStatus = (arg) => {
-            const message = arg.message;
+            console.log(arg)
+            const { message, connected, connectionProgress, disconnectionProgress } = arg;
 
             setVpnStatus(message);
-            // if (message === 'VPN connection established') {
-            //     setVpnStatusMain('connected');
-            // } else if (message === 'VPN disconnected') {
-            //     setVpnStatusMain('disconnected');
-            // } else {
-            //     setVpnStatusMain('connecting');
-            // }
-            console.log(arg)
+
+            if (connected) {
+                setVpnTunnelStatus('connected');
+            } else if (connectionProgress) {
+                setVpnTunnelStatus('connecting');
+            } else if (disconnectionProgress) {
+                setVpnTunnelStatus('disconnecting');
+            } else {
+                setVpnTunnelStatus('disconnected');
+            }
         };
 
         window.ipcRenderer.on('connectionStatus', handleConnectionStatus);
@@ -49,7 +57,6 @@ function Home(props) {
             window.ipcRenderer.removeAllListeners('connectionStatus');
         };
     }, []);
-
 
     React.useEffect(() => {
         const getIp = async () => {

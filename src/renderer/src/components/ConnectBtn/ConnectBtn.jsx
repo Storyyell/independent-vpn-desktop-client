@@ -32,6 +32,11 @@ const ConnectBtn = (props) => {
         animation: 'shadow-pulse 2s infinite'
       }
       break;
+    case 'disconnecting':
+      btnStyle = {
+        animation: 'shadow-pulse 2s infinite'
+      }
+      break;
     default:
       btnStyle = {}
 
@@ -58,6 +63,7 @@ const ConnectBtn = (props) => {
           {props.statusText === 'connected' && 'Connected'}
           {props.statusText === 'disconnected' && 'Tap to connect'}
           {props.statusText === 'connecting' && 'connecting...'}
+          {props.statusText === 'disconnecting' && 'disconnecting...'}
         </Typography>
         <Typography sx={{ color: '#888888', fontSize: '8.779px', fontWeight: '6pp' }}>
           {props.ip}

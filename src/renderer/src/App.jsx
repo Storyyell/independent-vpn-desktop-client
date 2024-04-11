@@ -1,8 +1,6 @@
 import React from 'react';
-import { useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { VpnStatusMainContext } from './context/VpnStatusMainContext';
 import { ServerListProvider } from './context/ServerListContext'
 import { VpnStatusMainProvider } from './context/VpnStatusMainContext'
 import { DeviceTokenProvider } from './context/DeviceTokenContext'
@@ -12,6 +10,7 @@ import { Box } from '@mui/material';
 import Header from './components/Header/Header';
 import { FavListProvider } from './context/FavContext';
 import { SysSettingsProvider } from './context/SysSettingsContext';
+import { VpnTunnelStatusProvider } from './context/VpnTunnelStatusContext';
 
 
 
@@ -49,21 +48,23 @@ function App() {
     <>
       <ServerListProvider>
         <VpnStatusMainProvider>
-          <SelectionProvider>
-            <DeviceTokenProvider>
-              <FavListProvider>
-                <SysSettingsProvider>
-                  <ThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <Box className="app grad">
-                      <Header />
-                      <Home />
-                    </Box>
-                  </ThemeProvider>
-                </SysSettingsProvider>
-              </FavListProvider>
-            </DeviceTokenProvider>
-          </SelectionProvider>
+          <VpnTunnelStatusProvider>
+            <SelectionProvider>
+              <DeviceTokenProvider>
+                <FavListProvider>
+                  <SysSettingsProvider>
+                    <ThemeProvider theme={theme}>
+                      <CssBaseline />
+                      <Box className="app grad">
+                        <Header />
+                        <Home />
+                      </Box>
+                    </ThemeProvider>
+                  </SysSettingsProvider>
+                </FavListProvider>
+              </DeviceTokenProvider>
+            </SelectionProvider>
+          </VpnTunnelStatusProvider>
         </VpnStatusMainProvider>
       </ServerListProvider>
     </>
