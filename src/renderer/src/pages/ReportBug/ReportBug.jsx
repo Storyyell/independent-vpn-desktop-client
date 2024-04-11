@@ -9,11 +9,11 @@ import { styled } from '@mui/system';
 
 
 const content = {
-  title: 'To help us improve please send diagnostics so we can investigate the issue',
-  matter: 'Describe your issue(optional)',
-  message: `The easiest and favourite way to use Sentinel VPN is to install the Sentinel app on all of your devices that you'd like to use with a VPN.If you install the Sentinel VPN app on your phone, computer, or other supported device, there is nothing else you need to install to use Sentinel.`,
-  button: 'Send'
-}
+  title: 'Create a support ticket',
+  matter: 'Describe your issue',
+  message: `Please provide us with as much information as possible so that we can assist you promptly. Your query could be related to any aspect of our services, and we're here to offer support.`,
+  button: 'Submit Ticket'
+};
 const blue = {
   100: '#DAECFF',
   200: '#b6daff',
