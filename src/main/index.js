@@ -136,6 +136,8 @@ function createWindow() {
   trayvar.on('click', function () { mainWindow.show(); });
   trayvar.setContextMenu(contextMenu)
 
+  trayvar.setToolTip('Independent VPN')
+
   mainWindow.on('minimize', function (event) {
     event.preventDefault();
     mainWindow.hide();
