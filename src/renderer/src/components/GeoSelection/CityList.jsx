@@ -64,7 +64,7 @@ const CityList = (props) => {
             )
           }) :
 
-          <Typography variant='subtitle2' sx={{ m: 2 }}>
+          <Typography sx={{ m: 2 }}>
             Loading cities list ...
           </Typography>
       }

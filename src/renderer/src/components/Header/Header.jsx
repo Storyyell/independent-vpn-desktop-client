@@ -40,7 +40,6 @@ const Header = () => {
         </Drawer>
 
         <Button
-          variant="outlined"
           size='small'
           color='error'
           sx={{
@@ -51,7 +50,7 @@ const Header = () => {
             borderRadius: '12px',
           }}
         >
-          <Typography variant="overline" sx={{ fontSize: '8px', color: 'white' }}>
+          <Typography sx={{ fontSize: '8px', color: 'white' }}>
             Upgrade to Premium
           </Typography>
         </Button>

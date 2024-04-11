@@ -51,7 +51,7 @@ const CountryList = (props) => {
 
           :
 
-          <Typography variant='subtitle2' sx={{ m: 2 }}>
+          <Typography sx={{ m: 2 }}>
             Loading country list ...
           </Typography>
       }

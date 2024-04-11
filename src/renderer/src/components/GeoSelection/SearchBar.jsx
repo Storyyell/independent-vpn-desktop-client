@@ -46,7 +46,7 @@ const SearchBar = (props) => {
         <Typography sx={{ color: 'white' }} style={{ fontSize: '15px' }}> Quick Select </Typography>
       </Button>
 
-      <TextField id="search" label={`search ${loadCityList ? 'cities' : 'countries'}`} variant="outlined"
+      <TextField id="search" label={`search ${loadCityList ? 'cities' : 'countries'}`}
         value={searchField}
         size='small'
         onChange={(e) => {

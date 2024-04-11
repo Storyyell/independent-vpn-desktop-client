@@ -65,10 +65,10 @@ export const GeoItem = (props) => {
               </Stack>
 
               <Box>
-                <Typography display={'inline'} sx={{ paddingRight: 1 }} variant='caption' fontSize={'12px'}>
+                <Typography display={'inline'} sx={{ paddingRight: 1 }} fontSize={'12px'}>
                   Node:
                 </Typography>
-                <Typography display={'inline'} variant='subtitle2 ' fontSize={'12px'}>
+                <Typography display={'inline'} fontSize={'12px'}>
                   {d.servers_available}
                 </Typography>
               </Box>
