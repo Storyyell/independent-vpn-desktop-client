@@ -91,6 +91,8 @@ const ReportBug = () => {
 
           onClick={() => {
             if (textArea?.length > 0) {
+
+              // todo update sendMail recipient details
               window.api.sendMail({
                 to: encodeURIComponent('email@example.com'),
                 subject: encodeURIComponent('Your Subject Here'),
