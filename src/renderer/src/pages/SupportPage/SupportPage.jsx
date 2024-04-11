@@ -39,13 +39,17 @@ const SupportPage = (props) => {
       title: 'Privacy policy',
       desc: '',
       variant: 1,
-      onClick: () => { }
+      onClick: () => {
+        window.api.sysOpen('https://sentinel.co/privacy-policy')
+      }
     },
     {
       title: 'Terms of service',
       desc: 'Ask Community for Help',
       variant: 1,
-      onClick: () => { }
+      onClick: () => {
+        window.api.sysOpen('https://sentinel.co/terms-of-service')
+      }
     }]
 
 
@@ -90,7 +94,8 @@ const SupportPage = (props) => {
             return (
               <Box key={index}>
                 <ListItem disablePadding>
-                  <ListItemButton sx={{ p: '3px', borderRadius: 1 }}>
+                  <ListItemButton sx={{ p: '3px', borderRadius: 1 }}
+                    onClick={item.onClick}>
                     <SettingsItem title={item.title} desc={item.desc} variant={item.variant} />
                   </ListItemButton>
                 </ListItem>
