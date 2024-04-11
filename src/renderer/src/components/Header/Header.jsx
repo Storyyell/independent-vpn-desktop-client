@@ -40,6 +40,7 @@ const Header = () => {
         </Drawer>
 
         <Button
+          variant="outlined"
           size='small'
           color='error'
           sx={{
