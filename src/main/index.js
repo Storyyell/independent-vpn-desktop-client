@@ -37,7 +37,8 @@ function createWindow() {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
-    }
+    },
+    maximizable: false,
   })
 
   // mainWindow.webContents.openDevTools();
