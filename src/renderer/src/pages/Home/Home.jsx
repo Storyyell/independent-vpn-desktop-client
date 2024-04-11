@@ -40,8 +40,7 @@ function Home(props) {
             // } else {
             //     setVpnStatusMain('connecting');
             // }
-
-            console.log(message);
+            console.log(arg)
         };
 
         window.ipcRenderer.on('connectionStatus', handleConnectionStatus);

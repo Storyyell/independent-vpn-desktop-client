@@ -1,9 +1,7 @@
 
 const rendererSend = (obj) => {
   const channel = 'connectionStatus';
-  const message = obj.message;
-  let statusObj = obj.statusObj();
-  global.mainWindow.webContents.send(channel, { message: message, statusObj: statusObj });
+  global.mainWindow.webContents.send(channel, obj);
 }
 
 export { rendererSend };

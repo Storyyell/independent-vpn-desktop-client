@@ -57,8 +57,8 @@ export async function vpnConnet(serverParms) {
             const gateway = await getDefaultGateway();
             vpnObj.gateway = gateway;
             console.log("VPN connection initializing...");
-            rendererSend({ message: 'VPN connection initializing...', statusObj: vpnObj.statusObj });
-            rendererSend({ message: 'Fetching server configuration...', statusObj: vpnObj.statusObj });
+            rendererSend({ message: 'VPN connection initializing...', ...(vpnObj.statusObj()) });
+            rendererSend({ message: 'Fetching server configuration...', ...(vpnObj.statusObj()) });
             const res = await pullServerConf(serverParms.device_token, serverParms.countryCode, serverParms.cityCode, serverParms.serverId);
             const serverObj = res.data;
             const { uuid, address: server_address, listen_port } = await saveV2rayConfig(serverObj);
@@ -144,7 +144,7 @@ export async function vpnConnetFx() {
         async function onVpnConnected() {
             return new Promise((resolve, reject) => {
                 console.log("V2ray tunnel created");
-                rendererSend({ message: 'V2ray tunnel created', statusObj: vpnObj.statusObj });
+                rendererSend({ message: 'V2ray tunnel created', ...(vpnObj.statusObj()) });
                 checkConnectivity('127.0.0.1', 10808)
                     .then(async () => {
                         console.log("connectivity check passed");
@@ -215,7 +215,7 @@ export async function vpnConnetFx() {
 
                 async function onTun2SocksConnected() {
                     console.log("Tun2socks tunnel created");
-                    rendererSend({ message: 'adapter created', statusObj: vpnObj.statusObj });
+                    rendererSend({ message: 'adapter created', ...(vpnObj.statusObj()) });
                     return await startAnotherCommand();
                 }
 
@@ -243,7 +243,7 @@ export async function vpnConnetFx() {
                                 vpnObj.connectionProgress = false;
                                 console.log("vpn connection established");
                                 global.vpnConnStatus = true;
-                                rendererSend({ message: 'VPN connection established', statusObj: vpnObj.statusObj });
+                                rendererSend({ message: 'VPN connection established', ...(vpnObj.statusObj()) });
                                 resolve(true);
                             })
                             .catch(async (e) => {
@@ -298,6 +298,7 @@ export async function vpnDisconnect() {
         console.log("vpn disconnection started...");
         vpnObj.connectionProgress = false;
         vpnObj.disconnectionProgress = true;
+        try { rendererSend({ message: 'VPN disconnecting...', ...(vpnObj.statusObj()) }); } catch (e) { }
         setTimeout(() => { vpnObj.disconnectionProgress = false }, 5000) // 10 seconds timeout for disconnection status cleanup on error
         let keys = Object.keys(vpnObj).reverse();
         keys.forEach(async (key) => {
@@ -310,7 +311,7 @@ export async function vpnDisconnect() {
         vpnObj.connected = false;
         global.vpnConnStatus = false;
         vpnObj.disconnectionProgress = false;
-        try { rendererSend({ message: 'VPN disconnected', statusObj: vpnObj.statusObj }); } catch (e) { }
+        try { rendererSend({ message: 'VPN disconnected', ...(vpnObj.statusObj()) }); } catch (e) { }
     } else {
         return;
     }
@@ -404,7 +405,7 @@ async function checkConnectivity(proxyIp, proxyPort) {
         }
     });
 
-    rendererSend({ message: 'checking connectivity...', statusObj: vpnObj.statusObj });
+    rendererSend({ message: 'checking connectivity...', ...(vpnObj.statusObj()) });
 
     options.agent = new https.Agent({ socket: agent.socket });
 
@@ -418,7 +419,7 @@ async function checkConnectivity(proxyIp, proxyPort) {
 
             res.on('end', () => {
                 console.log('Successfully connected to www.google.com');
-                rendererSend({ message: 'internet connectivity check passed...', statusObj: vpnObj.statusObj });
+                rendererSend({ message: 'internet connectivity check passed...', ...(vpnObj.statusObj()) });
 
                 resolve(true);
             });
@@ -426,7 +427,7 @@ async function checkConnectivity(proxyIp, proxyPort) {
 
         req.on('error', (e) => {
             console.error(`Request error: ${e.message}`);
-            rendererSend({ message: 'internet connectivity check failed...', statusObj: vpnObj.statusObj });
+            rendererSend({ message: 'internet connectivity check failed...', ...(vpnObj.statusObj()) });
 
             reject('internet connectivity check failed...');
         });
@@ -434,7 +435,7 @@ async function checkConnectivity(proxyIp, proxyPort) {
         req.on('timeout', () => {
             req.end();
             console.error('Request timeout after 3 seconds.');
-            rendererSend({ message: 'internet connectivity check failed...', statusObj: vpnObj.statusObj });
+            rendererSend({ message: 'internet connectivity check failed...', ...(vpnObj.statusObj()) });
 
             reject('internet connectivity check failed...');
         });
