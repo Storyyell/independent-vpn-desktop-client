@@ -11,6 +11,7 @@ import Home from './pages/Home/Home';
 import { Box } from '@mui/material';
 import Header from './components/Header/Header';
 import { FavListProvider } from './context/FavContext';
+import { SysSettingsProvider } from './context/SysSettingsContext';
 
 
 
@@ -51,13 +52,15 @@ function App() {
           <SelectionProvider>
             <DeviceTokenProvider>
               <FavListProvider>
-                <ThemeProvider theme={theme}>
-                  <CssBaseline />
-                  <Box className="app grad">
-                    <Header />
-                    <Home />
-                  </Box>
-                </ThemeProvider>
+                <SysSettingsProvider>
+                  <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <Box className="app grad">
+                      <Header />
+                      <Home />
+                    </Box>
+                  </ThemeProvider>
+                </SysSettingsProvider>
               </FavListProvider>
             </DeviceTokenProvider>
           </SelectionProvider>

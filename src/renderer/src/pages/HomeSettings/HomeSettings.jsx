@@ -40,15 +40,15 @@ const HomeSettings = (props) => {
       title: 'Logs',
       desc: 'See Connection Logs',
       variant: 1,
-      onClick: () => { }
-
+      onClick: () => { },
+      disabled: true
     },
     {
       title: 'Subscription',
       desc: 'Your current plan is Free',
       variant: 9,
-      onClick: () => { }
-
+      onClick: () => { },
+      disabled: true
     }]
 
   return (
@@ -90,8 +90,15 @@ const HomeSettings = (props) => {
               return (
                 <Box sx={{ paddingBottom: 1 }} key={index}>
                   <ListItem disablePadding>
-                    <ListItemButton onClick={() => { item.onClick() }} sx={{ p: '3px', borderRadius: 1 }}>
-                      <SettingsItem title={item.title} desc={item.desc} variant={item.variant} />
+                    <ListItemButton
+                      disabled={item?.disabled}
+                      onClick={() => { item.onClick() }}
+                      sx={{ p: '3px', borderRadius: 1 }}>
+                      <SettingsItem
+                        title={item.title}
+                        desc={item.desc}
+                        variant={item.variant}
+                      />
                     </ListItemButton>
                   </ListItem>
                   <Divider variant="fullWidth" component="li" />

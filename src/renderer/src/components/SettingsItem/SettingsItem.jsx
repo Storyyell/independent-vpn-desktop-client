@@ -25,8 +25,22 @@ function SettingsItem(props) {
         </Stack>
       </Grid>
       <Grid item xs={2} sx={{ textAlign: 'end' }} justifyContent={'flex-end'} alignItems={'center'} display={'flex'}>
+
+        {/* navigation */}
         {variant == 1 && <KeyboardArrowRightIcon fontSize='small' />}
-        {variant == 2 && <Switch defaultChecked size='small' />}
+
+        {/* toggle button */}
+        {variant == 2 && <Switch
+          color='error'
+          size='small'
+          checked={props?.checked}
+          onChange={(e) => {
+            props?.onChange(e.target.checked)
+          }}
+
+        />}
+
+        {/* selection */}
         {variant == 3 && <Select
           value={'v2ray'}
           label="Age"
@@ -35,7 +49,8 @@ function SettingsItem(props) {
         >
           <MenuItem value={'v2ray'} >v2ray</MenuItem>
           <MenuItem value={'wireguard'} disabled>wireguard</MenuItem>
-        </Select>}
+        </Select>
+        }
 
       </Grid>
     </Grid>
