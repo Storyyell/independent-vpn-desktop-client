@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Box, IconButton, Stack } from '@mui/material';
-import electronLogo from '../../assets/electron.svg'
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { ServerListContext } from '../../context/ServerListContext';
