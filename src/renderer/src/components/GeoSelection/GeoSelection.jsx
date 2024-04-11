@@ -59,7 +59,7 @@ const GeoSelection = (props) => {
         return favList?.countries?.includes(d?.id)
       }))
       :
-      setCountryListProcessed(serverList?.countries?.data || [])
+      setCountryListProcessed(serverList?.countries?.data?.sort((a, b) => a?.name.localeCompare(b?.name)) || [])
 
   }, [serverList?.countries, favIconClick, favList?.countries])
 
