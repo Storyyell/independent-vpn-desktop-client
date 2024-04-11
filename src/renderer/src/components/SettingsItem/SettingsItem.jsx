@@ -28,11 +28,8 @@ function SettingsItem(props) {
         {variant == 1 && <KeyboardArrowRightIcon fontSize='small' />}
         {variant == 2 && <Switch defaultChecked size='small' />}
         {variant == 3 && <Select
-          // labelId="demo-simple-select-label"
-          // id="demo-simple-select"
           value={'v2ray'}
           label="Age"
-          // onChange={handleChange}
           size='small'
           sx={{ width: '100px', }}
         >
