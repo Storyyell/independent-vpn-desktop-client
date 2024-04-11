@@ -25,12 +25,18 @@ const AppSettings = () => {
       desc: 'Default',
       variant: null,
     },
-    // {
-    //   title: 'Push notifications',
-    //   desc: 'Get notified about location updates, alerts, and new security features.',
-    //   variant: 2,
-    //   onClick: () => { }
-    // },
+    {
+      title: 'Push notifications',
+      desc: 'Get notified about location updates, alerts, and new security features.',
+      variant: 2,
+      checked: SysSettings.pushNotification,
+      onChange: (checked) => {
+        setSysSettings({ ...SysSettings, pushNotification: checked })
+        if (checked) {
+          window.api.pushNotification('independent vpn', 'push notification enabled')
+        }
+      }
+    },
     {
       title: 'Subscription',
       desc: 'Your current plan is Free',
@@ -43,7 +49,6 @@ const AppSettings = () => {
       title: 'Analytics',
       desc: 'Provide anonymous app usage data.',
       variant: 2,
-      onClick: () => { },
       checked: SysSettings.analytics,
       onChange: (checked) => {
         setSysSettings({ ...SysSettings, analytics: checked })
@@ -82,7 +87,8 @@ const AppSettings = () => {
               return (
                 <Box key={index} sx={{ paddingBottom: 1 }}>
                   <ListItem disablePadding>
-                    <ListItemButton disabled={item?.disabled || false} sx={{ p: '3px', borderRadius: 1 }} >
+                    <ListItemButton disabled={item?.disabled || false} sx={{ p: '3px', borderRadius: 1 }}
+                    >
                       <SettingsItem
                         title={index == 0 ? `App version ${appVersion}` : item.title}
                         desc={item.desc}

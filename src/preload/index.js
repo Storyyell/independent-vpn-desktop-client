@@ -15,6 +15,7 @@ const api = {
   getIp: (device_token) => ipcRenderer.invoke('getIp', device_token),
   appVersion: () => ipcRenderer.invoke('appVersion'),
   sendMail: (mailObj) => ipcRenderer.invoke('openMailClient', mailObj),
+  pushNotification: (title, body) => ipcRenderer.invoke('pushNotification', title, body),
 
   sysOpen: (...url) => ipcRenderer.invoke('sysOpen', ...url),
 }

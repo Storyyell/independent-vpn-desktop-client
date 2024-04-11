@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs'
 import path from 'path'
 import { vpnObj } from './system/vpnBase.js'
-import { registerDevice, pullCountryList, pullCityList, pullServerList, pullServerConf, getIp } from './system/ipcs.js'
+import { registerDevice, pullCountryList, pullCityList, pullServerList, pullServerConf, getIp, showNotification } from './system/ipcs.js'
 
 let sessionTempDir = {
   path: '',
@@ -112,6 +112,13 @@ function createWindow() {
         }
       });
     });
+  })
+
+  ipcMain.handle('pushNotification', async (event, title, body) => {
+    if (title && body) {
+      showNotification(title, body);
+    }
+
   })
 
   // HMR for renderer base on electron-vite cli.

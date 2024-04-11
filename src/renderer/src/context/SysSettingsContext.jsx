@@ -5,6 +5,7 @@ const sysSettingsDefault = {
     trayIcon: true,
     analytics: false,
     crashReport: false,
+    pushNotification: false,
 }
 
 const SysSettingsContext = createContext({});

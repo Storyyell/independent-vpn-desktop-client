@@ -1,4 +1,5 @@
 import axios from 'axios';
+const { Notification } = require('electron')
 
 export async function registerDevice() {
 
@@ -158,4 +159,14 @@ export async function getIp(device_token) {
     } catch (error) {
         throw new Error('ipfetch failed');
     }
+}
+
+export async function showNotification(title, body) {
+
+    const NOTIFICATION_TITLE = title
+    const NOTIFICATION_BODY = body
+    new Notification({
+        title: NOTIFICATION_TITLE,
+        body: NOTIFICATION_BODY
+    }).show()
 }
