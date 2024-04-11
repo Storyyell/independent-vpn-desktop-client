@@ -2,9 +2,14 @@ import { Box, Button, Chip, Divider, Grid, List, ListItem, ListItemButton, MenuI
 import React from 'react'
 import openBook from '../../assets/open_book.svg'
 import SettingsItem from '../../components/SettingsItem/SettingsItem'
-
+import Modal from '@mui/material/Modal';
+import SocialLink from './SocialLink';
 
 const SupportPage = (props) => {
+
+  const [modalOpen, setModalOpen] = React.useState(false);
+
+  const handleModalClose = () => setModalOpen(false);
 
   const supportSettingsJson = [
     {
@@ -14,10 +19,13 @@ const SupportPage = (props) => {
       onClick: () => { props.setSettingsPage('create ticket') }
     },
     {
-      title: 'Telegram Community',
+      title: 'Community',
       desc: 'Ask Community for Help',
       variant: 1,
-      onClick: () => { window.api.sysOpen(import.meta.env.VITE_SERVER_TELEGRAM_COMMUNITY_URL) }
+      onClick: () => {
+        // window.api.sysOpen('https://google.com')
+        setModalOpen(true)
+      }
     },
     {
       title: 'Report a bug',
@@ -39,6 +47,8 @@ const SupportPage = (props) => {
       variant: 1,
       onClick: () => { }
     }]
+
+
 
   return (
     <>
@@ -90,6 +100,15 @@ const SupportPage = (props) => {
           })
         }
       </List>
+
+      <Modal
+        open={modalOpen}
+        onClose={handleModalClose}
+      >
+        <div>
+          <SocialLink />
+        </div>
+      </Modal>
 
     </>
   )

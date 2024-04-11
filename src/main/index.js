@@ -89,7 +89,7 @@ function createWindow() {
   })
 
   ipcMain.handle('sysOpen', async (event, ...url) => {
-    shell.openExternal(url[0]);
+    shell.openExternal(url[0], { activate: true });
   })
 
   ipcMain.handle('getIp', async (event, device_token) => {
