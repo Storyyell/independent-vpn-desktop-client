@@ -14,6 +14,7 @@ const api = {
   triggerDisconnection: () => ipcRenderer.invoke('triggerDisconnection'),
   getIp: (device_token) => ipcRenderer.invoke('getIp', device_token),
   appVersion: () => ipcRenderer.invoke('appVersion'),
+  sendMail: (mailObj) => ipcRenderer.invoke('openMailClient', mailObj),
 
   sysOpen: (...url) => ipcRenderer.invoke('sysOpen', ...url),
 }

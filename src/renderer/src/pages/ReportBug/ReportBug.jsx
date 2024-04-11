@@ -1,19 +1,16 @@
 import React from 'react'
-import SettingsHeader from '../../components/SettingsHeader/SettingsHeader'
-import { Box, Button, Chip, Divider, Grid, List, ListItem, ListItemButton, MenuItem, Select, Stack, Typography } from '@mui/material'
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import Switch from '@mui/material/Switch';
-import SettingsItem from '../../components/SettingsItem/SettingsItem';
+import { Button, Stack, Typography } from '@mui/material'
 import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
 import { styled } from '@mui/system';
 
 
 const content = {
-  title: 'Create a support ticket',
-  matter: 'Describe your issue',
-  message: `Please provide us with as much information as possible so that we can assist you promptly. Your query could be related to any aspect of our services, and we're here to offer support.`,
-  button: 'Submit Ticket'
-};
+  title: 'To help us improve please send diagnostics so we can investigate the issue',
+  matter: 'Describe your issue(optional)',
+  message: `The easiest and favourite way to use Sentinel VPN is to install the Sentinel app on all of your devices that you'd like to use with a VPN.If you install the Sentinel VPN app on your phone, computer, or other supported device, there is nothing else you need to install to use Sentinel.`,
+  button: 'Send'
+}
+
 const blue = {
   100: '#DAECFF',
   200: '#b6daff',
@@ -71,16 +68,38 @@ const Textarea = styled(BaseTextareaAutosize)(
 
 
 const ReportBug = () => {
+  const [textArea, setTextArea] = React.useState('');
+
   return (
     <>
       <Stack direction="column" spacing={1} alignItems={'center'} width={'100%'}>
         <Typography fontSize={'13px'} sx={{ mt: 1 }} fontWeight={600}>{content.title}</Typography>
         <Stack width={'100%'} sx={{ paddingTop: 2 }} spacing={3}>
           <Typography fontSize={'11px'} fontWeight={600} >{content.matter}</Typography>
-          <Textarea aria-label="minimum height" minRows={3} placeholder="Minimum 3 rows" />
+          <Textarea aria-label="minimum height" minRows={3} placeholder="ticket description..."
+            value={textArea}
+            onChange={(e) => setTextArea(e.target.value)}
+          />
           <Typography fontSize={'11px'} align='justify' fontWeight={600} sx={{ p: 1 }}>{content.message}</Typography>
         </Stack>
-        <Button variant="contained" color="error" size="small" sx={{ px: 7 }}>{content.button}</Button>
+        <Button
+          variant="contained"
+          color="error"
+          size="small"
+          sx={{ px: 7 }}
+          disabled={textArea?.length < 1}
+
+          onClick={() => {
+            if (textArea?.length > 0) {
+              window.api.sendMail({
+                to: encodeURIComponent('email@example.com'),
+                subject: encodeURIComponent('Your Subject Here'),
+                body: encodeURIComponent(textArea)
+              })
+            }
+
+          }}
+        >{content.button}</Button>
       </Stack>
     </>
   )
