@@ -1,6 +1,7 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { ipcRenderer } from 'electron'
+import { getVpnMetric } from '../main/system/ipcs'
 
 
 // Custom APIs for renderer
@@ -16,6 +17,7 @@ const api = {
   appVersion: () => ipcRenderer.invoke('appVersion'),
   sendMail: (mailObj) => ipcRenderer.invoke('openMailClient', mailObj),
   pushNotification: (title, body) => ipcRenderer.invoke('pushNotification', title, body),
+  getVpnMetric: () => ipcRenderer.invoke('vpnMetric'),
 
   sysOpen: (...url) => ipcRenderer.invoke('sysOpen', ...url),
 }

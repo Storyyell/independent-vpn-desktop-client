@@ -30,7 +30,6 @@ function shuffleArray(array) {
 
 
 async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setVpnStatus, vpnStatusMain, setServerList, setVpnStatusMain, setSelectedItems) {
-
   console.log('handleVpnConnTrigger');
   setVpnStatusMain('connecting');
 

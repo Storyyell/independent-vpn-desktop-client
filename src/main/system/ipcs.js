@@ -1,5 +1,6 @@
 import axios from 'axios';
 const { Notification } = require('electron')
+import { vpnObj } from './vpnBase';
 
 export async function registerDevice() {
 
@@ -169,4 +170,8 @@ export async function showNotification(title, body) {
         title: NOTIFICATION_TITLE,
         body: NOTIFICATION_BODY
     }).show()
+}
+
+export async function getVpnMetric() {
+    return vpnObj.statusObj()
 }

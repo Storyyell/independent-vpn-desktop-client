@@ -35,7 +35,6 @@ function Home(props) {
 
     useEffect(() => {
         const handleConnectionStatus = (arg) => {
-            console.log(arg)
             const { message, connected, connectionProgress, disconnectionProgress } = arg;
 
             setVpnStatus(message);
