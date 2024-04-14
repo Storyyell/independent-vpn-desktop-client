@@ -176,7 +176,7 @@ export async function vpnConnetFx() {
 
                 const tun2socks = spawn(tun2socksPath, [
                     '-tcp-auto-tuning',
-                    '-device', 'tun://sentinel_vpn',
+                    '-device', 'tun://independent_vpn',
                     '-proxy', 'socks5://127.0.0.1:10808'
                 ]);
 
@@ -198,7 +198,7 @@ export async function vpnConnetFx() {
                     const output = data.toString();
                     console.log(`child stdout:\n${output}`);
 
-                    if (output.includes('level=info msg="[STACK] tun://sentinel_vpn <-> socks5://127.0.0.1:10808')) {
+                    if (output.includes('level=info msg="[STACK] tun://independent_vpn <-> socks5://127.0.0.1:10808')) {
                         vpnObj.tun2socks = tun2socks
                         tun2socks.stdout.removeListener('data', onDataReceived);
                         try {
@@ -266,8 +266,8 @@ export async function vpnConnetFx() {
 
 async function setStaticIP() {
     console.log("assigning static ip to internal adapter");
-    await exec('netsh interface ipv4 set address name="sentinel_vpn" source=static addr=192.168.123.1 mask=255.255.255.0');
-    await exec('netsh interface ipv6 set address interface="sentinel_vpn" address=fd12:3456:789a:1::1/64 store=persistent');
+    await exec('netsh interface ipv4 set address name="independent_vpn" source=static addr=192.168.123.1 mask=255.255.255.0');
+    await exec('netsh interface ipv6 set address interface="independent_vpn" address=fd12:3456:789a:1::1/64 store=persistent');
 
 }
 
@@ -276,10 +276,10 @@ async function setDnsServer() {
 
     if (!(vpnObj.dnsIndex) || vpnObj.dnsIndex > dnsList.length - 1 || vpnObj.dnsIndex < 0) { vpnObj.dnsIndex = 0; }
     console.log(`dns index: ${vpnObj.dnsIndex}`);
-    await exec(`netsh interface ipv4 set dnsservers name="sentinel_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv4[0]} register=none validate=no`);
-    await exec(`netsh interface ipv4 add dnsservers name="sentinel_vpn" address=${dnsList[vpnObj.dnsIndex].ipv4[1]} index=2 validate=no`);
-    await exec(`netsh interface ipv6 set dnsservers name="sentinel_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv6[0]} register=none validate=no`);
-    await exec(`netsh interface ipv6 add dnsservers name="sentinel_vpn" address=${dnsList[vpnObj.dnsIndex].ipv6[1]} index=2 validate=no`);
+    await exec(`netsh interface ipv4 set dnsservers name="independent_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv4[0]} register=none validate=no`);
+    await exec(`netsh interface ipv4 add dnsservers name="independent_vpn" address=${dnsList[vpnObj.dnsIndex].ipv4[1]} index=2 validate=no`);
+    await exec(`netsh interface ipv6 set dnsservers name="independent_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv6[0]} register=none validate=no`);
+    await exec(`netsh interface ipv6 add dnsservers name="independent_vpn" address=${dnsList[vpnObj.dnsIndex].ipv6[1]} index=2 validate=no`);
 
     // Flush DNS after setting DNS server
 
@@ -292,8 +292,8 @@ async function setDnsServer() {
 
 async function addGlobalRoute() {
     console.log("global traffic routing rule ");
-    await exec('netsh interface ipv4 add route 0.0.0.0/0 "sentinel_vpn" 192.168.123.1 metric=1');
-    await exec('netsh interface ipv6 add route ::/0 "sentinel_vpn" fd12:3456:789a:1::1 metric=1');
+    await exec('netsh interface ipv4 add route 0.0.0.0/0 "independent_vpn" 192.168.123.1 metric=1');
+    await exec('netsh interface ipv6 add route ::/0 "independent_vpn" fd12:3456:789a:1::1 metric=1');
 
 }
 
@@ -335,8 +335,8 @@ async function vpnConnCleanup(key) {
 
         case "addGlobalRoute":
             if (vpnObj["setStaticIP"]) {
-                await exec('netsh interface ipv4 delete route 0.0.0.0/0 "sentinel_vpn" 192.168.123.1')
-                await exec('netsh interface ipv6 delete route ::/0 "sentinel_vpn" fd12:3456:789a:1::1');
+                await exec('netsh interface ipv4 delete route 0.0.0.0/0 "independent_vpn" 192.168.123.1')
+                await exec('netsh interface ipv6 delete route ::/0 "independent_vpn" fd12:3456:789a:1::1');
                 vpnObj["addGlobalRoute"] = false;
             }
             break;
@@ -348,8 +348,8 @@ async function vpnConnCleanup(key) {
             break;
         case "setDnsServer":
             if (vpnObj["setDnsServer"]) {
-                await exec('netsh interface ipv4 set dnsservers name="sentinel_vpn" source=dhcp');
-                await exec('netsh interface ipv6 set dnsservers name="sentinel_vpn" source=dhcp');
+                await exec('netsh interface ipv4 set dnsservers name="independent_vpn" source=dhcp');
+                await exec('netsh interface ipv6 set dnsservers name="independent_vpn" source=dhcp');
 
                 // for default interface
                 await exec(`netsh interface ipv4 set dnsservers name=${vpnObj.defaultInterface} source=dhcp`)
@@ -360,8 +360,8 @@ async function vpnConnCleanup(key) {
         case "setStaticIP":
             if (vpnObj["setStaticIP"]) {
                 try {
-                    await exec('netsh interface ipv4 set address name="sentinel_vpn" source=dhcp');
-                    await exec('netsh interface ipv6 set address name="sentinel_vpn" source=dhcp');
+                    await exec('netsh interface ipv4 set address name="independent_vpn" source=dhcp');
+                    await exec('netsh interface ipv6 set address name="independent_vpn" source=dhcp');
                     vpnObj["setStaticIP"] = false;
                 } catch (error) {
                     throw error;

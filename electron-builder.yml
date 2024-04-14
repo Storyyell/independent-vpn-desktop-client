@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: sentinel_windows_app
+appId: com.bagimsizvpn.app
+productName: independent_vpn
 directories:
   buildResources: build
 files:
@@ -11,7 +11,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: sentinel_windows_app
+  executableName: independent_vpn
   requestedExecutionLevel: requireAdministrator # for admin privileges
   compression: maximum
 nsis:

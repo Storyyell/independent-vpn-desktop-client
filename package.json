@@ -1,10 +1,10 @@
 {
-  "name": "sentinel_windows_app",
+  "name": "independent_vpn",
   "version": "1.0.0",
-  "description": "An Electron application with React",
+  "description": "independent_vpn powered by sentinel network",
   "main": "./out/main/index.js",
   "author": "example.com",
-  "homepage": "https://electron-vite.org",
+  "homepage": "https://www.sentinel.co/",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",

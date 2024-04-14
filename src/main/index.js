@@ -21,7 +21,7 @@ let sessionTempDir = {
 global.sessionTempDir = sessionTempDir; // Todo remove this global variable 
 global.vpnConnStatus = false;
 
-global.adapterName = "sentinel_vpn";
+global.adapterName = "independent_vpn";
 
 
 function createWindow() {

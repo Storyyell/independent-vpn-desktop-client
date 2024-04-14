@@ -1,3 +1,3 @@
 provider: generic
 url: https://example.com/auto-updates
-updaterCacheDirName: sentinel_windows_app-updater
+updaterCacheDirName: independent_vpn-updater
