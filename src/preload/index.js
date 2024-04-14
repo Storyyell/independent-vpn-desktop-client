@@ -20,6 +20,7 @@ const api = {
   getVpnMetric: () => ipcRenderer.invoke('vpnMetric'),
   getDnsList: () => ipcRenderer.invoke('getDnsList'),
   setDns: (dnsId) => ipcRenderer.invoke('setDns', dnsId),
+  adapterSpeed: () => ipcRenderer.invoke('adapterSpeed'),
 
   sysOpen: (...url) => ipcRenderer.invoke('sysOpen', ...url),
 }

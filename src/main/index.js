@@ -11,6 +11,7 @@ import path from 'path'
 import { vpnObj } from './system/vpnBase.js'
 import { registerDevice, pullCountryList, pullCityList, pullServerList, pullServerConf, getIp, showNotification, getVpnMetric } from './system/ipcs.js'
 import { dnsList } from './system/dns/dnsList.js'
+import { adapterSpeed } from './system/stats/adapter.js'
 
 let sessionTempDir = {
   path: '',
@@ -19,6 +20,8 @@ let sessionTempDir = {
 
 global.sessionTempDir = sessionTempDir; // Todo remove this global variable 
 global.vpnConnStatus = false;
+
+global.adapterName = "sentinel_vpn";
 
 
 function createWindow() {
@@ -136,6 +139,8 @@ function createWindow() {
 
   })
   ipcMain.handle('setDns', async (event, dnsId) => { vpnObj.dnsIndex = dnsId || 0; })
+
+  ipcMain.handle('adapterSpeed', async (event) => { return adapterSpeed(global.adapterName); });
 
 
   // HMR for renderer base on electron-vite cli.

@@ -143,8 +143,8 @@ function Home(props) {
                 </Typography>
             </Stack>
 
-
-            <VpnTraffic />
+//todo disable vpn traffic for now becuase of the high cpu usage
+            {/* <VpnTraffic /> */}
             <GeoSelection
                 open={geoSelection}
                 onClose={() => setGeoSelection(false)}
