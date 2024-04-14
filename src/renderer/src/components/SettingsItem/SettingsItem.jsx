@@ -51,6 +51,21 @@ function SettingsItem(props) {
           <MenuItem value={'wireguard'} disabled>wireguard</MenuItem>
         </Select>
         }
+        {
+          variant == 4 && <Select
+            value={props.value || ''}
+            label={props.label || ''}
+            size='small'
+            sx={{ width: '100px', }}
+            onChange={(e) => { props.onChange(e) }}
+          >
+            {
+              (props?.array || [])?.map((item) => {
+                return <MenuItem value={item?.id} key={item?.id}>{item?.name}</MenuItem>
+              })
+            }
+          </Select>
+        }
 
       </Grid>
     </Grid>

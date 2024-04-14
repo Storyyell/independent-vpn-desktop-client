@@ -18,6 +18,8 @@ const api = {
   sendMail: (mailObj) => ipcRenderer.invoke('openMailClient', mailObj),
   pushNotification: (title, body) => ipcRenderer.invoke('pushNotification', title, body),
   getVpnMetric: () => ipcRenderer.invoke('vpnMetric'),
+  getDnsList: () => ipcRenderer.invoke('getDnsList'),
+  setDns: (dnsId) => ipcRenderer.invoke('setDns', dnsId),
 
   sysOpen: (...url) => ipcRenderer.invoke('sysOpen', ...url),
 }

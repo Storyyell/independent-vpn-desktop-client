@@ -11,6 +11,7 @@ import Header from './components/Header/Header';
 import { FavListProvider } from './context/FavContext';
 import { SysSettingsProvider } from './context/SysSettingsContext';
 import { VpnTunnelStatusProvider } from './context/VpnTunnelStatusContext';
+import { DnsListProvider } from './context/DnsListContext';
 
 
 
@@ -53,13 +54,15 @@ function App() {
               <DeviceTokenProvider>
                 <FavListProvider>
                   <SysSettingsProvider>
-                    <ThemeProvider theme={theme}>
-                      <CssBaseline />
-                      <Box className="app grad">
-                        <Header />
-                        <Home />
-                      </Box>
-                    </ThemeProvider>
+                    <DnsListProvider>
+                      <ThemeProvider theme={theme}>
+                        <CssBaseline />
+                        <Box className="app grad">
+                          <Header />
+                          <Home />
+                        </Box>
+                      </ThemeProvider>
+                    </DnsListProvider>
                   </SysSettingsProvider>
                 </FavListProvider>
               </DeviceTokenProvider>

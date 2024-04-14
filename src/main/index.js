@@ -10,6 +10,7 @@ import fs from 'fs'
 import path from 'path'
 import { vpnObj } from './system/vpnBase.js'
 import { registerDevice, pullCountryList, pullCityList, pullServerList, pullServerConf, getIp, showNotification, getVpnMetric } from './system/ipcs.js'
+import { dnsList } from './system/dns/dnsList.js'
 
 let sessionTempDir = {
   path: '',
@@ -125,6 +126,17 @@ function createWindow() {
   ipcMain.handle('vpnMetric', async (event) => {
     return getVpnMetric();
   })
+
+  ipcMain.handle('getDnsList', async (event) => {
+
+    return {
+      dnsList: dnsList,
+      selectedDns: vpnObj.dnsIndex
+    };
+
+  })
+  ipcMain.handle('setDns', async (event, dnsId) => { vpnObj.dnsIndex = dnsId; })
+
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.

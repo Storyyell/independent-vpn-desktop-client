@@ -5,12 +5,26 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Switch from '@mui/material/Switch';
 import SettingsItem from '../../components/SettingsItem/SettingsItem';
 import { SysSettingsContext } from '../../context/SysSettingsContext';
+import { DnsListContext } from '../../context/DnsListContext';
 
 
 const VpnSetting = () => {
 
-  const { SysSettings, setSysSettings } = React.useContext(SysSettingsContext)
-  console.log(SysSettings)
+  const { SysSettings, setSysSettings } = React.useContext(SysSettingsContext);
+  const { dnsList: dnsObj, setDnsList: setDnsObj } = React.useContext(DnsListContext);
+
+  React.useEffect(() => {
+    window.api.getDnsList()
+      .then((res) => {
+        console.log(res);
+        setDnsObj({ dnsList: res.dnsList, selectedDns: res.selectedDns })
+      })
+      .catch((err) => { })
+
+    if (dnsObj.selectedDns) {
+      window.api.setDns(dnsObj?.selectedDns);
+    }
+  }, [])
 
   const homeSettingsJson =
     [
@@ -54,6 +68,25 @@ const VpnSetting = () => {
       //   onClick: () => { }
 
       // },
+
+      {
+        title: 'Change DNS',
+        desc: 'Change your DNS server to improve privacy',
+        variant: 4,
+        array: dnsObj.dnsList,
+        value: dnsObj.selectedDns,
+        label: 'DNS',
+        onChange: (e) => {
+          setDnsObj((d) => {
+            window.api.setDns(e.target.value);
+            return ({
+              ...d,
+              selectedDns: e.target.value
+            })
+          })
+          window.api.setDns(e.target.value);
+        }
+      },
       {
         title: 'Tray Icon',
         desc: 'Show App in System Tray when running in background',
@@ -77,11 +110,15 @@ const VpnSetting = () => {
                   <ListItem disablePadding>
                     <ListItemButton sx={{ p: '3px', borderRadius: 1 }}>
                       <SettingsItem
-                        title={item.title}
-                        desc={item.desc}
-                        variant={item.variant}
-                        checked={item.checked}
-                        onChange={item.onChange}
+                        title={item?.title}
+                        desc={item?.desc}
+                        variant={item?.variant}
+                        checked={item?.checked}
+                        onChange={item?.onChange}
+                        array={item?.array}
+                        value={item?.value}
+                        label={item?.label}
+                        onClick={item?.onClick}
                       />
                     </ListItemButton>
                   </ListItem>
