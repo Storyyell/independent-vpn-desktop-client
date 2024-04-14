@@ -227,7 +227,7 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
             setVpnStatusMain('connecting');
             const slc = await refreshServerList(selectedItems?.countryId, selectedItems?.cityId, setServerList, serverList, deviceToken);
             const slObj = slc.servers?.[`${selectedItems.countryId}-${selectedItems.cityId}`];
-            const sl = selectRandomItems(slObj.data, retryServerNo);
+            const sl = selectRandomItems(slObj?.data, retryServerNo);
             await retryLogic(sl, deviceToken, setVpnStatus, setVpnStatusMain, connectServer, disconnectServer);
           } catch (error) {
             console.log(error);

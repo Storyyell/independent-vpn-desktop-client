@@ -3,16 +3,15 @@ import { spawn } from "child_process"
 import path from "path";
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-import { getDefaultGateway } from "./defaultGateway"
-import child_process from "child_process";
+import { getDefaultGateway, getDefaultInterface } from "./defaultGateway"
 import { SocksClient } from 'socks';
 import { saveV2rayConfig } from "./v2rayConfig";
 import dns from "dns";
 import net from "net";
-import axios from 'axios';
 const https = require('https');
 import { pullServerConf } from "./ipcs";
 import { rendererSend } from "./utils";
+import { dnsList } from "./dns/dnsList";
 
 var vpnObj = {
     connected: false,
@@ -31,6 +30,7 @@ var vpnObj = {
     serverAddress: null,
     serverPort: null,
     serverUUID: null,
+    dnsIndex: 0,
 
     statusObj: function () {
         return {
@@ -53,9 +53,12 @@ export async function vpnConnet(serverParms) {
     return new Promise(async (resolve, reject) => {
         vpnObj.connectionProgress = true;
         console.log(global.sessionTempDir.path);
+
         try {
             const gateway = await getDefaultGateway();
+            const defaultInterface = await getDefaultInterface();
             vpnObj.gateway = gateway;
+            vpnObj.defaultInterface = defaultInterface;
             console.log("VPN connection initializing...");
             rendererSend({ message: 'VPN connection initializing...', ...(vpnObj.statusObj()) });
             rendererSend({ message: 'Fetching server configuration...', ...(vpnObj.statusObj()) });
@@ -269,10 +272,10 @@ async function setStaticIP() {
 
 async function setDnsServer() {
     console.log('enabling custom DNS server');
-    await exec('netsh interface ipv4 set dnsservers name="sentinel_vpn" static address=1.1.1.1 register=none primary validate=no');
-    await exec('netsh interface ipv4 add dnsservers name="sentinel_vpn" address=1.0.0.1 index=2 register=none validate=no');
-    await exec('netsh interface ipv6 set dnsservers name="sentinel_vpn" static address=2606:4700:4700::1111 register=none primary validate=no');
-    await exec('netsh interface ipv6 add dnsservers name="sentinel_vpn" address=2606:4700:4700::1001 index=2 register=none validate=no');
+    await exec(`netsh interface ipv4 set dnsservers name="sentinel_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv4[0]} register=none validate=no`);
+    await exec(`netsh interface ipv4 add dnsservers name="sentinel_vpn" address=${dnsList[vpnObj.dnsIndex].ipv4[1]} index=2 validate=no`);
+    await exec(`netsh interface ipv6 set dnsservers name="sentinel_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv6[0]} register=none validate=no`);
+    await exec(`netsh interface ipv6 add dnsservers name="sentinel_vpn" address=${dnsList[vpnObj.dnsIndex].ipv6[1]} index=2 validate=no`);
 
     // Flush DNS after setting DNS server
     await exec('ipconfig /flushdns');
