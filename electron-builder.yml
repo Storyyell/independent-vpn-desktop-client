@@ -13,11 +13,15 @@ asarUnpack:
 win:
   executableName: sentinel_windows_app
   requestedExecutionLevel: requireAdministrator # for admin privileges
+  compression: maximum
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
+  createStartMenuShortcut: true
+  oneClick: false
+  allowToChangeInstallationDirectory : true
 mac:
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
