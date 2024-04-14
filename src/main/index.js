@@ -135,7 +135,7 @@ function createWindow() {
     };
 
   })
-  ipcMain.handle('setDns', async (event, dnsId) => { vpnObj.dnsIndex = dnsId; })
+  ipcMain.handle('setDns', async (event, dnsId) => { vpnObj.dnsIndex = dnsId || 0; })
 
 
   // HMR for renderer base on electron-vite cli.

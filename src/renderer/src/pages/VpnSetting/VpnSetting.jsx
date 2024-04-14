@@ -78,13 +78,12 @@ const VpnSetting = () => {
         label: 'DNS',
         onChange: (e) => {
           setDnsObj((d) => {
-            window.api.setDns(e.target.value);
+            window.api.setDns(parseInt(e.target.value) - 1);
             return ({
               ...d,
               selectedDns: e.target.value
             })
           })
-          window.api.setDns(e.target.value);
         }
       },
       {

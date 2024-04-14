@@ -13,6 +13,7 @@ import GeoSelection from '../../components/GeoSelection/GeoSelection';
 import VpnTraffic from '../../components/VpnTraffic/VpnTraffic';
 import { handleVpnConnTrigger } from './ConnectionTrigger';
 import { VpnTunnelStatusContext } from '../../context/VpnTunnelStatusContext';
+import { DnsListContext } from '../../context/DnsListContext';
 
 
 
@@ -30,8 +31,16 @@ function Home(props) {
     const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
     const [geoSelection, setGeoSelection] = React.useState(false);
     const { vpnTunnelStatus, setVpnTunnelStatus } = React.useContext(VpnTunnelStatusContext);
+    const { dnsList: dnsObj } = React.useContext(DnsListContext);
+
     const [ip, setIp] = useState('--.--.--.--');
 
+
+    React.useEffect(() => {
+        if (dnsObj.selectedDns) {
+            window.api.setDns(parseInt(dnsObj?.selectedDns) - 1);
+        }
+    }, []);
 
     useEffect(() => {
         const handleConnectionStatus = (arg) => {

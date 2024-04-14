@@ -13,6 +13,7 @@ import { pullServerConf } from "./ipcs";
 import { rendererSend } from "./utils";
 import { dnsList } from "./dns/dnsList";
 
+
 var vpnObj = {
     connected: false,
     v2ray: null,
@@ -272,12 +273,20 @@ async function setStaticIP() {
 
 async function setDnsServer() {
     console.log('enabling custom DNS server');
+
+    if (!(vpnObj.dnsIndex) || vpnObj.dnsIndex > dnsList.length - 1 || vpnObj.dnsIndex < 0) { vpnObj.dnsIndex = 0; }
+    console.log(`dns index: ${vpnObj.dnsIndex}`);
     await exec(`netsh interface ipv4 set dnsservers name="sentinel_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv4[0]} register=none validate=no`);
     await exec(`netsh interface ipv4 add dnsservers name="sentinel_vpn" address=${dnsList[vpnObj.dnsIndex].ipv4[1]} index=2 validate=no`);
     await exec(`netsh interface ipv6 set dnsservers name="sentinel_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv6[0]} register=none validate=no`);
     await exec(`netsh interface ipv6 add dnsservers name="sentinel_vpn" address=${dnsList[vpnObj.dnsIndex].ipv6[1]} index=2 validate=no`);
 
     // Flush DNS after setting DNS server
+
+    // for default interface
+    await exec(`netsh interface ipv4 set dnsservers name=${vpnObj.defaultInterface} static address=${dnsList[vpnObj.dnsIndex].ipv4[0]} register=none validate=no`)
+    await exec(`netsh interface ipv6 set dnsservers name=${vpnObj.defaultInterface} static address=${dnsList[vpnObj.dnsIndex].ipv6[0]} register=none validate=no`)
+
     await exec('ipconfig /flushdns');
 }
 
@@ -306,7 +315,7 @@ export async function vpnDisconnect() {
         let keys = Object.keys(vpnObj).reverse();
         keys.forEach(async (key) => {
             console.log(`cleaning vpn object key :=> ${key}`);
-            await vpnConnCleanup(key);
+            try { await vpnConnCleanup(key); } catch (error) { }
         })
         if (!vpnObj.connected) {
             console.log("vpn disconnected");
@@ -341,6 +350,10 @@ async function vpnConnCleanup(key) {
             if (vpnObj["setDnsServer"]) {
                 await exec('netsh interface ipv4 set dnsservers name="sentinel_vpn" source=dhcp');
                 await exec('netsh interface ipv6 set dnsservers name="sentinel_vpn" source=dhcp');
+
+                // for default interface
+                await exec(`netsh interface ipv4 set dnsservers name=${vpnObj.defaultInterface} source=dhcp`)
+                await exec(`netsh interface ipv6 set dnsservers name=${vpnObj.defaultInterface} source=dhcp`)
                 vpnObj["setDnsServer"] = false;
             }
             break;
