@@ -281,8 +281,8 @@ async function setDnsServer() {
     await exec(`netsh interface ipv4 set dnsservers name="independent_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv4[0]} register=none validate=no`);
     await exec(`netsh interface ipv4 add dnsservers name="independent_vpn" address=${dnsList[vpnObj.dnsIndex].ipv4[1]} index=2 validate=no`);
 
-    vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 add dnsservers name="independent_vpn" address=${dnsList[vpnObj.dnsIndex].ipv6[1]} index=2 validate=no`);
     vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 set dnsservers name="independent_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv6[0]} register=none validate=no`);
+    vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 add dnsservers name="independent_vpn" address=${dnsList[vpnObj.dnsIndex].ipv6[1]} index=2 validate=no`);
 
     // Flush DNS after setting DNS server
 
