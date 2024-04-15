@@ -3,7 +3,7 @@ import { spawn } from "child_process"
 import path from "path";
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-import { getDefaultGateway, getDefaultInterface } from "./defaultGateway"
+import { getDefaultGateway, getDefaultInterface, getAdapterIPs } from "./defaultGateway"
 import { SocksClient } from 'socks';
 import { saveV2rayConfig } from "./v2rayConfig";
 import dns from "dns";
@@ -23,6 +23,7 @@ var vpnObj = {
     addVpnRoute: false,
     addGlobalRoute: false,
     gateway: null,
+    gatewayIps: null,
     triggerConnection: vpnConnetFx,
     triggerDisconnection: vpnDisconnect,
     disconnectionProgress: false,
@@ -58,8 +59,10 @@ export async function vpnConnet(serverParms) {
         try {
             const gateway = await getDefaultGateway();
             const defaultInterface = await getDefaultInterface();
+            const gatewayIps = getAdapterIPs(defaultInterface);
             vpnObj.gateway = gateway;
             vpnObj.defaultInterface = defaultInterface;
+            vpnObj.gatewayIps = gatewayIps;
             console.log("VPN connection initializing...");
             rendererSend({ message: 'VPN connection initializing...', ...(vpnObj.statusObj()) });
             rendererSend({ message: 'Fetching server configuration...', ...(vpnObj.statusObj()) });
@@ -267,8 +270,7 @@ export async function vpnConnetFx() {
 async function setStaticIP() {
     console.log("assigning static ip to internal adapter");
     await exec('netsh interface ipv4 set address name="independent_vpn" source=static addr=192.168.123.1 mask=255.255.255.0');
-    await exec('netsh interface ipv6 set address interface="independent_vpn" address=fd12:3456:789a:1::1/64 store=persistent');
-
+    vpnObj.gatewayIps.ipv6Support && await exec('netsh interface ipv6 set address interface="independent_vpn" address=fd12:3456:789a:1::1/64 store=persistent');
 }
 
 async function setDnsServer() {
@@ -278,14 +280,15 @@ async function setDnsServer() {
     console.log(`dns index: ${vpnObj.dnsIndex}`);
     await exec(`netsh interface ipv4 set dnsservers name="independent_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv4[0]} register=none validate=no`);
     await exec(`netsh interface ipv4 add dnsservers name="independent_vpn" address=${dnsList[vpnObj.dnsIndex].ipv4[1]} index=2 validate=no`);
-    await exec(`netsh interface ipv6 set dnsservers name="independent_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv6[0]} register=none validate=no`);
-    await exec(`netsh interface ipv6 add dnsservers name="independent_vpn" address=${dnsList[vpnObj.dnsIndex].ipv6[1]} index=2 validate=no`);
+
+    vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 add dnsservers name="independent_vpn" address=${dnsList[vpnObj.dnsIndex].ipv6[1]} index=2 validate=no`);
+    vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 set dnsservers name="independent_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv6[0]} register=none validate=no`);
 
     // Flush DNS after setting DNS server
 
     // for default interface
     await exec(`netsh interface ipv4 set dnsservers name=${vpnObj.defaultInterface} static address=${dnsList[vpnObj.dnsIndex].ipv4[0]} register=none validate=no`)
-    await exec(`netsh interface ipv6 set dnsservers name=${vpnObj.defaultInterface} static address=${dnsList[vpnObj.dnsIndex].ipv6[0]} register=none validate=no`)
+    vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 set dnsservers name=${vpnObj.defaultInterface} static address=${dnsList[vpnObj.dnsIndex].ipv6[0]} register=none validate=no`)
 
     await exec('ipconfig /flushdns');
 }
@@ -293,7 +296,7 @@ async function setDnsServer() {
 async function addGlobalRoute() {
     console.log("global traffic routing rule ");
     await exec('netsh interface ipv4 add route 0.0.0.0/0 "independent_vpn" 192.168.123.1 metric=1');
-    await exec('netsh interface ipv6 add route ::/0 "independent_vpn" fd12:3456:789a:1::1 metric=1');
+    vpnObj.gatewayIps.ipv6Support && await exec('netsh interface ipv6 add route ::/0 "independent_vpn" fd12:3456:789a:1::1 metric=1');
 
 }
 
@@ -336,7 +339,7 @@ async function vpnConnCleanup(key) {
         case "addGlobalRoute":
             if (vpnObj["setStaticIP"]) {
                 await exec('netsh interface ipv4 delete route 0.0.0.0/0 "independent_vpn" 192.168.123.1')
-                await exec('netsh interface ipv6 delete route ::/0 "independent_vpn" fd12:3456:789a:1::1');
+                vpnObj.gatewayIps.ipv6Support && await exec('netsh interface ipv6 delete route ::/0 "independent_vpn" fd12:3456:789a:1::1');
                 vpnObj["addGlobalRoute"] = false;
             }
             break;
@@ -349,11 +352,11 @@ async function vpnConnCleanup(key) {
         case "setDnsServer":
             if (vpnObj["setDnsServer"]) {
                 await exec('netsh interface ipv4 set dnsservers name="independent_vpn" source=dhcp');
-                await exec('netsh interface ipv6 set dnsservers name="independent_vpn" source=dhcp');
+                vpnObj.gatewayIps.ipv6Support && await exec('netsh interface ipv6 set dnsservers name="independent_vpn" source=dhcp');
 
                 // for default interface
                 await exec(`netsh interface ipv4 set dnsservers name=${vpnObj.defaultInterface} source=dhcp`)
-                await exec(`netsh interface ipv6 set dnsservers name=${vpnObj.defaultInterface} source=dhcp`)
+                vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 set dnsservers name=${vpnObj.defaultInterface} source=dhcp`)
                 vpnObj["setDnsServer"] = false;
             }
             break;
@@ -361,7 +364,7 @@ async function vpnConnCleanup(key) {
             if (vpnObj["setStaticIP"]) {
                 try {
                     await exec('netsh interface ipv4 set address name="independent_vpn" source=dhcp');
-                    await exec('netsh interface ipv6 set address name="independent_vpn" source=dhcp');
+                    vpnObj.gatewayIps.ipv6Support && await exec('netsh interface ipv6 set address name="independent_vpn" source=dhcp');
                     vpnObj["setStaticIP"] = false;
                 } catch (error) {
                     throw error;
