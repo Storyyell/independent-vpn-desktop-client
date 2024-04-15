@@ -40,6 +40,7 @@ const theme = createTheme({
   },
 });
 
+// todo change global state management to recoil
 // todo add case of revoed device token and followed by re-regisration
 
 function App() {
