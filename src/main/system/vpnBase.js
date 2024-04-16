@@ -227,7 +227,7 @@ export async function vpnConnetFx() {
                 // });
 
                 async function onTun2SocksConnected() {
-                    console.log("Tun2socks tunnel created");
+                    console.log("vpn-adapter tunnel created");
                     rendererSend({ message: 'adapter created', ...(vpnObj.statusObj()) });
                     return await startAnotherCommand();
                 }
