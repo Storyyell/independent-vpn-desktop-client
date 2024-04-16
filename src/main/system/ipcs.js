@@ -28,7 +28,7 @@ export async function registerDevice() {
                 resolve(response.data?.data?.token);
             })
             .catch((error) => {
-                log.error("registerDevice error: ", error);
+                log.error("registerDevice error: ");
                 reject(error)
             });
     })
@@ -84,7 +84,7 @@ export async function pullCityList(device_token, countryCode) {
                 resolve(response.data);
             })
             .catch((error) => {
-                log.error(error);
+                log.error("pullCityList error:");
                 reject(error)
             });
     })
@@ -111,7 +111,7 @@ export async function pullServerList(device_token, countryCode, cityCode) {
                 resolve(response.data);
             })
             .catch((error) => {
-                log.error(error);
+                log.error("pullServerList error:");
                 reject(error)
             });
     })
@@ -137,7 +137,6 @@ export async function pullServerConf(device_token, countryCode, cityCode, server
         const response = await axios.request(config);
         return response.data;
     } catch (error) {
-        log.error(error);
         throw new Error('server config fetch failed');
     }
 }
@@ -162,6 +161,7 @@ export async function getIp(device_token) {
         const response = await axios.request(config);
         return response.data;
     } catch (error) {
+        log.error("getIp error:");
         // throw new Error('ipfetch failed');
     }
 }
