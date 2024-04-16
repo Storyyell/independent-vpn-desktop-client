@@ -440,7 +440,6 @@ async function checkConnectivity(proxyIp, proxyPort) {
             });
 
             res.on('end', () => {
-                console.log('Successfully connected to www.google.com');
                 rendererSend({ message: 'internet connectivity check passed...', ...(vpnObj.statusObj()) });
 
                 resolve(true);
