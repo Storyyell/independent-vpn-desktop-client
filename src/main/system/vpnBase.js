@@ -3,7 +3,7 @@ import { spawn } from "child_process"
 import path from "path";
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-import { getDefaultGateway, getDefaultInterface, getAdapterIPs } from "./defaultGateway"
+import { getDefaultGateway, getAdapterIPs, getInterfaceNameByGateway } from "./defaultGateway"
 import { SocksClient } from 'socks';
 import { saveV2rayConfig } from "./v2rayConfig";
 import dns from "dns";
@@ -58,8 +58,8 @@ export async function vpnConnet(serverParms) {
 
         try {
             const gateway = await getDefaultGateway();
-            const defaultInterface = await getDefaultInterface();
-            const gatewayIps = getAdapterIPs();
+            const defaultInterface = getInterfaceNameByGateway(gateway);
+            const gatewayIps = getAdapterIPs(defaultInterface);
             vpnObj.gateway = gateway;
             vpnObj.defaultInterface = defaultInterface;
             vpnObj.gatewayIps = gatewayIps;

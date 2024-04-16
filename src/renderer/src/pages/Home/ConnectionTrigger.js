@@ -57,7 +57,7 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
 
             let NoOfServer = Math.min(retryServerNo, totalServerCount);
 
-            let NoOfServerOriginal = NoOfServer;
+            const NoOfServerOriginal = NoOfServer;
 
             let countriesSelected = [];
 
@@ -85,7 +85,7 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
             }));
 
             try {
-              sl.slice(0, NoOfServerOriginal);
+              sl = sl.slice(0, NoOfServerOriginal);
             } catch (error) { }
             return sl;
 
