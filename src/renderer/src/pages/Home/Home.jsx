@@ -30,16 +30,26 @@ function Home(props) {
     const { deviceToken, setDeviceToken } = React.useContext(DeviceTokenContext);
     const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
     const [geoSelection, setGeoSelection] = React.useState(false);
-    const { vpnTunnelStatus, setVpnTunnelStatus } = React.useContext(VpnTunnelStatusContext);
-    const { dnsList: dnsObj } = React.useContext(DnsListContext);
+    // const { vpnTunnelStatus, setVpnTunnelStatus } = React.useContext(VpnTunnelStatusContext);
+    const { dnsObj, setDnsObj } = React.useContext(DnsListContext);
 
     const [ip, setIp] = useState('--.--.--.--');
 
 
     React.useEffect(() => {
         if (dnsObj.selectedDns) {
-            window.api.setDns(parseInt(dnsObj?.selectedDns) - 1);
+            window.api.setDns(dnsObj.selectedDns)
         }
+        window.api.getDnsList()
+            .then((res) => {
+                setDnsObj((t) => {
+                    return {
+                        dnsList: res.dnsList,
+                        selectedDns: t.selectedDns || res.selectedDns || 0
+                    }
+                });
+            })
+            .catch((err) => { })
     }, []);
 
     useEffect(() => {

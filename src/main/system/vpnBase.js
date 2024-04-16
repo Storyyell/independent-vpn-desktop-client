@@ -59,7 +59,7 @@ export async function vpnConnet(serverParms) {
         try {
             const gateway = await getDefaultGateway();
             const defaultInterface = await getDefaultInterface();
-            const gatewayIps = getAdapterIPs(defaultInterface);
+            const gatewayIps = getAdapterIPs();
             vpnObj.gateway = gateway;
             vpnObj.defaultInterface = defaultInterface;
             vpnObj.gatewayIps = gatewayIps;
@@ -79,6 +79,8 @@ export async function vpnConnet(serverParms) {
             const serverIp = await getIPv4(server_address);
             vpnObj.serverIp = serverIp;
             console.log(`server ip: ${vpnObj.serverIp}`);
+            if (!(vpnObj.dnsIndex) || vpnObj.dnsIndex >= dnsList.length || vpnObj.dnsIndex < 0) { vpnObj.dnsIndex = 0; }
+            console.log(`dns selected : ${dnsList[vpnObj.dnsIndex].name}`);
             try {
                 await vpnObj.triggerConnection(gateway);
                 resolve(true);
@@ -277,9 +279,6 @@ async function setStaticIP() {
 
 async function setDnsServer() {
     console.log('enabling custom DNS server');
-
-    if (!(vpnObj.dnsIndex) || vpnObj.dnsIndex > dnsList.length - 1 || vpnObj.dnsIndex < 0) { vpnObj.dnsIndex = 0; }
-    console.log(`dns index: ${vpnObj.dnsIndex}`);
     await exec(`netsh interface ipv4 set dnsservers name="independent_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv4[0]} register=none validate=no`);
     await exec(`netsh interface ipv4 add dnsservers name="independent_vpn" address=${dnsList[vpnObj.dnsIndex].ipv4[1]} index=2 validate=no`);
 

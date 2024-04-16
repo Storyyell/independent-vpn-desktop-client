@@ -94,12 +94,12 @@ export function registerIpcHandlers(ipcMain) {
   ipcMain.handle('getDnsList', async (event) => {
 
     return {
-      dnsList: dnsList,
-      selectedDns: vpnObj.dnsIndex
+      dnsList: dnsList || [],
+      selectedDns: vpnObj.dnsIndex || 0
     };
 
   })
-  ipcMain.handle('setDns', async (event, dnsId) => { vpnObj.dnsIndex = dnsId || 0; })
+  ipcMain.handle('setDns', async (event, dnsId) => { vpnObj.dnsIndex = dnsId || 0 })
 
   ipcMain.handle('adapterSpeed', async (event) => { return adapterSpeed(global.adapterName); });
 

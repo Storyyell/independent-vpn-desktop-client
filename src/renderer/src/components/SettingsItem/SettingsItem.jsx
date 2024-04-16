@@ -10,7 +10,6 @@ function SettingsItem(props) {
   const variant = parseInt(props.variant)
   // const variant = 1
 
-
   return (
     <Grid container sx={{ marginBottom: 0.5, display: (variant != 0 ? 'flex' : 'none') }}>
       <Grid item xs>
@@ -53,14 +52,14 @@ function SettingsItem(props) {
         }
         {
           variant == 4 && <Select
-            value={props.value || ''}
-            label={props.label || ''}
+            value={props.value}
+            label={props.label}
             size='small'
             sx={{ width: '100px', }}
             onChange={(e) => { props.onChange(e) }}
           >
             {
-              (props?.array || [])?.map((item) => {
+              (props?.array || [])?.map((item, index) => {
                 return <MenuItem value={item?.id} key={item?.id}>{item?.name}</MenuItem>
               })
             }
@@ -68,7 +67,7 @@ function SettingsItem(props) {
         }
 
       </Grid>
-    </Grid>
+    </Grid >
   )
 }
 export default SettingsItem

@@ -4,20 +4,20 @@ const DnsListContext = createContext({});
 
 function DnsListProvider({ children }) {
     const initialState = JSON.parse(localStorage.getItem('dns_list')) || { dnsList: [], selectedDns: '' };
-    const [dnsList, setDnsList] = useState(initialState);
+    const [dnsObj, setDnsObj] = useState(initialState);
 
     useEffect(() => {
         try {
-            const jsonStr = JSON.stringify(dnsList);
+            const jsonStr = JSON.stringify(dnsObj);
             localStorage.setItem('dns_list', jsonStr);
 
         } catch (error) {
             // console.error('Error saving to local storage', error);
         }
-    }, [dnsList]);
+    }, [dnsObj]);
 
     return (
-        <DnsListContext.Provider value={{ dnsList, setDnsList }}>
+        <DnsListContext.Provider value={{ dnsObj, setDnsObj }}>
             {children}
         </DnsListContext.Provider>
     );

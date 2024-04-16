@@ -49,6 +49,19 @@ async function getDefaultInterface() {
     }
 }
 
+function findInterfaceByIP(ip) {
+    const networkInterfaces = os.networkInterfaces();
 
+    for (const interfaceName in networkInterfaces) {
+        const addresses = networkInterfaces[interfaceName];
+        for (const addressInfo of addresses) {
+            if (addressInfo.address === ip && !addressInfo.internal) {
+                return { interfaceName, ...addressInfo };
+            }
+        }
+    }
+
+    throw new Error(`Interface with IP address ${ip} not found.`);
+}
 
 export { getDefaultGateway, getDefaultInterface, getAdapterIPs };

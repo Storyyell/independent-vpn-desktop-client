@@ -11,20 +11,7 @@ import { DnsListContext } from '../../context/DnsListContext';
 const VpnSetting = () => {
 
   const { SysSettings, setSysSettings } = React.useContext(SysSettingsContext);
-  const { dnsList: dnsObj, setDnsList: setDnsObj } = React.useContext(DnsListContext);
-
-  React.useEffect(() => {
-    window.api.getDnsList()
-      .then((res) => {
-        console.log(res);
-        setDnsObj({ dnsList: res.dnsList, selectedDns: res.selectedDns })
-      })
-      .catch((err) => { })
-
-    if (dnsObj.selectedDns) {
-      window.api.setDns(dnsObj?.selectedDns);
-    }
-  }, [])
+  const { dnsObj, setDnsObj } = React.useContext(DnsListContext);
 
   const homeSettingsJson =
     [
@@ -78,7 +65,7 @@ const VpnSetting = () => {
         label: 'DNS',
         onChange: (e) => {
           setDnsObj((d) => {
-            window.api.setDns(parseInt(e.target.value) - 1);
+            window.api.setDns(parseInt(e.target.value));
             return ({
               ...d,
               selectedDns: e.target.value
