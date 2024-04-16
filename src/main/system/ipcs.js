@@ -158,7 +158,7 @@ export async function getIp(device_token) {
         const response = await axios.request(config);
         return response.data;
     } catch (error) {
-        throw new Error('ipfetch failed');
+        // throw new Error('ipfetch failed');
     }
 }
 

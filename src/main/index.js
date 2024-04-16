@@ -1,4 +1,5 @@
 import { app, shell, BrowserWindow, ipcMain, screen, Tray, Menu } from 'electron'
+import log from 'electron-log/main';
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -23,6 +24,11 @@ global.vpnConnStatus = false;
 
 global.adapterName = "independent_vpn";
 
+// initialize the logger
+log.initialize({ spyRendererConsole: true });
+
+// redirect console.log to the logger
+console.log = log.log;
 
 function createWindow() {
   let screen_size = screen.getPrimaryDisplay().workAreaSize

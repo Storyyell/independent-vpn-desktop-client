@@ -45,6 +45,8 @@ const theme = createTheme({
 
 function App() {
 
+  // __electronLog.info('Log from the renderer')
+
 
   return (
     <>
