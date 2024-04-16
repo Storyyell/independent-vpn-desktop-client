@@ -28,7 +28,7 @@ export async function registerDevice() {
                 resolve(response.data?.data?.token);
             })
             .catch((error) => {
-                log.error(error);
+                log.error("registerDevice error: ", error);
                 reject(error)
             });
     })
@@ -55,7 +55,8 @@ export async function pullCountryList(device_token) {
                 resolve(response.data);
             })
             .catch((error) => {
-                log.error(error);
+                log.error("pullCountryList error:");
+                // log.error(error);
                 reject(error)
             });
     })
