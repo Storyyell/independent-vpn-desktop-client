@@ -54,7 +54,7 @@ var vpnObj = {
 export async function vpnConnet(serverParms) {
     return new Promise(async (resolve, reject) => {
         vpnObj.connectionProgress = true;
-        console.log(global.sessionTempDir.path);
+        // console.log(global.sessionTempDir.path);
 
         try {
             const gateway = await getDefaultGateway();

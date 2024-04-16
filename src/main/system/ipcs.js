@@ -1,6 +1,9 @@
 import axios from 'axios';
 const { Notification } = require('electron')
 import { vpnObj } from './vpnBase';
+import log from 'electron-log/main';
+import { exec } from 'child_process';
+
 
 export async function registerDevice() {
 
@@ -174,4 +177,26 @@ export async function showNotification(title, body) {
 
 export async function getVpnMetric() {
     return vpnObj.statusObj()
+}
+
+
+// todo want to change log file open logic later
+export async function openLogFile() {
+    return new Promise((resolve, reject) => {
+        const logFilePath = log.transports.file.getFile().path;
+
+        exec(`start ${logFilePath}`, (error, stdout, stderr) => {
+            if (error) {
+                console.error('Error:', error);
+                reject(error);
+            }
+            if (stderr) {
+                console.error('Stderr:', stderr);
+                reject(stderr);
+            }
+
+            console.log('Log file opened successfully');
+            resolve();
+        });
+    });
 }

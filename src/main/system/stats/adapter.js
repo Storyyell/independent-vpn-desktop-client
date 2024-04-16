@@ -53,4 +53,6 @@ async function adapterSpeed(adapterName) {
   }
 }
 
+
+
 export { getAdapterStatistics, adapterSpeed };

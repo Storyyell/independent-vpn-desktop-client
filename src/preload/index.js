@@ -21,6 +21,7 @@ const api = {
   getDnsList: () => ipcRenderer.invoke('getDnsList'),
   setDns: (dnsId) => ipcRenderer.invoke('setDns', dnsId),
   adapterSpeed: () => ipcRenderer.invoke('adapterSpeed'),
+  openLogger: () => ipcRenderer.invoke('openLogger'),
 
   sysOpen: (...url) => ipcRenderer.invoke('sysOpen', ...url),
 }

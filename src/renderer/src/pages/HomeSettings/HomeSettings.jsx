@@ -40,8 +40,10 @@ const HomeSettings = (props) => {
       title: 'Logs',
       desc: 'See Connection Logs',
       variant: 1,
-      onClick: () => { },
-      disabled: true
+      onClick: async () => {
+        await window.api.openLogger()
+      },
+      // disabled: true
     },
     {
       title: 'Subscription',

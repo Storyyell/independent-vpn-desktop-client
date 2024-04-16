@@ -11,6 +11,8 @@ import path from 'path'
 import { vpnObj } from './system/vpnBase.js'
 import { registerIpcHandlers } from './ipcHandlers/handlers.js';
 
+// todo code want to be splitted across the files for manageability [ scope increased]
+
 let sessionTempDir = {
   path: '',
   uuid: uuidv4()

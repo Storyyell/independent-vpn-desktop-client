@@ -9,7 +9,9 @@ import {
   pullServerConf,
   getIp,
   showNotification,
-  getVpnMetric
+  getVpnMetric,
+  openLogFile
+
 } from '../system/ipcs.js'
 import { dnsList } from '../system/dns/dnsList.js'
 import { adapterSpeed } from '../system/stats/adapter.js'
@@ -100,5 +102,10 @@ export function registerIpcHandlers(ipcMain) {
   ipcMain.handle('setDns', async (event, dnsId) => { vpnObj.dnsIndex = dnsId || 0; })
 
   ipcMain.handle('adapterSpeed', async (event) => { return adapterSpeed(global.adapterName); });
+
+  ipcMain.handle('openLogger', async (event) => {
+    return openLogFile();
+  });
+
 
 }
