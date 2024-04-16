@@ -177,6 +177,7 @@ export async function vpnConnetFx() {
 
                 const tun2socksPath = path.join(basePath, 'tun2socks.exe');
 
+                // todo make adapter name dynamic
                 const tun2socks = spawn(tun2socksPath, [
                     '-tcp-auto-tuning',
                     '-device', 'tun://independent_vpn',
@@ -287,8 +288,8 @@ async function setDnsServer() {
     // Flush DNS after setting DNS server
 
     // for default interface
-    await exec(`netsh interface ipv4 set dnsservers name=${vpnObj.defaultInterface} static address=${dnsList[vpnObj.dnsIndex].ipv4[0]} register=none validate=no`)
-    vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 set dnsservers name=${vpnObj.defaultInterface} static address=${dnsList[vpnObj.dnsIndex].ipv6[0]} register=none validate=no`)
+    await exec(`netsh interface ipv4 set dnsservers name="${vpnObj.defaultInterface}" static address=${dnsList[vpnObj.dnsIndex].ipv4[0]} register=none validate=no`)
+    vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 set dnsservers name="${vpnObj.defaultInterface}" static address=${dnsList[vpnObj.dnsIndex].ipv6[0]} register=none validate=no`)
 
     await exec('ipconfig /flushdns');
 }
@@ -355,8 +356,8 @@ async function vpnConnCleanup(key) {
                 vpnObj.gatewayIps.ipv6Support && await exec('netsh interface ipv6 set dnsservers name="independent_vpn" source=dhcp');
 
                 // for default interface
-                await exec(`netsh interface ipv4 set dnsservers name=${vpnObj.defaultInterface} source=dhcp`)
-                vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 set dnsservers name=${vpnObj.defaultInterface} source=dhcp`)
+                await exec(`netsh interface ipv4 set dnsservers name="${vpnObj.defaultInterface}" source=dhcp`)
+                vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 set dnsservers name="${vpnObj.defaultInterface}" source=dhcp`)
                 vpnObj["setDnsServer"] = false;
             }
             break;
