@@ -51,6 +51,8 @@ var vpnObj = {
 // Todo handle the case of multiple vpn disconnection function call on closing and error [ now it wont cause any bugs for performance optimization ]
 // Todo integrate vpn spawn  into vpnObj variable
 
+// todo set custom dns for all external adapter
+
 export async function vpnConnet(serverParms) {
     return new Promise(async (resolve, reject) => {
         vpnObj.connectionProgress = true;
