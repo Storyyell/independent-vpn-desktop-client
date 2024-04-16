@@ -30,7 +30,7 @@ log.initialize({ spyRendererConsole: true });
 // redirect console.log to the logger
 console.log = log.log;
 
-console.log(log.transports.file.getFile().path);
+console.log(`log path :=> ${log.transports.file.getFile().path}`);
 
 
 function createWindow() {
@@ -246,6 +246,7 @@ app.on('will-quit', async () => {
   if (global.sessionTempDir.path) {
     try {
       fs.rmSync(global.sessionTempDir.path, { recursive: true });
+      fs.rmSync(log.transports.file.getFile().path);
     } catch (err) {
       console.error(err);
     }
