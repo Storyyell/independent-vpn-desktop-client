@@ -128,7 +128,8 @@ export async function vpnConnetFx() {
 
         async function onDataReceived(data) {
             const output = data.toString();
-            console.log(`child stdout:\n${output}`);
+            // todo want to safely print the output later
+            // console.log(`child stdout:\n${output}`);
 
             if (output.includes('started')) {
                 v2ray.stdout.removeListener('data', onDataReceived);
