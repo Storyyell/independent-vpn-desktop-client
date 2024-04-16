@@ -30,6 +30,9 @@ log.initialize({ spyRendererConsole: true });
 // redirect console.log to the logger
 console.log = log.log;
 
+console.log(log.transports.file.getFile().path);
+
+
 function createWindow() {
   let screen_size = screen.getPrimaryDisplay().workAreaSize
   // Create the browser window.

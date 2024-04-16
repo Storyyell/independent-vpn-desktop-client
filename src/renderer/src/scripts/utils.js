@@ -15,7 +15,7 @@ async function refreshCountryList(deviceToken, serverList, setServerList) {
       setServerList(updatedServerList);
       return updatedServerList;
     } catch (e) {
-      console.log(e);
+      log.error(e);
     }
   }
   return serverList;
@@ -40,7 +40,7 @@ async function refreshCityList(countryId, deviceToken, serverList, setServerList
       setServerList(updatedServerList);
       return updatedServerList;
     } catch (e) {
-      console.log(e);
+      log.error(e);
     }
   }
   return serverList;
@@ -67,7 +67,7 @@ async function refreshServerList(countryId, cityId, setServerList, serverList, d
       setServerList(updatedServerList);
       return updatedServerList;
     } catch (e) {
-      console.log(e);
+      log.error(e);
     }
   }
   return serverList;

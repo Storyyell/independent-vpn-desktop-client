@@ -230,7 +230,7 @@ async function handleVpnConnTrigger(deviceToken, selectedItems, serverList, setV
             const sl = selectRandomItems(slObj?.data, retryServerNo);
             await retryLogic(sl, deviceToken, setVpnStatus, setVpnStatusMain, connectServer, disconnectServer);
           } catch (error) {
-            console.log(error);
+            log.error(error);
             await disconnectServer(setVpnStatusMain)
           }
         }
@@ -322,7 +322,7 @@ const retryLogic = async (sl, deviceToken, setVpnStatus, setVpnStatusMain, conne
       }
     }
   } catch (error) {
-    console.log(error);
+    log.error(error);
     await disconnectServer(setVpnStatusMain)
   }
 }
@@ -332,7 +332,7 @@ async function disconnectServer(setVpnStatusMain) {
     setVpnStatusMain('disconnecting');
     await window.api.triggerDisconnection();
   } catch (error) {
-    console.log(error);
+    log.error(error);
   }
   setVpnStatusMain('disconnected');
 
