@@ -319,7 +319,7 @@ export async function vpnDisconnect() {
         setTimeout(() => { vpnObj.disconnectionProgress = false }, 5000) // 10 seconds timeout for disconnection status cleanup on error
         let keys = Object.keys(vpnObj).reverse();
         keys.forEach(async (key) => {
-            console.log(`cleaning vpn object key :=> ${key}`);
+            // console.log(`cleaning vpn object key :=> ${key}`);
             try { await vpnConnCleanup(key); } catch (error) { }
         })
         if (!vpnObj.connected) {
