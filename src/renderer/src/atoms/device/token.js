@@ -3,3 +3,4 @@ const deviceTokenState = atom({
   default: "",
 });
 
+export { deviceTokenState }
