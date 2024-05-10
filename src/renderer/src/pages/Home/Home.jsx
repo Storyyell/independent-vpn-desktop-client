@@ -15,6 +15,7 @@ import { handleVpnConnTrigger } from './ConnectionTrigger';
 import { VpnTunnelStatusContext } from '../../context/VpnTunnelStatusContext';
 import { DnsListContext } from '../../context/DnsListContext';
 import Selector from '../../components/Selector/Selector';
+import ConnectSwitch from '../../components/ConnectSwitch/ConnectSwitch';
 
 
 
@@ -165,6 +166,8 @@ function Home(props) {
             />
 
             <Box style={{ display: "flex", flexGrow: 1 }}></Box>
+
+            <ConnectSwitch />
 
             <Selector />
 
