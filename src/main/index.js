@@ -36,12 +36,12 @@ function createWindow() {
   let screen_size = screen.getPrimaryDisplay().workAreaSize
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    minWidth: 380,
-    minHeight: 540,
-    width: 380,
-    height: 540,
-    x: screen_size.width - 380 - 40,
-    y: screen_size.height - 540 - 50,
+    minWidth: 393,
+    minHeight: 652,
+    width: 393,
+    height: 652,
+    x: screen_size.width - 393 - 40,
+    y: screen_size.height - 652 - 50,
     backgroundColor: '#1E1A1B',
     show: false,
     autoHideMenuBar: true,
