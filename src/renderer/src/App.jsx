@@ -74,7 +74,7 @@ function App() {
                     <DnsListProvider>
                       <ThemeProvider theme={theme}>
                         <CssBaseline />
-                        <Box className="app grad">
+                        <Box className="app svg-background">
                           <Header />
                           <Home />
                         </Box>

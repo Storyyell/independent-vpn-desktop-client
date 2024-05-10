@@ -5,6 +5,13 @@
   src: local('Segoe UI Regular'), url('../fonts/segoe-ui-4/Segoe_UI.woff') format('woff');
 }
 
+.svg-background {
+  background-image: url('./background.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+
 body {
   padding: 0;
   margin: 0;
@@ -37,10 +44,4 @@ body {
 
 .logo:hover {
   filter: drop-shadow(0 0 1.2em #6988e6aa);
-}
-
-
-
-.grad {
-  background: linear-gradient(180deg, #1E1A1B 0%, #171414 100%);
 }
