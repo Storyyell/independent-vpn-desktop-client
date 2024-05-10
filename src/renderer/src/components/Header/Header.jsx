@@ -10,7 +10,7 @@ import HomeSettings from '../../pages/HomeSettings/HomeSettings';
 import Settings from '../../pages/Settings/Settings';
 import GearBtn from './GearBtn';
 import StatusBar from './StatusBar';
-import backgroundImage from '../../assets/background.svg'; // Import the background image
+import backgroundImage from '../../assets/background.svg';
 
 
 
@@ -38,7 +38,10 @@ const Header = () => {
           },
         }}
       >
-        <Box sx={{ width: '90vw', m: 1, height: '100vh' }} role="presentation">
+        <Box
+          className={"app-padding"}
+          sx={{ width: '100vw', height: '100vh' }}
+          role="presentation">
           <Settings onClick={() => { setMenuClick(false); }} />
         </Box>
       </Drawer>

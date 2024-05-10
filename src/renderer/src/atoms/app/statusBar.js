@@ -2,7 +2,7 @@ import { atom } from "recoil";
 
 const statusBarState = atom({
   key: 'statusBarText',
-  default: 1,
+  default: 2,
 });
 
 export { statusBarState }

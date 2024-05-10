@@ -31,6 +31,9 @@ body {
   width: 100%;
   height: inherit;
   flex: 1;
+}
+
+.app-padding {
   padding: 25px 25px;
 }
 

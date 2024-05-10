@@ -25,6 +25,11 @@ const StatusBar = () => {
           <Typography sx={{ fontSize: "14px", color: "#54687A", fontWeight: "500" }}>Connection Protected</Typography>
         </>)
 
+      case 2:
+        return (<>
+          <Typography sx={{ fontSize: "14px", color: "#54687A", fontWeight: "500" }}>Home</Typography>
+        </>)
+
       default:
         return (<>
           <WarningAmberIcon fontSize="small" color="error" sx={{ mx: 2 }} />
