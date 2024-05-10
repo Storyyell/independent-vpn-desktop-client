@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import HomeSettings from '../../pages/HomeSettings/HomeSettings';
 import Settings from '../../pages/Settings/Settings';
 import GearBtn from './GearBtn';
+import StatusBar from './StatusBar';
 
 
 const Header = () => {
@@ -33,8 +34,10 @@ const Header = () => {
         <Box sx={{ width: '90vw', m: 1, height: '100vh' }} role="presentation">
           <Settings onClick={() => { setMenuClick(false) }} />
         </Box>
-      </Drawer>
 
+      </Drawer>
+      <StatusBar />
+      <Box sx={{ width: "37px", height: "37px" }}></Box>
     </Stack>
   )
 }
