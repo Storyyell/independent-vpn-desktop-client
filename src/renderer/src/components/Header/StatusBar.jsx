@@ -11,7 +11,7 @@ const StatusBar = (props) => {
   const StatusElement = (props) => {
 
     if (props.text) {
-      return (<Typography sx={{ fontSize: "14px", color: "#54687A", fontWeight: "500" }}>{props.text}</Typography>)
+      return (<Typography sx={{ fontSize: "14px", fontWeight: "500" }}>{props.text}</Typography>)
     }
 
     const statusBarCode = useRecoilValue(statusBarState);
