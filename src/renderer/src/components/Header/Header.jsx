@@ -10,6 +10,8 @@ import HomeSettings from '../../pages/HomeSettings/HomeSettings';
 import Settings from '../../pages/Settings/Settings';
 import GearBtn from './GearBtn';
 import StatusBar from './StatusBar';
+import backgroundImage from '../../assets/background.svg'; // Import the background image
+
 
 
 const Header = () => {
@@ -25,17 +27,23 @@ const Header = () => {
       <GearBtn menuClick={menuClick} handleMenuClick={handleMenuClick} />
 
       {/* side drawer */}
-      <Drawer open={menuClick} onClose={() => { setMenuClick(false) }}
+      <Drawer
+        open={menuClick}
+        onClose={() => { setMenuClick(false); }}
         PaperProps={{
           style: {
-            background: 'linear-gradient(180deg, #1E1A1B 0%, #171414 100%)',
-          }
-        }}>
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          },
+        }}
+      >
         <Box sx={{ width: '90vw', m: 1, height: '100vh' }} role="presentation">
-          <Settings onClick={() => { setMenuClick(false) }} />
+          <Settings onClick={() => { setMenuClick(false); }} />
         </Box>
-
       </Drawer>
+
+
       <StatusBar />
       <Box sx={{ width: "37px", height: "37px" }}></Box>
     </Stack>

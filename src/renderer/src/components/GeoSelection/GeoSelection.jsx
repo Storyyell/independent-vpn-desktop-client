@@ -13,6 +13,8 @@ import CityList from './CityList';
 import GeoSelHeader from './GeoSelHeader';
 import SearchBar from './SearchBar';
 import { refreshCityList, refreshCountryList } from '../../scripts/utils';
+import backgroundImage from '../../assets/background.svg'; // Import the background image
+
 
 
 const GeoSelection = (props) => {
@@ -166,8 +168,10 @@ const GeoSelection = (props) => {
       anchor='bottom'
       PaperProps={{
         style: {
-          background: 'linear-gradient(180deg, #1E1A1B 0%, #171414 100%)',
-        }
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        },
       }}
     >
       {DrawerList}
