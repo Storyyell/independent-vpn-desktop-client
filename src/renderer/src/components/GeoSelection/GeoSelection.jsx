@@ -92,19 +92,21 @@ const GeoSelection = (props) => {
 
   const DrawerList = (
     <>
-      <Stack direction={'column'} spacing={1} sx={{ height: '100vh', margin: '10px 10px' }} style={{ overflowY: 'scroll' }}>
+      <Stack direction={'column'} spacing={1} className='app-padding' sx={{ height: '100vh' }} style={{ overflowY: 'scroll' }}>
 
-        <GeoSelHeader
-          favIconClick={favIconClick}
-          setFavIconClick={setFavIconClick}
-          mentIconStyle={mentIconStyle}
-          loadCityList={loadCityList}
-          setLoadCityList={setLoadCityList}
-          setSelectedItems={setSelectedItems}
-          onClose={props.onClose}
-        />
+        <Box style={{ marginBottom: "8px" }}>
+          <GeoSelHeader
+            favIconClick={favIconClick}
+            setFavIconClick={setFavIconClick}
+            mentIconStyle={mentIconStyle}
+            loadCityList={loadCityList}
+            setLoadCityList={setLoadCityList}
+            setSelectedItems={setSelectedItems}
+            onClose={props.onClose}
+          />
+        </Box>
 
-        <SearchBar
+        {/* <SearchBar
           searchField={searchField}
           setSearchField={setSearchField}
           loadCityList={loadCityList}
@@ -116,9 +118,9 @@ const GeoSelection = (props) => {
           deviceToken={deviceToken}
           setServerList={setServerList}
 
-        />
+        /> */}
 
-        <Stack direction={'column'} spacing={2} style={{ margin: '8px' }}>
+        <Stack direction={'column'} spacing={2}>
 
           <Box sx={{ width: '100%' }} role="presentation" >
 

@@ -34,17 +34,6 @@ const CountryList = (props) => {
               <GeoItem key={d?.id} data={d} geoType='country' onClick={(val) => {
                 handleCountryChange(val)
               }}
-                onFavClick={() => {
-                  favList?.countries?.includes(d?.id)
-                    ?
-                    setFavList((c) => {
-                      return { ...c, countries: c.countries.filter((f) => f != d?.id) }
-                    })
-                    :
-                    setFavList((c) => {
-                      return { ...c, countries: [...c.countries, d?.id] }
-                    })
-                }}
               />
             )
           })

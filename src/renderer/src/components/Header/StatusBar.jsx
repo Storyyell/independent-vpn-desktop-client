@@ -51,9 +51,8 @@ const StatusBar = (props) => {
         alignItems: "center",
         justifyContent: "center",
         height: "37px",
-        width: "237px",
+        width: "217px",
         borderRadius: "18.5px",
-        borderWidth: "1px",
         backgroundColor: "#101921"
       }}>
 
