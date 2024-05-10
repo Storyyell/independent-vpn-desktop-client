@@ -6,13 +6,15 @@ import { VpnStatusMainProvider } from './context/VpnStatusMainContext'
 import { DeviceTokenProvider } from './context/DeviceTokenContext'
 import { SelectionProvider } from './context/SelectionContext'
 import Home from './pages/Home/Home';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Header from './components/Header/Header';
 import { FavListProvider } from './context/FavContext';
 import { SysSettingsProvider } from './context/SysSettingsContext';
 import { VpnTunnelStatusProvider } from './context/VpnTunnelStatusContext';
 import { DnsListProvider } from './context/DnsListContext';
 
+import { appVersionState } from './atoms/app/version';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 
 const theme = createTheme({
@@ -40,13 +42,25 @@ const theme = createTheme({
   },
 });
 
-// todo change global state management to recoil [ it has inbuilt function for this app requirement with low bundle size] 
-// todo add case of revoed device token and followed by re-regisration
+
 
 function App() {
 
   // __electronLog.info('Log from the renderer')
 
+  const setAppVersion = useSetRecoilState(appVersionState);
+
+  React.useEffect(() => {
+
+    // setting app version
+    (() => {
+      window.api.appVersion()
+        .then((appVersion) => {
+          setAppVersion(appVersion);
+        })
+    })();
+
+  }, []);
 
   return (
     <>

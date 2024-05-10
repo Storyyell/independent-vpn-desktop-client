@@ -62,7 +62,7 @@ export function registerIpcHandlers(ipcMain) {
     return getIp(device_token);
   })
 
-  ipcMain.handle('appVersion', async (event) => {
+  ipcMain.handle('appVersion', (event) => {
     let appVersion = app.getVersion();
     return appVersion;
   })
