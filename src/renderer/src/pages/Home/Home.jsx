@@ -14,6 +14,7 @@ import VpnTraffic from '../../components/VpnTraffic/VpnTraffic';
 import { handleVpnConnTrigger } from './ConnectionTrigger';
 import { VpnTunnelStatusContext } from '../../context/VpnTunnelStatusContext';
 import { DnsListContext } from '../../context/DnsListContext';
+import Selector from '../../components/Selector/Selector';
 
 
 
@@ -153,12 +154,20 @@ function Home(props) {
                 </Typography>
             </Stack>
 
+
+
             {/* //todo disable vpn traffic for now becuase of the high cpu usage */}
             {/* <VpnTraffic /> */}
+
             <GeoSelection
                 open={geoSelection}
                 onClose={() => setGeoSelection(false)}
             />
+
+            <Box style={{ display: "flex", flexGrow: 1 }}></Box>
+
+            <Selector />
+
         </>
     )
 }
