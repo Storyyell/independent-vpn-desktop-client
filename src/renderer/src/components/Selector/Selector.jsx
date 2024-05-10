@@ -7,20 +7,17 @@ import GeoHolder from './GeoHolder'
 const Selector = (props) => {
 
   return (
-    <div onClick={() => { props.onClick() }}>
+    <Stack direction={'row'} sx={{
+      height: "54px",
+      width: "100%",
+      alignItems: "center",
+      justifyContent: "space-around"
+    }}
+    >
 
-      <Stack direction={'row'} sx={{
-        height: "54px",
-        width: "100%",
-        justifyContent: "space-around",
-        alignItems: "center"
-      }}
-      >
-
-        <GeoHolder />
-        <PowerBtn />
-      </Stack>
-    </div>
+      <GeoHolder onClick={() => { props.onClick() }} />
+      <PowerBtn />
+    </Stack>
   )
 }
 
