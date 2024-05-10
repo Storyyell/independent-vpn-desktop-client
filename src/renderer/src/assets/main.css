@@ -11,14 +11,19 @@ body {
 }
 
 #root {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   user-select: none;
+}
+
+.app {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: inherit;
+  flex: 1;
 }
 
 .logo {
@@ -33,14 +38,7 @@ body {
   filter: drop-shadow(0 0 1.2em #6988e6aa);
 }
 
-.app {
-  display: flex;
-  align-items: center;
-  /* justify-content: center; */
-  flex-direction: column;
-  width: 100%;
-  flex: 1;
-}
+
 
 .grad {
   background: linear-gradient(180deg, #1E1A1B 0%, #171414 100%);
