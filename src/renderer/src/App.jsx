@@ -14,7 +14,8 @@ import { VpnTunnelStatusProvider } from './context/VpnTunnelStatusContext';
 import { DnsListProvider } from './context/DnsListContext';
 
 import { appVersionState } from './atoms/app/version';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { deviceTokenState } from './atoms/app/token';
 
 
 const theme = createTheme({
@@ -49,6 +50,7 @@ function App() {
   // __electronLog.info('Log from the renderer')
 
   const setAppVersion = useSetRecoilState(appVersionState);
+  const [deviceToken, setDeviceToken] = useRecoilState(deviceTokenState)
 
   React.useEffect(() => {
 
@@ -60,7 +62,28 @@ function App() {
         })
     })();
 
+    // registerDevice
+    (
+      () => {
+        if (deviceToken == "") {
+          window.api.registerDevice()
+            .then((res) => {
+              setDeviceToken(res)
+            })
+            .catch((e) => {
+              log.error(e)
+            })
+        }
+      }
+    )();
+
+
   }, []);
+
+
+  window.onbeforeunload = () => {
+    localStorage.setItem("device_token_", deviceToken);
+  };
 
   return (
     <>
