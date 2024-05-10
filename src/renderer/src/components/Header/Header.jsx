@@ -40,7 +40,7 @@ const Header = () => {
       >
         <Box
           className={"app-padding"}
-          sx={{ width: '100vw', height: '100vh' }}
+          sx={{ width: '100vw', height: '100vh', display: "flex", flexDirection: "column" }}
           role="presentation">
           <Settings onClick={() => { setMenuClick(false); }} />
         </Box>

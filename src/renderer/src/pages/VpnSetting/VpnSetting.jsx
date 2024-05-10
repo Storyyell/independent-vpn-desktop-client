@@ -19,14 +19,14 @@ const VpnSetting = () => {
       //   title: 'Auto-connect',
       //   desc: 'Automaically reconnects if you switch networks or restart the app.',
       //   variant: 2,
-      //   onClick: () => { props.setSettingsPage('vpnsetting') }
+      //   onClick: () => { props.setSettingsPage('VPN Setting') }
       // },
       {
         title: 'Protocol',
         desc: 'Changes the VPN Protocol',
         variant: 3,
         options: ['V2RAY', 'WIREGUARD'],
-        onClick: () => { props.setSettingsPage('appsetting') }
+        onClick: () => { props.setSettingsPage('App Setting') }
 
       },
 

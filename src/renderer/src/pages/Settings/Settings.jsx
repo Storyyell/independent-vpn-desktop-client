@@ -5,61 +5,68 @@ import VpnSetting from '../VpnSetting/VpnSetting'
 import AppSettings from '../AppSettings/AppSettings'
 import SupportPage from '../SupportPage/SupportPage'
 import ReportBug from '../ReportBug/ReportBug'
-import { Box } from '@mui/material'
+import { Box, Stack, Typography } from '@mui/material'
+import { useRecoilValue } from 'recoil'
+import { appVersionState } from '../../atoms/app/version'
 
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-}
 
 const Settings = (props) => {
-  const [settingsPage, setSettingsPage] = React.useState('home')
-
+  const [settingsPage, setSettingsPage] = React.useState('Home')
+  const appVersion = useRecoilValue(appVersionState);
 
   return (
     <>
-      <SettingsHeader header={capitalizeFirstLetter(settingsPage)} onClick={() => {
+      <SettingsHeader header={settingsPage} onClick={() => {
         switch (settingsPage) {
 
-          case 'home':
-            // setSettingsPage('home')
+          case 'Home':
+            // setSettingsPage('Home')
             props.onClick() // exits the drawer
             break;
 
-          case 'vpn setting':
-            setSettingsPage('home')
+          case 'VPN Setting':
+            setSettingsPage('Home')
             break;
 
-          case 'app setting':
-            setSettingsPage('home')
+          case 'App Setting':
+            setSettingsPage('Home')
             break;
 
-          case 'support':
-            setSettingsPage('home')
+          case 'Support':
+            setSettingsPage('Home')
             break;
 
-          case 'report-bug':
-            setSettingsPage('support')
+          case 'Report Bug':
+            setSettingsPage('Support')
             break;
 
-          case 'create ticket':
-            setSettingsPage('support')
+          case 'Create Ticket':
+            setSettingsPage('Support')
             break;
 
           default:
-            setSettingsPage('home')
+            setSettingsPage('Home')
             props.onClick()
         }
       }} />
 
-      <Box sx={{ m: 1 }}>
-        {settingsPage == 'home' && <HomeSettings setSettingsPage={setSettingsPage} />}
-        {settingsPage == 'vpn setting' && <VpnSetting />}
-        {settingsPage == 'app setting' && <AppSettings />}
-        {settingsPage == 'support' && <SupportPage setSettingsPage={setSettingsPage} />}
-        {settingsPage == 'report-bug' && <ReportBug setSettingsPage={setSettingsPage} />}
-        {settingsPage == 'create ticket' && <ReportBug setSettingsPage={setSettingsPage} />}
+      <Box sx={{
+        display: "flex",
+        flexDirection: "column",
+        // height: "100%"
+        flexGrow: 1
+      }}>
+        {settingsPage == 'Home' && <HomeSettings setSettingsPage={setSettingsPage} />}
+        {settingsPage == 'VPN Setting' && <VpnSetting />}
+        {settingsPage == 'App Setting' && <AppSettings />}
+        {settingsPage == 'Support' && <SupportPage setSettingsPage={setSettingsPage} />}
+        {settingsPage == 'Report Bug' && <ReportBug setSettingsPage={setSettingsPage} />}
+        {settingsPage == 'Create Ticket' && <ReportBug setSettingsPage={setSettingsPage} />}
       </Box>
 
+      <Stack direction={"row"} sx={{ justifyContent: "center", mb: 1 }}>
+        <Typography sx={{ fontWeight: 500 }}>{`Version ${appVersion}`}</Typography>
+      </Stack>
     </>
   )
 }

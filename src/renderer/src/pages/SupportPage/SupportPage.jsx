@@ -16,7 +16,7 @@ const SupportPage = (props) => {
       title: 'Create ticket',
       desc: 'Create and send a ticket to our support team',
       variant: 1,
-      onClick: () => { props.setSettingsPage('create ticket') }
+      onClick: () => { props.setSettingsPage('Create Ticket') }
     },
     {
       title: 'Community',
@@ -31,7 +31,7 @@ const SupportPage = (props) => {
       title: 'Report a bug',
       desc: 'Found an issue in our app? Let us know and we wll ge it fixed',
       variant: 1,
-      onClick: () => { props.setSettingsPage('report-bug') }
+      onClick: () => { props.setSettingsPage('Report Bug') }
     }]
 
   const generalInfoSettingsJson = [

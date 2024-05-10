@@ -5,10 +5,15 @@ import { statusBarState } from '../../atoms/app/statusBar'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 
-const StatusBar = () => {
+const StatusBar = (props) => {
 
 
-  const StatusElement = () => {
+  const StatusElement = (props) => {
+
+    if (props.text) {
+      return (<Typography sx={{ fontSize: "14px", color: "#54687A", fontWeight: "500" }}>{props.text}</Typography>)
+    }
+
     const statusBarCode = useRecoilValue(statusBarState);
 
     switch (statusBarCode) {
@@ -18,13 +23,13 @@ const StatusBar = () => {
           <WarningAmberIcon fontSize="small" color="error" sx={{ mx: 2 }} />
           <Typography sx={{ fontSize: "14px", color: "#54687A", fontWeight: "500" }}>Not Protected</Typography>
         </>)
-
+      // connected
       case 1:
         return (<>
           <VerifiedUserIcon fontSize="small" color="success" sx={{ mx: 2 }} />
           <Typography sx={{ fontSize: "14px", color: "#54687A", fontWeight: "500" }}>Connection Protected</Typography>
         </>)
-
+      // home
       case 2:
         return (<>
           <Typography sx={{ fontSize: "14px", color: "#54687A", fontWeight: "500" }}>Home</Typography>
@@ -36,6 +41,7 @@ const StatusBar = () => {
           <Typography sx={{ fontSize: "14px", color: "#54687A", fontWeight: "500" }}>Not Protected</Typography>
         </>)
     }
+
   }
 
   return (
@@ -51,7 +57,7 @@ const StatusBar = () => {
         backgroundColor: "#101921"
       }}>
 
-      <StatusElement />
+      <StatusElement text={props.text} />
     </Box>
   )
 }

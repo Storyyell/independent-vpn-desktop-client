@@ -17,7 +17,7 @@ const SettingsHeader = (props) => {
       }}
     >
       <GearBtn handleMenuClick={() => { props.onClick() }} menuClick={true} />
-      <StatusBar />
+      <StatusBar text={props.header} />
       <Box sx={{ width: "37px", height: "37px" }}></Box>
     </Stack>
   )

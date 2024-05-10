@@ -27,13 +27,13 @@ const HomeSettings = (props) => {
       title: 'VPN Settings',
       desc: 'Connection and security',
       variant: 1,
-      onClick: () => { props.setSettingsPage('vpn setting') }
+      onClick: () => { props.setSettingsPage('VPN Setting') }
     },
     {
       title: 'App Settings',
       desc: 'App general features',
       variant: 1,
-      onClick: () => { props.setSettingsPage('app setting') }
+      onClick: () => { props.setSettingsPage('App Setting') }
 
     },
     {
@@ -120,7 +120,7 @@ const HomeSettings = (props) => {
             <ListItemButton
 
               onClick={() => {
-                props.setSettingsPage('support')
+                props.setSettingsPage('Support')
               }}
 
               sx={{ p: '3px', borderRadius: 1 }}>
