@@ -169,7 +169,7 @@ function Home(props) {
 
             <ConnectSwitch />
 
-            <Selector />
+            <Selector onClick={() => setGeoSelection(true)} />
 
         </>
     )

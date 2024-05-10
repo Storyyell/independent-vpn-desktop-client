@@ -4,19 +4,23 @@ import React from 'react'
 import PowerBtn from './PowerBtn'
 import GeoHolder from './GeoHolder'
 
-const Selector = () => {
+const Selector = (props) => {
 
   return (
-    <Stack direction={'row'} sx={{
-      height: "54px",
-      width: "100%",
-      justifyContent: "space-around",
-      alignItems: "center"
-    }}>
+    <div onClick={() => { props.onClick() }}>
 
-      <GeoHolder />
-      <PowerBtn />
-    </Stack>
+      <Stack direction={'row'} sx={{
+        height: "54px",
+        width: "100%",
+        justifyContent: "space-around",
+        alignItems: "center"
+      }}
+      >
+
+        <GeoHolder />
+        <PowerBtn />
+      </Stack>
+    </div>
   )
 }
 
