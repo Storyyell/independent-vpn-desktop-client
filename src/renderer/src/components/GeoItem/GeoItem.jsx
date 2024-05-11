@@ -6,6 +6,7 @@ import favIcon from '../../assets/favIcon.svg';
 import ListItemButton from '@mui/material/ListItemButton';
 import { FavListContext } from '../../context/FavContext';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import serverIcon from "../../assets/server_icon.svg"
 
 
 export const GeoItem = (props) => {
@@ -76,7 +77,7 @@ export const GeoItem = (props) => {
 
 
             <img
-              src={`https://flagcdn.com/36x27/${d?.code?.toLowerCase()}.png`}
+              src={props.geoType == "country" ? `https://flagcdn.com/36x27/${d?.code?.toLowerCase()}.png` : serverIcon}
               alt="Country Flag"
               style={{
                 borderRadius: '50%',
