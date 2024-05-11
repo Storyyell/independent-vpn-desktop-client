@@ -1,5 +1,5 @@
 import { Padding, SixK } from '@mui/icons-material'
-import { Box, Stack } from '@mui/material'
+import { Box, IconButton, Stack } from '@mui/material'
 import React from 'react'
 import PowerBtn from './PowerBtn'
 import GeoHolder from './GeoHolder'
@@ -14,9 +14,12 @@ const Selector = (props) => {
       justifyContent: "space-around"
     }}
     >
-
-      <GeoHolder onClick={() => { props.onClick() }} />
-      <PowerBtn />
+      <IconButton sx={{ borderRadius: "34px" }}>
+        <GeoHolder onClick={() => { props.onClick() }} />
+      </IconButton>
+      <IconButton>
+        <PowerBtn />
+      </IconButton>
     </Stack>
   )
 }
