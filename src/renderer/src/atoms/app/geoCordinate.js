@@ -3,8 +3,8 @@ import { atom } from "recoil";
 const geoCoordinateState = atom({
   key: 'geoCoordinate',
   default: {
-    lat: -28.6174,
-    lng: -14.5599,
+    lat: 50.8101,
+    lng: 4.3247,
     ip: ""
   },
 });
