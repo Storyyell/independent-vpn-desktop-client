@@ -80,23 +80,23 @@ function App() {
     )();
 
     // fetching home ip
-    (
-      () => {
-        if (deviceToken != "") {
-          window.api.getIp(deviceToken)
-            .then(({ data }) => {
-              if (data) {
-                setLocation({
-                  lat: data.latitude,
-                  lng: data.longitude,
-                  ip: data.ip
-                })
-              }
-            })
-            .catch((e) => { console.log(e) });
-        }
-      }
-    )();
+    // (
+    //   () => {
+    //     if (deviceToken != "") {
+    //       window.api.getIp(deviceToken)
+    //         .then(({ data }) => {
+    //           if (data) {
+    //             setLocation({
+    //               lat: data.latitude,
+    //               lng: data.longitude,
+    //               ip: data.ip
+    //             })
+    //           }
+    //         })
+    //         .catch((e) => { console.log(e) });
+    //     }
+    //   }
+    // )();
 
 
   }, []);

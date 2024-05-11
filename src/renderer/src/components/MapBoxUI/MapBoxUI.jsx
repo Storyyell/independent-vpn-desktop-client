@@ -22,17 +22,7 @@ export default function MapBoxUI() {
       zoom: zoom
     });
 
-    map.current.on('move', () => {
-      // setCoordinate((d) => {
-      //   return ({
-      //     lat: map.current.getCenter().lat.toFixed(4),
-      //     lng: map.current.getCenter().lng.toFixed(4),
-      //     ip: d.ip
-      //   })
-      // }
-      // );
-      setZoom(map.current.getZoom().toFixed(1));
-    });
+
   }, []);
 
 
