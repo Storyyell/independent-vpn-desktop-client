@@ -16,6 +16,8 @@ import { VpnTunnelStatusContext } from '../../context/VpnTunnelStatusContext';
 import { DnsListContext } from '../../context/DnsListContext';
 import Selector from '../../components/Selector/Selector';
 import ConnectSwitch from '../../components/ConnectSwitch/ConnectSwitch';
+import MapBoxUI from '../../components/MapBoxUI/MapBoxUI';
+
 
 
 
@@ -32,6 +34,7 @@ function Home(props) {
     const { deviceToken, setDeviceToken } = React.useContext(DeviceTokenContext);
     const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
     const [geoSelection, setGeoSelection] = React.useState(false);
+
     // const { vpnTunnelStatus, setVpnTunnelStatus } = React.useContext(VpnTunnelStatusContext);
     const { dnsObj, setDnsObj } = React.useContext(DnsListContext);
 
@@ -115,7 +118,7 @@ function Home(props) {
 
     return (
         <>
-            <Stack direction={'column'} spacing={1} alignItems={'center'} my={2}>
+            {/* <Stack direction={'column'} spacing={1} alignItems={'center'} my={2}>
                 <Button
                     size="medium"
                     variant="outlined"
@@ -134,18 +137,18 @@ function Home(props) {
                     </Typography>
                     <ArrowRightIcon />
                 </Button>
-                {/* todo make text autoscroll */}
                 <Typography style={{ fontSize: "20px" }}>
                     {`${selectedItems.countryId ? getObj('country', selectedItems.countryId, null) : '----'} / ${selectedItems.cityId ? getObj('city', selectedItems.countryId, selectedItems.cityId) : '----'}`}
                 </Typography>
-            </Stack>
-            <Box>
+            </Stack> */}
+            {/* <Box>
                 <ConnectBtn
                     onClick={triggerVpnConnection}
                     ip={ip}
                 />
 
-            </Box>
+            </Box> */}
+
             <Stack direction="row" spacing={1} style={{ alignItems: 'center', justifyContent: 'center', margin: "10px" }} >
                 <Typography style={{ fontSize: '12px', fontWeight: '800' }}>
                     {`status :`}
@@ -155,7 +158,7 @@ function Home(props) {
                 </Typography>
             </Stack>
 
-
+            <MapBoxUI />
 
             {/* //todo disable vpn traffic for now becuase of the high cpu usage */}
             {/* <VpnTraffic /> */}
@@ -165,7 +168,7 @@ function Home(props) {
                 onClose={() => setGeoSelection(false)}
             />
 
-            <Box style={{ display: "flex", flexGrow: 1 }}></Box>
+            {/* <Box style={{ display: "flex", flexGrow: 1 }}></Box> */}
 
             <ConnectSwitch />
 
