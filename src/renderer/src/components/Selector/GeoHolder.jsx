@@ -6,12 +6,12 @@ import { useRecoilValue } from 'recoil';
 import { countryNameSelected } from '../../selectors/countryNameSelection';
 
 
-const GeoHolder = (props) => {
+const GeoHolder = () => {
 
   const countryChoosed = useRecoilValue(countryNameSelected);
 
   return (
-    <div onClick={() => { props.onClick() }}>
+    <div >
       <Box sx={{
         height: "54px",
         borderRadius: "27px",

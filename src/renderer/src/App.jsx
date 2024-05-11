@@ -16,6 +16,7 @@ import { DnsListProvider } from './context/DnsListContext';
 import { appVersionState } from './atoms/app/version';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { deviceTokenState } from './atoms/app/token';
+import { geoCoordinateState } from './atoms/app/geoCordinate';
 
 
 const theme = createTheme({
@@ -50,7 +51,8 @@ function App() {
   // __electronLog.info('Log from the renderer')
 
   const setAppVersion = useSetRecoilState(appVersionState);
-  const [deviceToken, setDeviceToken] = useRecoilState(deviceTokenState)
+  const [deviceToken, setDeviceToken] = useRecoilState(deviceTokenState);
+  const setLocation = useSetRecoilState(geoCoordinateState);
 
   React.useEffect(() => {
 
@@ -73,6 +75,25 @@ function App() {
             .catch((e) => {
               log.error(e)
             })
+        }
+      }
+    )();
+
+    // fetching home ip
+    (
+      () => {
+        if (deviceToken != "") {
+          window.api.getIp(deviceToken)
+            .then(({ data }) => {
+              if (data) {
+                setLocation({
+                  lat: data.latitude,
+                  lng: data.longitude,
+                  ip: data.ip
+                })
+              }
+            })
+            .catch((e) => { console.log(e) });
         }
       }
     )();

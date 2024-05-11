@@ -14,8 +14,10 @@ const Selector = (props) => {
       justifyContent: "space-around"
     }}
     >
-      <IconButton sx={{ borderRadius: "34px" }}>
-        <GeoHolder onClick={() => { props.onClick() }} />
+      <IconButton
+        sx={{ borderRadius: "34px" }}
+        onClick={() => { props.onClick() }}>
+        <GeoHolder />
       </IconButton>
       <IconButton>
         <PowerBtn />
