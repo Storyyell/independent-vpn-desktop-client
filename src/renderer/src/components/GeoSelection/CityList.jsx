@@ -4,61 +4,69 @@ import { Typography } from '@mui/material';
 import { refreshServerList } from '../../scripts/utils';
 import { handleVpnConnTrigger } from '../../pages/Home/ConnectionTrigger';
 import { VpnStatusMainContext } from '../../context/VpnStatusMainContext';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { countrySelectedState } from '../../atoms/userSelection/country';
+import { deviceTokenState } from '../../atoms/app/token';
+import { cityListState } from '../../atoms/available/cityList';
+import { citySelectedState } from '../../atoms/userSelection/city';
 
+const dataValidityPeroid = 10 * 60 * 1000 // 10minutes
 
 const CityList = (props) => {
 
   let serverList = props.serverList
-  let cityListProcessed = props.cityListProcessed
-  let selectedItems = props.selectedItems
-  let favList = props.favList
-  let setFavList = props.setFavList
   let setSelectedItems = props.setSelectedItems
-  let deviceToken = props.deviceToken
   let setServerList = props.setServerList
 
   const { vpnStatusMain, setVpnStatusMain } = React.useContext(VpnStatusMainContext);
 
+  const countryId = useRecoilValue(countrySelectedState);
+  const deviceToken = useRecoilValue(deviceTokenState);
+  const [cityObj, setCityObj] = useRecoilState(cityListState);
+  const setCitySelected = useSetRecoilState(citySelectedState);
+
+  let cityListProcessed = (cityObj?.[countryId]?.data) || [];
+
+  React.useEffect(() => {
+    const now = new Date();
+    if (deviceToken && ((now - (cityObj?.[countryId]?.timeStamp || 0)) > dataValidityPeroid)) {
+      console.log("fetching city list for country id : ", countryId);
+      window.api.getCities(deviceToken, countryId)
+        .then((res) => {
+          if (res.data) {
+            setCityObj((cityObjOld) => {
+              return ({
+                ...cityObjOld,
+                [countryId]: {
+                  timeStamp: new Date(),
+                  data: res.data
+                }
+              })
+            })
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+    }
+  }, []);
 
   const handleCityChange = (cityId_) => {
-
-    setSelectedItems((d) => {
-      return { ...d, cityId: cityId_ }
-    })
-
-    // refreshServerList(selectedItems?.countryId, cityId_, setServerList, serverList, deviceToken);
-
-    handleVpnConnTrigger(deviceToken, { ...selectedItems, cityId: cityId_ }, serverList, () => { }, vpnStatusMain, setServerList, setVpnStatusMain, setSelectedItems)
-
+    // trigerring vpn connection 
+    // handleVpnConnTrigger(deviceToken, { countryId: countryId, cityId: cityId_ }, serverList, () => { }, vpnStatusMain, setServerList, setVpnStatusMain, setSelectedItems)
+    setCitySelected(cityId_);
   };
 
   return (
     <>
       {
-        serverList?.cities[selectedItems?.countryId]?.data ?
+        cityListProcessed.length > 0 ?
           cityListProcessed?.map((d, i) => {
             return (
-              <GeoItem key={i} geoType='city' data={{ ...d, code: (serverList?.countries?.data?.find(d => d.id == selectedItems?.countryId))?.code }} onClick={(val) => {
-                handleCityChange(val)
-                props.onClose()
-              }}
-                onFavClick={() => {
-                  favList?.cities?.[selectedItems?.countryId]?.includes(d?.id)
-                    ?
-                    setFavList((c) => {
-                      const filteredCities = (c?.cities?.[selectedItems?.countryId]).filter((f) => f !== d.id);
-                      if (filteredCities.length === 0) {
-                        const newCities = { ...c.cities };
-                        delete newCities[selectedItems?.countryId];
-                        return { ...c, cities: newCities };
-                      } else {
-                        return { ...c, cities: { ...c.cities, [selectedItems?.countryId]: filteredCities } };
-                      }
-                    })
-                    :
-                    setFavList((c) => {
-                      return { ...c, cities: { ...c.cities, [selectedItems?.countryId]: [...(c?.cities?.[selectedItems?.countryId] || []), d?.id] } };
-                    })
+              <GeoItem key={i} geoType='city' data={{ ...d, code: null }}
+                onClick={(val) => {
+                  handleCityChange(val);
+                  props.onClose();
                 }}
               />
             )
