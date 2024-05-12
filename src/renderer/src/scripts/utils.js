@@ -1,49 +1,60 @@
 const dataValidityPeroid = 10 * 60 * 1000 // 10minutes
 
-async function refreshCountryList(deviceToken, serverList, setServerList) {
+async function refreshCountryList(deviceToken, countryList, setCountryList) {
   const now = Date.now();
 
-  const lastRefreshTimestamp = serverList?.countries?.timestamp; // new Date()
+  const lastRefreshTimestamp = countryList?.timeStamp; // new Date()
 
-  if (deviceToken && (!lastRefreshTimestamp || (now - lastRefreshTimestamp) >= dataValidityPeroid)) {
+  if (deviceToken && ((now - lastRefreshTimestamp) >= dataValidityPeroid)) {
     try {
-      const res = await window.api.getCountries(deviceToken);
-      const updatedServerList = {
-        ...serverList,
-        countries: { data: res.data, timestamp: new Date() }
-      };
-      setServerList(updatedServerList);
-      return updatedServerList;
+      const { data } = await window.api.getCountries(deviceToken);
+      setCountryList({ data: data || [], timestamp: new Date() });
+      return data || [];
     } catch (e) {
       log.error(e);
+      return countryList?.data || [];
     }
   }
-  return serverList;
+  return countryList?.data || [];
 }
 
-async function refreshCityList(countryId, deviceToken, serverList, setServerList) {
+async function refreshCityList(deviceToken, countryId, cityList, setCityList) {
 
   const now = Date.now();
 
-  const lastRefreshTimestamp = serverList?.cities?.countryId?.timestamp; // new Date()
+  const cityObj = cityList?.[countryId]
 
-  if ((!lastRefreshTimestamp || now - lastRefreshTimestamp > dataValidityPeroid) && countryId && deviceToken) {
-    try {
-      const res = await window.api.getCities(deviceToken, countryId);
-      const updatedServerList = {
-        ...serverList,
-        cities: {
-          ...serverList.cities,
-          [countryId]: { data: res.data, timestamp: new Date() }
-        }
-      };
-      setServerList(updatedServerList);
-      return updatedServerList;
-    } catch (e) {
-      log.error(e);
+  if (cityObj) {
+    const lastRefreshTimestamp = cityObj?.timestamp; // new Date()
+
+    if (((now - lastRefreshTimestamp) < dataValidityPeroid) && deviceToken && countryId) {
+
+      return cityObj.data || [];
     }
   }
-  return serverList;
+  try {
+
+    if (!deviceToken || !countryId) {
+      return [];
+    }
+
+    const { data } = await window.api.getCities(deviceToken, countryId);
+
+    setCityList((cityListObj) => {
+      return {
+        ...cityListObj,
+        [countryId]: { data: data || [], timestamp: new Date() }
+      }
+    });
+
+    return data || [];
+
+
+  } catch (e) {
+    // log.error(e);
+    console.log(e);
+    return cityObj?.data || [];
+  }
 
 }
 

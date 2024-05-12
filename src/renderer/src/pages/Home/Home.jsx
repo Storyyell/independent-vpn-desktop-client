@@ -60,18 +60,7 @@ function Home(props) {
     useEffect(() => {
         const handleConnectionStatus = (arg) => {
             const { message, connected, connectionProgress, disconnectionProgress } = arg;
-
             setVpnStatus(message);
-
-            // if (connected) {
-            //     setVpnTunnelStatus('connected');
-            // } else if (connectionProgress) {
-            //     setVpnTunnelStatus('connecting');
-            // } else if (disconnectionProgress) {
-            //     setVpnTunnelStatus('disconnecting');
-            // } else {
-            //     setVpnTunnelStatus('disconnected');
-            // }
         };
 
         window.ipcRenderer.on('connectionStatus', handleConnectionStatus);

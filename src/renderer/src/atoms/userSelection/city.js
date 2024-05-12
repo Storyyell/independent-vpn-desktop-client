@@ -2,7 +2,7 @@ import { atom } from "recoil";
 
 const citySelectedState = atom({
   key: 'citySelected',
-  default: {},
+  default: null,
 });
 
 export { citySelectedState }
