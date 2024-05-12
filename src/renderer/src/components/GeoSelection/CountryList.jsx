@@ -1,6 +1,6 @@
 import React from 'react'
 import { GeoItem } from '../GeoItem/GeoItem'
-import { Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { useRecoilState, useRecoilValue, useRecoilCallback, useSetRecoilState, useResetRecoilState } from 'recoil'
 import { deviceTokenState } from '../../atoms/app/token'
 import { countryListState } from '../../atoms/available/countryList'
@@ -67,11 +67,30 @@ const CountryList = (props) => {
           })
 
           :
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '470px',
+            flexGrow: 1
+          }}>
+            <Typography sx={{
+              m: 1,
+              color: 'grey',
+              fontSize: '16px'
+            }}>
+              Loading country list ...
+            </Typography>
+            <Typography sx={{
+              m: 0,
+              fontSize: '12px',
+            }}>
+              please wait...
+            </Typography>
+            <Box sx={{ height: "200px" }}></Box>
+          </Box>
 
-          <Typography sx={{ m: 2 }}>
-            Loading country list ...
-
-          </Typography>
       }
     </>
   )

@@ -10,7 +10,6 @@ const cityNameSelected = selector({
     const countryIdSelected = get(countrySelectedState);
     const cityIdSelected = get(citySelectedState);
 
-    debugger;
     if (countryIdSelected == null) {
       return { name: "", code: "" };
     }
