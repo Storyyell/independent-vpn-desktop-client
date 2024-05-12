@@ -1,8 +1,7 @@
-import { Padding, SixK } from '@mui/icons-material'
 import { Box, IconButton, Stack } from '@mui/material'
 import React from 'react'
-import PowerBtn from './PowerBtn'
 import GeoHolder from './GeoHolder'
+import ConnectBtn from './ConnectBtn/ConnectBtn'
 
 const Selector = (props) => {
 
@@ -19,9 +18,7 @@ const Selector = (props) => {
         onClick={() => { props.onClick() }}>
         <GeoHolder />
       </IconButton>
-      <IconButton>
-        <PowerBtn />
-      </IconButton>
+      <ConnectBtn />
     </Stack>
   )
 }

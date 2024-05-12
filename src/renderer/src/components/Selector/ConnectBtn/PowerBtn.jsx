@@ -3,7 +3,7 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { Box } from '@mui/system';
 
 
-const PowerBtn = () => {
+const PowerBtn = (props) => {
   return (
     <Box sx={{
       width: "54px",
@@ -12,9 +12,9 @@ const PowerBtn = () => {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      borderRadius: "27px"
+      borderRadius: "27px",
     }}>
-      <PowerSettingsNewIcon />
+      <PowerSettingsNewIcon color={props.color} />
     </Box>
   )
 }
