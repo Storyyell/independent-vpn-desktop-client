@@ -9,15 +9,10 @@ const ConnectSwitch = () => {
     <Stack
       direction={"column"}
       sx={{
-        p: 2,
+        p: 1,
         alignItems: "center",
       }} >
-      <Switch
-        color='warning'
-        checkedIcon={<ElectricBoltIcon fontSize='small' />}
-        size='medium'
-      />
-      <Typography>Not Connected</Typography>
+      <Typography fontWeight={600}>Not Connected</Typography>
     </Stack>
   )
 }

@@ -1,14 +1,15 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useRecoilState } from 'recoil';
 import { geoCoordinateState } from '../../atoms/app/geoCordinate';
+import zIndex from '@mui/material/styles/zIndex';
 
 // Set your mapbox token
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_KEY;
 
 export default function MapBoxUI() {
-  const [{ lat, lng }, setCoordinate] = useRecoilState(geoCoordinateState);
+  const [{ lat, lng, ip }, setCoordinate] = useRecoilState(geoCoordinateState);
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [zoom, setZoom] = useState(10);
@@ -36,15 +37,43 @@ export default function MapBoxUI() {
 
   return (
     <Box
-      ref={mapContainer}
       sx={{
         width: "100%",
         backgroundColor: "#171A20",
         borderRadius: "8px",
         display: "flex",
         flexGrow: 1,
+        position: 'relative',
         overflow: "hidden",
+        border: "2px solid #20242B",
+      }}
+    >
+      <Box
+        ref={mapContainer}
+        sx={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+        }}
+      >
+        {/* Map container content goes here */}
+      </Box>
+      <Box sx={{
+        zIndex: 1,
+        position: 'absolute',
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        p: 1,
+        flexDirection: "column"
       }}>
+        {ip && <Typography sx={{ fontWeight: 700, }}>Current location</Typography>}
+        {ip && <Typography sx={{ fontWeight: 400, color: "#ACB3BD" }}>{ip}</Typography>}
+      </Box>
     </Box>
-  );
+
+
+  )
 }
