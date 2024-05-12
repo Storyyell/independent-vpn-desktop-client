@@ -137,99 +137,103 @@ async function handleVpnConnTrigger(
       })()
       break
 
-    // case (selectedItems.cityId === null && selectedItems.countryId !== null):
+    case (cityCodeSelected === null && countryCodeSelected !== null):
 
-    //   await (async () => {
+      await (async () => {
 
-    //     const connect = async () => {
-    //       try {
-    //         setVpnStatusMain('connecting');
+        const connect = async () => {
+          try {
+            setVpnConnectionStatus(2);
+            console.log(`selectedCountry = ${countryCodeSelected} && selectedCity === null`);
+            // handle the case of during city list fetching
+            let slc_ = await refreshCityList(deviceToken, countryCodeSelected, cityList, setCityList);
 
-    //         const countryId = selectedItems.countryId;
-    //         console.log('selectedItems.cityId === null && selectedItems.countryId !== null');
-    //         // handle the case of during city list fetching
-    //         let cityList = serverList?.cities?.[countryId]?.data;
-    //         if (!cityList) {
-    //           console.log('Fetching city list...');
-    //           await refreshCityList(selectedItems?.countryId, deviceToken, serverList, setServerList);
-    //           cityList = serverList?.cities?.[countryId]?.data;
-    //         }
+            let citiesServerCount = 0;
 
-    //         let citiesServerCount = 0;
+            slc_?.forEach(async (city) => {
+              citiesServerCount += city.servers_available;
+            });
 
-    //         cityList?.forEach(async (city) => {
-    //           citiesServerCount += city.servers_available;
-    //         });
+            let NoOfServer = Math.min(retryServerNo, citiesServerCount);
+            const NoOfServerOriginal = NoOfServer;
 
-    //         let NoOfServer = Math.min(retryServerNo, citiesServerCount);
-    //         const NoOfServerOriginal = NoOfServer;
+            slc_ = shuffleArray([...slc_]);
 
-    //         cityList = shuffleArray(cityList);
+            let selectedCity = [];
 
-    //         let selectedCity = [];
+            slc_.forEach(city => {
+              if (NoOfServer > 0) {
+                selectedCity.push(city);
+                NoOfServer -= city.servers_available;
+              }
+            });
 
-    //         cityList.forEach(city => {
-    //           if (NoOfServer > 0) {
-    //             selectedCity.push(city);
-    //             NoOfServer -= city.servers_available;
-    //           }
-    //         });
+            let sl = [];
 
-    //         let sl = [];
+            NoOfServer = NoOfServerOriginal;
+            debugger;
+            await Promise.all(slc_.map(async (city) => {
 
-    //         await Promise.all(cityList.map(async (city) => {
-    //           const slc = await refreshServerList(city?.country_id, city?.id, setServerList, serverList, deviceToken);
-    //           sl = sl.concat(slc.servers?.[`${city?.country_id}-${city?.id}`]?.data);
-    //         }));
+              if (NoOfServer > 0) {
+                const slc = await getServerList(deviceToken, serverListObj, setServerListObj, "V2RAY", countryCodeSelected, city.id);
+                sl = sl.concat(slc);
+                NoOfServer -= city.servers_available;
+              }
+            }));
 
-    //         try { sl = sl.slice(0, NoOfServerOriginal); } catch (error) { }
+            try { sl = sl.slice(0, NoOfServerOriginal); }
+            catch (error) {
+              disconnectServer(setVpnConnectionStatus);
+            }
+            return sl;
 
-    //         return sl;
+          } catch (error) {
+            disconnectServer(setVpnConnectionStatus);
+            return [];
+          }
+        }
 
-    //       } catch (error) {
-    //         return [];
-    //       }
-    //     }
 
+        switch (vpnConnectionStatus) {
+          case 1:
+            console.log('Already connected. Disconnecting...');
+            await disconnectServer(vpnConnectionStatus);
 
-    //     switch (vpnStatusMain) {
-    //       case 'connected':
-    //         console.log('Already connected. Disconnecting...');
-    //         await disconnectServer(setVpnStatusMain);
+            // commented auto reconnect on diff location feature
+            // if (selectedItems?.countryId == window?.currentLocation?.country_id) {
+            //   console.log('Same location. Disconnecting...');
 
-    //         if (selectedItems?.countryId == window?.currentLocation?.country_id) {
-    //           console.log('Same location. Disconnecting...');
+            // } else {
+            //   console.log('Different location. Disconnecting...');
+            //   console.log('Connecting to new location...');
+            //   let sl = await connect();
+            //   await retryLogic(sl, deviceToken, setVpnStatus, setVpnStatusMain, connectServer, disconnectServer);
+            // }
 
-    //         } else {
-    //           console.log('Different location. Disconnecting...');
-    //           console.log('Connecting to new location...');
-    //           let sl = await connect();
-    //           await retryLogic(sl, deviceToken, setVpnStatus, setVpnStatusMain, connectServer, disconnectServer);
-    //         }
+            break
 
-    //         break
+          case 2:
+            console.log('Currently connecting...');
+            break
 
-    //       case 'connecting':
-    //         console.log('Currently connecting...');
-    //         setSelectedItems((d) => { return { countryId: window?.currentLocation?.country_id, cityId: null } })
-    //         break
+          case 0:
+            console.log('Disconnected. Connecting to specified country...');
+            debugger;
+            let sl = await connect();
+            await retryLogic(sl, deviceToken, setVpnConnectionStatus, connectServer, setCountrySelected, setCitySelected, setServerSelected, disconnectServer);
+            break;
 
-    //       case 'disconnected':
-    //         console.log('Disconnected. Connecting to new location...');
-    //         let sl = await connect();
-    //         await retryLogic(sl, deviceToken, setVpnStatus, setVpnStatusMain, connectServer, disconnectServer);
-    //         break;
+          case 3:
+            console.log('Currently disconnecting...');
+            break;
 
-    //       case 'disconnecting':
-    //         console.log('Currently disconnecting...');
-    //         break;
-    //       default:
-    //         await disconnectServer(setVpnStatusMain)
-    //         break
-    //     }
-    //   })();
+          default:
+            await disconnectServer(vpnConnectionStatus);
+            break
+        }
+      })();
 
-    //   break
+      break
 
 
     case (cityCodeSelected !== null && countryCodeSelected !== null):
