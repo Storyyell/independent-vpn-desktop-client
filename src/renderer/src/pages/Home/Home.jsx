@@ -137,15 +137,16 @@ function Home(props) {
                 />
 
             </Box> */}
+            <Box sx={{ height: "20px" }}>   </Box>
 
-            <Stack direction="row" spacing={1} style={{ alignItems: 'center', justifyContent: 'center', margin: "10px" }} >
+            {/* <Stack direction="row" spacing={1} style={{ alignItems: 'center', justifyContent: 'center', margin: "10px" }} >
                 <Typography style={{ fontSize: '12px', fontWeight: '800' }}>
                     {`status :`}
                 </Typography>
                 <Typography style={{ fontSize: '12px' }} >
                     {vpnStatus ? vpnStatus : 'VPN disconnected'}
                 </Typography>
-            </Stack>
+            </Stack> */}
 
             <MapBoxUI />
 
