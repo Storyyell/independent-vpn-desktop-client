@@ -13,7 +13,7 @@ const SettingsHeader = (props) => {
         justifyContent: 'space-between',
         alignItems: 'center',
         width: "100%",
-        marginBottom: "32px"
+        marginBottom: "24px"
       }}
     >
       <GearBtn handleMenuClick={() => { props.onClick() }} menuClick={true} />

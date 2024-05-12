@@ -73,20 +73,23 @@ const ReportBug = () => {
   return (
     <>
       <Stack direction="column" spacing={1} alignItems={'center'} width={'100%'}>
-        <Typography fontSize={'13px'} sx={{ mt: 1 }} fontWeight={600}>{content.title}</Typography>
-        <Stack width={'100%'} sx={{ paddingTop: 2 }} spacing={3}>
-          <Typography fontSize={'11px'} fontWeight={600} >{content.matter}</Typography>
-          <Textarea aria-label="minimum height" minRows={3} placeholder="ticket description..."
+        <Typography fontSize={'13px'} sx={{ mt: 2 }} fontWeight={600}>{content.title}</Typography>
+
+        <Stack width={'100%'} sx={{ paddingTop: 1 }} spacing={3}>
+          <Typography fontSize={'11px'} fontWeight={500} >{content.matter}</Typography>
+          <Textarea aria-label="minimum height" minRows={5} maxRows-={5} placeholder="ticket description..."
             value={textArea}
             onChange={(e) => setTextArea(e.target.value)}
+            color='white'
+            style={{ resize: 'none' }}
           />
-          <Typography fontSize={'11px'} align='justify' fontWeight={600} sx={{ p: 1 }}>{content.message}</Typography>
+          <Typography fontSize={'11px'} align='justify' fontWeight={500} sx={{ p: 1 }}>{content.message}</Typography>
         </Stack>
         <Button
           variant="contained"
           color="error"
-          size="small"
-          sx={{ px: 7 }}
+          size="large"
+          sx={{ px: 10 }}
           disabled={textArea?.length < 1}
 
           onClick={() => {

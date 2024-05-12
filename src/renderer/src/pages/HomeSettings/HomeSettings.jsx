@@ -57,26 +57,29 @@ const HomeSettings = (props) => {
     <>
       <Stack spacing={1} width={'100%'}>
 
-        <Grid container sx={{ marginBottom: 1 }}>
+        <Grid container>
           <Grid item xs>
-            <Typography fontSize={17} sx={{ fontWeight: 800 }}>
+            <Typography fontSize={"16px"} sx={{ fontWeight: 600 }}>
               {`User - ${stringToUniqueNumber(deviceToken)}`}
             </Typography>
           </Grid>
-          <Grid item xs={6} sx={{ textAlign: 'end' }} >
-            <Chip size="small" label="FREE" color="error" variant="outlined"
-              sx={{
-                height: 'auto',
-                '& .MuiChip-label': {
-                  fontSize: '9px'
-                },
-              }} />
+          <Grid item xs={6} sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+          }} >
+            <Chip label="Free" size="small" sx={{
+              backgroundColor: '#101921',
+              color: '#fff',
+              width: '58px',
+              height: '23px',
+              fontSize: '10px',
+            }} />
           </Grid>
         </Grid>
 
-        <Grid container sx={{ marginBottom: 2 }}>
+        <Grid container sx={{ marginBottom: 1 }}>
           <Grid item xs>
-            <Typography fontSize={11}>
+            <Typography fontSize={"10px"} color={"grey"}>
               Explore Settings in the App
             </Typography>
           </Grid>

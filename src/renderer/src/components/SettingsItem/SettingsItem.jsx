@@ -14,16 +14,16 @@ function SettingsItem(props) {
     <Grid container sx={{ marginBottom: 0.5, display: (variant != 0 ? 'flex' : 'none') }}>
       <Grid item xs>
         <Stack direction="column" spacing={1}>
-          <Typography fontSize={11} sx={{ fontWeight: 600 }} >
+          <Typography fontSize={"12px"} sx={{ fontWeight: 600 }} >
             {props.title}
           </Typography>
 
-          <Typography fontSize={9}>
+          <Typography fontSize={"10px"} color={"grey"}>
             {props.desc}
           </Typography>
         </Stack>
       </Grid>
-      <Grid item xs={2} sx={{ textAlign: 'end' }} justifyContent={'flex-end'} alignItems={'center'} display={'flex'}>
+      <Grid item xs={2} sx={{ textAlign: 'end' }} justifyContent={'flex-end'} display={'flex'}>
 
         {/* navigation */}
         {variant == 1 && <KeyboardArrowRightIcon fontSize='small' />}
@@ -31,7 +31,7 @@ function SettingsItem(props) {
         {/* toggle button */}
         {variant == 2 && <Switch
           color='error'
-          size='small'
+          size='medium'
           checked={props?.checked}
           onChange={(e) => {
             props?.onChange(e.target.checked)
@@ -44,7 +44,15 @@ function SettingsItem(props) {
           value={'v2ray'}
           label="Age"
           size='small'
-          sx={{ width: '100px', }}
+          sx={{
+            borderRadius: '17px',
+            height: '30px',
+            px: 1,
+            fontSize: '10px',
+            backgroundColor: '#101921',
+            width: '100px'
+
+          }}
         >
           <MenuItem value={'v2ray'} >v2ray</MenuItem>
           <MenuItem value={'wireguard'} disabled>wireguard</MenuItem>
@@ -55,7 +63,14 @@ function SettingsItem(props) {
             value={props.value}
             label={props.label}
             size='small'
-            sx={{ width: '100px', }}
+            sx={{
+              borderRadius: '17px',
+              height: '30px',
+              px: 1,
+              fontSize: '10px',
+              backgroundColor: '#101921',
+              width: '100px'
+            }}
             onChange={(e) => { props.onChange(e) }}
           >
             {

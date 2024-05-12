@@ -1,6 +1,5 @@
 import { Box, Button, Chip, Divider, Grid, List, ListItem, ListItemButton, MenuItem, Select, Stack, Typography } from '@mui/material'
 import React from 'react'
-import openBook from '../../assets/open_book.svg'
 import SettingsItem from '../../components/SettingsItem/SettingsItem'
 import Modal from '@mui/material/Modal';
 import SocialLink from './SocialLink';
@@ -56,14 +55,11 @@ const SupportPage = (props) => {
 
   return (
     <>
-      <Stack direction="column" spacing={1} alignItems={'center'} width={'100%'} >
+      <Stack direction="column" spacing={1} alignItems={'center'} width={'100%'} sx={{ mb: 1 }}>
 
-        <Box>
-          <img src={openBook} alt="Support" width={25} />
-        </Box>
         <Typography fontSize={'12px'} fontWeight={'600'} >Have a question</Typography>
-        <Typography fontSize={'10px'} fontWeight={'400'} >We migh have the answer in our help section</Typography>
-        <Button variant="contained" color="error" size="small" sx={{ px: 5 }}> <Typography style={{ fontSize: '10px', fontWeight: '600' }}>Browse Guides</Typography> </Button>
+        <Typography fontSize={'10px'} fontWeight={'400'} color={"grey"}>We migh have the answer in our help section</Typography>
+        <Button variant="contained" color="error" size="large" sx={{ px: 5 }}> <Typography style={{ fontSize: '10px', fontWeight: '600' }}>Browse Guides</Typography> </Button>
 
       </Stack>
 
