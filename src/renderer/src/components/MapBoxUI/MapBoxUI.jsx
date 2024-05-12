@@ -1,18 +1,18 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { Box, Typography } from '@mui/material';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { geoCoordinateState } from '../../atoms/app/geoCordinate';
-import zIndex from '@mui/material/styles/zIndex';
+import LocationTxt from './LocationTxt';
 
 // Set your mapbox token
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_KEY;
 
 export default function MapBoxUI() {
-  const [{ lat, lng, ip }, setCoordinate] = useRecoilState(geoCoordinateState);
+  const { lat, lng } = useRecoilValue(geoCoordinateState);
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const [zoom, setZoom] = useState(10);
+  const [zoom, setZoom] = useState(9);
 
   useEffect(() => {
     if (map.current) return; // If already initialized, do nothing
@@ -22,8 +22,6 @@ export default function MapBoxUI() {
       center: [lng, lat],
       zoom: zoom
     });
-
-
   }, []);
 
 
@@ -69,8 +67,7 @@ export default function MapBoxUI() {
         p: 1,
         flexDirection: "column"
       }}>
-        {ip && <Typography sx={{ fontWeight: 700, }}>Current location</Typography>}
-        {ip && <Typography sx={{ fontWeight: 400, color: "#ACB3BD" }}>{ip}</Typography>}
+        <LocationTxt />
       </Box>
     </Box>
 

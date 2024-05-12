@@ -85,10 +85,31 @@ async function refreshServerList(countryId, cityId, setServerList, serverList, d
 
 }
 
+
+function locationReload(deviceToken, setLocation) {
+  setTimeout(() => {
+    if (deviceToken != "") {
+      window.api.getIp(deviceToken)
+        .then(({ data }) => {
+          if (data) {
+            setLocation({
+              lat: data.latitude,
+              lng: data.longitude,
+              ip: data.ip
+            })
+          }
+        })
+        .catch((e) => { });
+    }
+  }, 2000);
+}
+
+
 export {
   refreshCountryList,
   refreshCityList,
-  refreshServerList
+  refreshServerList,
+  locationReload
 
 };
 

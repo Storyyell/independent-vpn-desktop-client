@@ -122,7 +122,6 @@ async function handleVpnConnTrigger(
           case 0:
             console.log('Disconnected. Connecting to new location...');
             let sl = await connect();
-            debugger;
             await retryLogic(sl, deviceToken, setVpnConnectionStatus, connectServer, setCountrySelected, setCitySelected, setServerSelected, disconnectServer);
             break
           case 3:
@@ -171,7 +170,6 @@ async function handleVpnConnTrigger(
             let sl = [];
 
             NoOfServer = NoOfServerOriginal;
-            debugger;
             await Promise.all(slc_.map(async (city) => {
 
               if (NoOfServer > 0) {
@@ -218,7 +216,6 @@ async function handleVpnConnTrigger(
 
           case 0:
             console.log('Disconnected. Connecting to specified country...');
-            debugger;
             let sl = await connect();
             await retryLogic(sl, deviceToken, setVpnConnectionStatus, connectServer, setCountrySelected, setCitySelected, setServerSelected, disconnectServer);
             break;

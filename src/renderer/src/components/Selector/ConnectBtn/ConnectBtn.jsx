@@ -45,7 +45,6 @@ const ConnectBtn = () => {
   return (
     <IconButton onClick={() => {
 
-      debugger;
 
       handleVpnConnTrigger(
         deviceToken,
