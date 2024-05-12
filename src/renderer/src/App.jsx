@@ -81,7 +81,21 @@ function App() {
     )();
 
     // fetching home ip
-    locationReload(deviceToken, setLocation);
+    (() => {
+      if (deviceToken != "") {
+        window.api.getIp(deviceToken)
+          .then(({ data }) => {
+            if (data) {
+              setLocation({
+                lat: data.latitude,
+                lng: data.longitude,
+                ip: data.ip
+              })
+            }
+          })
+          .catch((e) => { });
+      }
+    })();
 
   }, []);
 

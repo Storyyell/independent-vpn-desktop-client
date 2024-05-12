@@ -65,7 +65,7 @@ const Settings = (props) => {
       </Box>
 
       <Stack direction={"row"} sx={{ justifyContent: "center", mb: 1 }}>
-        <Typography sx={{ fontWeight: 500 }}>{`Version ${appVersion}`}</Typography>
+        <Typography sx={{ fontWeight: 500, fontSize: "14px" }}>{`Version ${appVersion}`}</Typography>
       </Stack>
     </>
   )
