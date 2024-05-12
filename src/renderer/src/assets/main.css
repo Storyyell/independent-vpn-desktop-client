@@ -1,8 +1,9 @@
 @font-face {
-  font-family: 'Segoe UI Regular';
+  font-family: 'Montserrat';
   font-style: normal;
   font-weight: normal;
-  src: local('Segoe UI Regular'), url('../fonts/segoe-ui-4/Segoe_UI.woff') format('woff');
+  src: local('Montserrat Regular'), local('Montserrat-Regular'),
+    url('../fonts/Montserrat/Montserrat.ttf') format('truetype');
 }
 
 .svg-background {

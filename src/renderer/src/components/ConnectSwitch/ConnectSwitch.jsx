@@ -9,15 +9,15 @@ import { vpnConnectionState } from '../../atoms/app/vpnConnectionState';
 function renderVpnStatusMessage(vpnConnectionStatus) {
   switch (vpnConnectionStatus) {
     case 0:
-      return <Typography fontWeight={600}>Not Connected</Typography>;
+      return <Typography fontWeight={400}>Not Connected</Typography>;
     case 2:
-      return <Typography fontWeight={600}>Connecting...</Typography>;
+      return <Typography fontWeight={400}>Connecting...</Typography>;
     case 1:
-      return <Typography fontWeight={600}>Securely Connected</Typography>;
+      return <Typography fontWeight={400}>Securely Connected</Typography>;
     case 3:
-      return <Typography fontWeight={600}>Disconnecting...</Typography>;
+      return <Typography fontWeight={400}>Disconnecting...</Typography>;
     default:
-      return <Typography fontWeight={600}>Not Connected</Typography>;
+      return <Typography fontWeight={400}>Not Connected</Typography>;
   }
 }
 

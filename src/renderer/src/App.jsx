@@ -25,7 +25,7 @@ const theme = createTheme({
     mode: 'dark',
   },
   typography: {
-    fontFamily: 'Segoe UI',
+    fontFamily: 'Montserrat',
   },
   components: {
     MuiCssBaseline: {
