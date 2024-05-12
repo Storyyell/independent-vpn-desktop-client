@@ -34,7 +34,7 @@ export function registerIpcHandlers(ipcMain) {
   })
 
   ipcMain.handle('registerDevice', async () => {
-    console.log('device registration triggered on main process')
+    // console.log('device registration triggered on main process')
     return registerDevice()
   })
 
