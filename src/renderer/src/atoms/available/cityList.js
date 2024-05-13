@@ -3,7 +3,7 @@ import { atom } from "recoil";
 
 const cityListState = atom({
   key: 'cityList',
-  default: {},
+  default: localStorage.getItem("city_list_") || {},
 });
 
 export { cityListState }

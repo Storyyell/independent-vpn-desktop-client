@@ -10,22 +10,12 @@ import { serverListState } from '../../atoms/available/serverList';
 const StateSave = () => {
 
   const deviceToken =  useRecoilValue(deviceTokenState);
-  const [countryList, setCountryList] = useRecoilState(countryListState);
-  const [cityList, setCityList] = useRecoilState(cityListState);
-  const [serverList, setServerList] = useRecoilState(serverListState);
+  const countryList = useRecoilValue(countryListState);
+  const cityList = useRecoilValue(cityListState);
+  const serverList = useRecoilValue(serverListState);
 
   React.useEffect(() => {
-
-    // loading country list
-    const cl = localStorage.getItem("country_list_");
-    if(cl) setCountryList(cl);
-    // loading city list
-    const cty = localStorage.getItem("city_list_");
-    if(cty) setCityList(cty);
-    // loading server list
-    const sl = localStorage.getItem("server_list_");
-    if(sl) setServerList(sl);
-
+  // code to load state 
   },[]);
 
   window.onbeforeunload = () => {
