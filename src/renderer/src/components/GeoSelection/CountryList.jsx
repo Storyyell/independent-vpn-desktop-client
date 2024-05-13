@@ -23,11 +23,7 @@ const CountryList = (props) => {
   let countryListProcessed = countryList.data || [];
 
   React.useEffect(() => {
-    const now = new Date();
-
-    if (deviceToken && (now - countryList.timeStamp > dataValidityPeroid)) {
       countryListProcessed = refreshCountryList(deviceToken, countryList, setCountryList);
-    }
   }, [])
 
 
