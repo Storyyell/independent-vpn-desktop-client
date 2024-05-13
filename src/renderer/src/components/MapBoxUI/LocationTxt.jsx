@@ -22,8 +22,9 @@ const LocationTxt = () => {
       locationReload(deviceToken, setLocation);
       return (
         <>
-          <Typography sx={{ fontWeight: 500, }}>Current location</Typography>
-          <Typography sx={{ fontWeight: 300, fontSize: "14px", color: "#ACB3BD" }}>{ip}</Typography>
+          {ip ? <Typography sx={{ fontWeight: 500, }}>Current location</Typography> : 
+          <Typography sx={{ fontWeight: 500, }}>Map Loading...</Typography>}
+          {ip && <Typography sx={{ fontWeight: 300, fontSize: "14px", color: "#ACB3BD" }}>{ip}</Typography>}
         </>
       )
     case 1:
