@@ -6,6 +6,7 @@ import { deviceTokenState } from '../../atoms/app/token'
 import { countryListState } from '../../atoms/available/countryList'
 import { countrySelectedState } from '../../atoms/userSelection/country'
 import { citySelectedState } from '../../atoms/userSelection/city'
+import { refreshCountryList } from '../../scripts/utils'
 
 const dataValidityPeroid = 10 * 60 * 1000 // 10minutes
 
@@ -19,28 +20,13 @@ const CountryList = (props) => {
   const setCountrySelected = useSetRecoilState(countrySelectedState);
   const resetCitySelected = useResetRecoilState(citySelectedState);
 
-  let countryListProcessed = countryList.data || [];
+  let countryListProcessed = [];
 
   React.useEffect(() => {
     const now = new Date();
 
     if (deviceToken && (now - countryList.timeStamp > dataValidityPeroid)) {
-
-      console.log("county list fetch trigerred")
-
-      window.api.getCountries(deviceToken)
-        .then((res) => {
-          if (res.data) {
-            setCountryList({
-              timeStamp: new Date(),
-              data: res.data
-            })
-          }
-        })
-        .catch((e) => {
-          console.log(e)
-        })
-
+      countryListProcessed = refreshCountryList(deviceToken, countryList, setCountryList);
     }
   }, [])
 

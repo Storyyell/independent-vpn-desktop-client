@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GeoItem } from '../GeoItem/GeoItem';
 import { Box, Typography } from '@mui/material';
-import { refreshServerList } from '../../scripts/utils';
+import { refreshCityList, refreshServerList } from '../../scripts/utils';
 import { handleVpnConnTrigger } from '../../pages/Home/ConnectionTrigger';
 import { VpnStatusMainContext } from '../../context/VpnStatusMainContext';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -28,27 +28,7 @@ const CityList = (props) => {
   let cityListProcessed = (cityObj?.[countryId]?.data) || [];
 
   React.useEffect(() => {
-    const now = new Date();
-    if (deviceToken && ((now - (cityObj?.[countryId]?.timeStamp || 0)) > dataValidityPeroid)) {
-      console.log("fetching city list for country id : ", countryId);
-      window.api.getCities(deviceToken, countryId)
-        .then((res) => {
-          if (res.data) {
-            setCityObj((cityObjOld) => {
-              return ({
-                ...cityObjOld,
-                [countryId]: {
-                  timeStamp: new Date(),
-                  data: res.data
-                }
-              })
-            })
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-        })
-    }
+    cityListProcessed = refreshCityList(deviceToken, countryId, cityObj, setCityObj);
   }, []);
 
   const handleCityChange = (cityId_) => {
