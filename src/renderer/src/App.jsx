@@ -116,6 +116,7 @@ function App() {
                         <Box className="app svg-background app-padding">
                           <Header />
                           <Home />
+                          {/* StateSave want to be moved to app level */}
                           <StateSave/>
                         </Box>
                       </ThemeProvider>
