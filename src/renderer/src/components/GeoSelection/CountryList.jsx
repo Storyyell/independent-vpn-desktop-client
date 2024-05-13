@@ -20,7 +20,7 @@ const CountryList = (props) => {
   const setCountrySelected = useSetRecoilState(countrySelectedState);
   const resetCitySelected = useResetRecoilState(citySelectedState);
 
-  let countryListProcessed = [];
+  let countryListProcessed = countryList.data || [];
 
   React.useEffect(() => {
     const now = new Date();
