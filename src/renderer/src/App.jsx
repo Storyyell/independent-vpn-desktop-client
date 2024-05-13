@@ -19,6 +19,7 @@ import { deviceTokenState } from './atoms/app/token';
 import { geoCoordinateState } from './atoms/app/geoCordinate';
 import StateSave from './components/StateSave/StateSave';
 import OfflineModal  from './components/OfflineModal/OfflineModal';
+import { useNetworkStatus } from './hooks/NetworkStatus/NetworkStatus';
 
 
 const theme = createTheme({
@@ -55,6 +56,7 @@ function App() {
   const setAppVersion = useSetRecoilState(appVersionState);
   const [deviceToken, setDeviceToken] = useRecoilState(deviceTokenState);
   const setLocation = useSetRecoilState(geoCoordinateState);
+  const isOnline = useNetworkStatus();
 
   React.useEffect(() => {
 

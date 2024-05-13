@@ -2,7 +2,7 @@ import { atom } from "recoil";
 
 const onlineState = atom({
   key: 'onlineState',
-  default: true,
+  default: navigator.onLine,
 });
 
 export { onlineState }
