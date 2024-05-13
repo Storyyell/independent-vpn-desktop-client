@@ -18,6 +18,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { deviceTokenState } from './atoms/app/token';
 import { geoCoordinateState } from './atoms/app/geoCordinate';
 import StateSave from './components/StateSave/StateSave';
+import OfflineModal  from './components/OfflineModal/OfflineModal';
 
 
 const theme = createTheme({
@@ -118,6 +119,7 @@ function App() {
                           <Home />
                           {/* StateSave want to be moved to app level */}
                           <StateSave/>
+                          <OfflineModal />
                         </Box>
                       </ThemeProvider>
                     </DnsListProvider>
