@@ -26,7 +26,7 @@ const StatusBar = (props) => {
       // connected
       case 1:
         return (<>
-          <VerifiedUserIcon fontSize="small" color="success" sx={{ mx: 2 }} />
+          <VerifiedUserIcon fontSize="small" color="success" sx={{ mr: 2 }} />
           <Typography sx={{ fontSize: "14px", color: "#54687A", fontWeight: "500" }}>Connection Protected</Typography>
         </>)
       default:
