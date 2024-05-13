@@ -20,18 +20,18 @@ const StatusBar = (props) => {
       // not connected 
       case 0:
         return (<>
-          <WarningAmberIcon fontSize="small" color="error" sx={{ mx: 2 }} />
+          <WarningAmberIcon fontSize="small" color="error" sx={{ mr: 1 }} />
           <Typography sx={{ fontSize: "14px", color: "#54687A", fontWeight: "500" }}>Not Protected</Typography>
         </>)
       // connected
       case 1:
         return (<>
-          <VerifiedUserIcon fontSize="small" color="success" sx={{ mr: 2 }} />
+          <VerifiedUserIcon fontSize="small" color="success" sx={{ mr: 1 }} />
           <Typography sx={{ fontSize: "14px", color: "#54687A", fontWeight: "500" }}>Connection Protected</Typography>
         </>)
       default:
         return (<>
-          <WarningAmberIcon fontSize="small" color="error" sx={{ mx: 2 }} />
+          <WarningAmberIcon fontSize="small" color="error" sx={{ mr: 1 }} />
           <Typography sx={{ fontSize: "14px", color: "#54687A", fontWeight: "500" }}>Not Protected</Typography>
         </>)
     }

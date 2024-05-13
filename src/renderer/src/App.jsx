@@ -17,7 +17,7 @@ import { appVersionState } from './atoms/app/version';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { deviceTokenState } from './atoms/app/token';
 import { geoCoordinateState } from './atoms/app/geoCordinate';
-import { locationReload } from './scripts/utils';
+import StateSave from './components/StateSave/StateSave';
 
 
 const theme = createTheme({
@@ -100,9 +100,6 @@ function App() {
   }, []);
 
 
-  window.onbeforeunload = () => {
-    localStorage.setItem("device_token_", deviceToken);
-  };
 
   return (
     <>
@@ -119,6 +116,7 @@ function App() {
                         <Box className="app svg-background app-padding">
                           <Header />
                           <Home />
+                          <StateSave/>
                         </Box>
                       </ThemeProvider>
                     </DnsListProvider>
