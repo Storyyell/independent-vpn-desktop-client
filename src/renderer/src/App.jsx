@@ -57,7 +57,7 @@ function App() {
   const setAppVersion = useSetRecoilState(appVersionState);
   const [deviceToken, setDeviceToken] = useRecoilState(deviceTokenState);
   const setLocation = useSetRecoilState(geoCoordinateState);
-  isOnline = useRecoilValue(onlineState);
+  const isOnline = useRecoilValue(onlineState);
   useNetworkStatus();
 
   React.useEffect(() => {
