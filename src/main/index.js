@@ -11,6 +11,7 @@ import path from 'path'
 import { vpnObj } from './system/vpnBase.js'
 import { registerIpcHandlers } from './ipcHandlers/handlers.js';
 import axios from 'axios';
+const { globalShortcut } = require('electron');
 
 // todo code want to be splitted across the files for manageability [ scope increased]
 
@@ -58,6 +59,11 @@ function createWindow() {
   })
 
   // mainWindow.webContents.openDevTools();
+  if (process.env.NODE_ENV === 'production') {
+    mainWindow.webContents.on('devtools-opened', () => {
+      mainWindow.webContents.closeDevTools();
+    });
+  }
 
   mainWindow.on('ready-to-show', () => {
     //todo remove this global scope of main window
@@ -116,6 +122,9 @@ app.whenReady().then(() => {
 
     // Set app user model id for windows
     electronApp.setAppUserModelId('com.electron')
+
+    // Disable the Alt key
+    globalShortcut.register('Alt', () => { });
 
     // Default open or close DevTools by F12 in development
     // and ignore CommandOrControl + R in production.
