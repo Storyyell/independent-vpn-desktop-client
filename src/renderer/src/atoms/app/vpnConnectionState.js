@@ -7,7 +7,7 @@ import { atom } from "recoil";
 
 const vpnConnectionState = atom({
   key: 'vpnConnectionStatus',
-  default: 0,
+  default: 2,
 });
 
 export { vpnConnectionState }
