@@ -22,25 +22,25 @@ const LocationTxt = () => {
       locationReload(deviceToken, setLocation);
       return (
         <>
-          {ip ? <Typography sx={{ fontWeight: 500, }}>Current location</Typography> : 
+          {ip !== "" ? <Typography sx={{ fontWeight: 500, }}>Current location</Typography> : 
           <Typography sx={{ fontWeight: 500, }}>Map Loading...</Typography>}
-          {ip && <Typography sx={{ fontWeight: 300, fontSize: "14px", color: "#ACB3BD" }}>{ip}</Typography>}
+          {ip !== "" && <Typography sx={{ fontWeight: 300, fontSize: "14px", color: "#ACB3BD" }}>{ip}</Typography>}
         </>
       )
     case 1:
       locationReload(deviceToken, setLocation);
       return (
         <>
-          {ip && <Typography sx={{ fontWeight: 500, }}>{`${countryNameObj.name || ""}, ${cityNameObj.name || ""}`}</Typography>}
-          {ip && <Typography sx={{ fontWeight: 300, fontSize: "14px", color: "#ACB3BD" }}>{ip}</Typography>}
+          {ip !== "" && <Typography sx={{ fontWeight: 500, }}>{`${countryNameObj.name || ""}, ${cityNameObj.name || ""}`}</Typography>}
+          {ip !== "" && <Typography sx={{ fontWeight: 300, fontSize: "14px", color: "#ACB3BD" }}>{ip}</Typography>}
         </>
       )
 
     default:
       return (
         <>
-          {ip && <Typography sx={{ fontWeight: 500, }}>Current location</Typography>}
-          {ip && <Typography sx={{ fontWeight: 300, fontSize: "14px", color: "#ACB3BD" }}>{ip}</Typography>}
+          {ip !== "" && <Typography sx={{ fontWeight: 500, }}>Current location</Typography>}
+          {ip !== "" && <Typography sx={{ fontWeight: 300, fontSize: "14px", color: "#ACB3BD" }}>{ip}</Typography>}
         </>
       )
   }
