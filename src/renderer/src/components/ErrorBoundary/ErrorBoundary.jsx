@@ -22,7 +22,7 @@ class ErrorBoundary extends Component {
       return (
         <Box sx={{p:2}}>
         <Typography sx={{
-          color: 'white',
+          color: 'whitesmoke',
         }}>
           Please clean the cache and restart the application
         </Typography>
