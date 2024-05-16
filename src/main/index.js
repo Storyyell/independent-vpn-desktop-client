@@ -63,6 +63,10 @@ function createWindow() {
     mainWindow.webContents.on('devtools-opened', () => {
       mainWindow.webContents.closeDevTools();
     });
+    // application menu to null to disable default menu behavior in production
+      Menu.setApplicationMenu(null);
+  }else{
+    optimizer.watchWindowShortcuts(mainWindow);
   }
 
   mainWindow.on('ready-to-show', () => {
