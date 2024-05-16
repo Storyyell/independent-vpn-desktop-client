@@ -11,11 +11,8 @@ import { FavListContext } from '../../context/FavContext';
 import CountryList from './CountryList';
 import CityList from './CityList';
 import GeoSelHeader from './GeoSelHeader';
-import SearchBar from './SearchBar';
 import { refreshCityList, refreshCountryList } from '../../scripts/utils';
-import backgroundImage from '../../assets/background.svg'; // Import the background image
-
-
+import backgroundImage from '../../assets/background.svg';
 
 const GeoSelection = (props) => {
 
@@ -27,7 +24,6 @@ const GeoSelection = (props) => {
   const [favIconClick, setFavIconClick] = React.useState(false);
   const [countryListProcessed, setCountryListProcessed] = React.useState(serverList?.countries?.data || []);
   const [cityListProcessed, setCityListProcessed] = React.useState(serverList?.cities?.[selectedItems?.countryId]?.data || []);
-  const [searchField, setSearchField] = React.useState('');
   const [processListUpdate, setProcessListUpdate] = React.useState(false)
 
   const mentIconStyle = {
@@ -65,20 +61,6 @@ const GeoSelection = (props) => {
             onClose={props.onClose}
           />
         </Box>
-
-        {/* <SearchBar
-          searchField={searchField}
-          setSearchField={setSearchField}
-          loadCityList={loadCityList}
-          favIconClick={favIconClick}
-          setFavList={setFavList}
-          onClose={props.onClose}
-          setLoadCityList={setLoadCityList}
-          serverList={serverList}
-          deviceToken={deviceToken}
-          setServerList={setServerList}
-
-        /> */}
 
         <Stack direction={'column'} spacing={2}>
 

@@ -23,7 +23,6 @@ import { useNetworkStatus } from './hooks/NetworkStatus/NetworkStatus';
 import { onlineState } from './atoms/app/onlineState';
 import LoadingSceen from './pages/LoadingScreen/LoadingSceen';
 import { isLoadingState } from './atoms/app/loadingScreeen';
-import { locationReload } from './scripts/utils';
 
 
 const theme = createTheme({
@@ -59,7 +58,6 @@ function App() {
 
   const setAppVersion = useSetRecoilState(appVersionState);
   const [deviceToken, setDeviceToken] = useRecoilState(deviceTokenState);
-  const setLocation = useSetRecoilState(geoCoordinateState);
   const isOnline = useRecoilValue(onlineState);
   useNetworkStatus();
   const isLoading = useRecoilValue(isLoadingState);
