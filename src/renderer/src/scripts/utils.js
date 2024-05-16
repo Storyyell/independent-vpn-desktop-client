@@ -2,61 +2,46 @@ const dataValidityPeroid = 10 * 60 * 1000 // 10minutes
 
 async function refreshCountryList(deviceToken, countryList, setCountryList) {
   const now = Date.now();
+  const lastRefreshTimestamp = countryList?.timestamp;
 
-  const lastRefreshTimestamp = countryList?.timeStamp; // new Date()
+  const shouldRefresh = deviceToken &&
+    (!lastRefreshTimestamp || (now - lastRefreshTimestamp) >= dataValidityPeroid);
 
-  if (deviceToken && ((now - lastRefreshTimestamp) >= dataValidityPeroid)) {
-    try {
-      const { data } = await window.api.getCountries(deviceToken);
+  if (shouldRefresh) {
+    window.api.getCountries(deviceToken).then(({ data }) => {
       setCountryList({ data: data || [], timestamp: new Date() });
-      return data || [];
-    } catch (e) {
+    }).catch((e) => {
       log.error(e);
-      return countryList?.data || [];
-    }
+    });
   }
+
   return countryList?.data || [];
 }
 
 async function refreshCityList(deviceToken, countryId, cityList, setCityList) {
-
   const now = Date.now();
-
-  const cityObj = cityList?.[countryId]
+  const cityObj = cityList?.[countryId];
 
   if (cityObj) {
-    const lastRefreshTimestamp = cityObj?.timestamp; // new Date()
+    const lastRefreshTimestamp = cityObj.timestamp; 
 
     if (((now - lastRefreshTimestamp) < dataValidityPeroid) && deviceToken && countryId) {
-
       return cityObj.data || [];
     }
   }
-  try {
 
-    if (!deviceToken || !countryId) {
-      return [];
-    }
-
-    const { data } = await window.api.getCities(deviceToken, countryId);
-
-    setCityList((cityListObj) => {
-      return {
+  if (deviceToken && countryId) {
+    window.api.getCities(deviceToken, countryId).then(({ data }) => {
+      setCityList((cityListObj) => ({
         ...cityListObj,
         [countryId]: { data: data || [], timestamp: new Date() }
-      }
-    });
-
-    return data || [];
-
-
-  } catch (e) {
-    // log.error(e);
-    console.log(e);
-    return cityObj?.data || [];
+      }));
+    }).catch(console.error);
   }
 
+  return cityObj?.data || [];
 }
+
 
 async function refreshServerList(countryId, cityId, setServerList, serverList, deviceToken) {
 
