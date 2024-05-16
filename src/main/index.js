@@ -10,7 +10,8 @@ import fs from 'fs'
 import path from 'path'
 import { vpnObj } from './system/vpnBase.js'
 import { registerIpcHandlers } from './ipcHandlers/handlers.js';
-import axios from 'axios';
+import "./utils/axiosTweek.js"
+
 const { globalShortcut } = require('electron');
 
 // todo code want to be splitted across the files for manageability [ scope increased]
@@ -24,8 +25,6 @@ global.sessionTempDir = sessionTempDir; // Todo remove this global variable
 global.vpnConnStatus = false;
 
 global.adapterName = "independent_vpn";
-
-axios.defaults.timeout = 30000; // 30 seconds
 
 
 // initialize the logger
