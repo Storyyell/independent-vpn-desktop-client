@@ -48,47 +48,7 @@ const GeoSelection = (props) => {
   }, [deviceToken, props.open])
 
 
-  // for refreshing the city list
-  React.useEffect(() => {
-    refreshCityList(selectedItems?.countryId, deviceToken, serverList, setServerList);
-  }, [selectedItems?.countryId, deviceToken])
 
-
-  // for refreshing the processed country list
-  React.useEffect(() => {
-    favIconClick ?
-      setCountryListProcessed(serverList?.countries?.data?.filter((d) => {
-        return favList?.countries?.includes(d?.id)
-      }))
-      :
-      setCountryListProcessed(serverList?.countries?.data?.sort((a, b) => a?.name.localeCompare(b?.name)) || [])
-
-  }, [serverList?.countries, favIconClick, favList?.countries])
-
-  // for refreshing the processed city list
-  React.useEffect(() => {
-
-    favIconClick ?
-      setCityListProcessed(serverList?.cities?.[selectedItems?.countryId]?.data?.filter((d) => {
-        return favList?.cities?.[selectedItems?.countryId]?.includes(d?.id)
-      }))
-      :
-      setCityListProcessed(serverList?.cities[selectedItems?.countryId]?.data || [])
-
-  }, [serverList?.cities, favIconClick, favList?.cities, processListUpdate])
-
-  // for search functionality
-  React.useEffect(() => {
-    if (loadCityList) {
-      setCityListProcessed((l) => {
-        return (serverList?.cities?.[selectedItems?.countryId]?.data?.filter((d) => { return (d?.name?.toLowerCase()?.includes(searchField.toLowerCase())) }))
-      })
-    } else {
-      setCountryListProcessed(() => {
-        return (serverList?.countries?.data?.filter((d) => { return (d?.name?.toLowerCase().includes(searchField.toLowerCase())) }))
-      })
-    }
-  }, [searchField])
 
   const DrawerList = (
     <>

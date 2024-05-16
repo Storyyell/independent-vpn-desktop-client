@@ -7,7 +7,8 @@ import { isLoadingState } from '../../atoms/app/loadingScreeen';
 import { deviceTokenState } from '../../atoms/app/token';
 import { countryListState } from '../../atoms/available/countryList';
 import { geoCoordinateState } from '../../atoms/app/geoCordinate';
-import { refreshCountryList } from '../../scripts/utils';
+import { locationReload, refreshCityList, refreshCountryList } from '../../scripts/utils';
+import { cityListState } from '../../atoms/available/cityList';
 
 const LoadingScreen = () => {
   const setLoading = useSetRecoilState(isLoadingState);
@@ -15,23 +16,60 @@ const LoadingScreen = () => {
   const [countryList, setCountryList] = useRecoilState(countryListState);
   const setCoordinate = useSetRecoilState(geoCoordinateState);
   const [loaderTxt, setLoaderTxt] = React.useState("Loading...");
+  const [cityList, setCityList] = useRecoilState(cityListState);
+  const [location, setLocation] = useRecoilState(geoCoordinateState);
+
+
+  function Loader() {
+  const [progress, setProgress] = React.useState(0);
+
+  React.useEffect(() => {
+    const intervalId = setInterval(() => {
+      setProgress((currentProgress) => (currentProgress + 1) % 4);
+    }, 500);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []); // Empty array ensures effect runs only once on mount
+
+  return (
+    <>
+      {progress === 0 && "."}
+      {progress === 1 && ".."}
+      {progress === 2 && "..."}
+      {progress === 3 && "...."}
+    </>
+  );
+}
+
+
 
   React.useEffect(() => {
 
     if (deviceToken == "") {
-      setLoaderTxt("registering device...");
+      setLoaderTxt("registering device ");
+      return;
+    }
+    if(location.ip === ""){
+      setLoaderTxt("Getting location ");
+      locationReload(deviceToken, setLocation, 0)
       return;
     }
 
     if (countryList.data.length === 0) {
-      setLoaderTxt("Loading countries...");
+      setLoaderTxt("Loading countries ");
       refreshCountryList(deviceToken, countryList, setCountryList);
       return;
     } else {
-      // setLoading(false);
+      setLoaderTxt("Loading cities ");
+      countryList.data.forEach((d)=>{
+        refreshCityList(deviceToken, d.id, cityList, setCityList)
+      })
+      setLoading(false);
+      return;
     }
 
-  }, [deviceToken, countryList]);
+  }, [deviceToken, countryList, location]);
 
   return (
     <Box
@@ -62,13 +100,15 @@ const LoadingScreen = () => {
           bottom: 0,
           left: 0,
           width: '100vw',
-          textAlign: 'center',
-          py: 3
+          py: 3,
+          display:"flex",
+          direction:"row",
+          justifyContent:"center"
         }}
       >
         <Typography>
           {loaderTxt}
-        </Typography>
+        </Typography><Box sx={{width:"20px", px:0.5}}><Loader /></Box>
       </Box>
     </Box>
   );

@@ -19,10 +19,10 @@ const StateSave = () => {
   },[]);
 
   window.onbeforeunload = () => {
-    localStorage.setItem("device_token_", deviceToken);
-    localStorage.setItem("country_list_", countryList);
-    localStorage.setItem("city_list_", cityList);
-    localStorage.setItem("server_list_", serverList);
+    localStorage.setItem("device_token_", JSON.stringify(deviceToken));
+    localStorage.setItem("country_list_", JSON.stringify(countryList));
+    localStorage.setItem("city_list_", JSON.stringify(cityList));
+    localStorage.setItem("server_list_", JSON.stringify(serverList));
   };
 
   return (

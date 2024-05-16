@@ -11,7 +11,7 @@ async function refreshCountryList(deviceToken, countryList, setCountryList) {
     window.api.getCountries(deviceToken).then(({ data }) => {
       setCountryList({ data: data || [], timestamp: new Date() });
     }).catch((e) => {
-      log.error(e);
+      console.error(e);
     });
   }
 
@@ -63,7 +63,7 @@ async function refreshServerList(countryId, cityId, setServerList, serverList, d
       setServerList(updatedServerList);
       return updatedServerList;
     } catch (e) {
-      log.error(e);
+      console.error(e);
     }
   }
   return serverList;
@@ -71,7 +71,7 @@ async function refreshServerList(countryId, cityId, setServerList, serverList, d
 }
 
 
-function locationReload(deviceToken, setLocation) {
+function locationReload(deviceToken, setLocation, timeout = 2000) {
   setTimeout(() => {
     if (deviceToken != "") {
       window.api.getIp(deviceToken)
@@ -86,7 +86,7 @@ function locationReload(deviceToken, setLocation) {
         })
         .catch((e) => { });
     }
-  }, 2000);
+  }, timeout);
 }
 
 
