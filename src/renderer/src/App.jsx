@@ -89,8 +89,6 @@ function App() {
       }
     )();
 
-    // fetching home ip
-    locationReload(deviceToken, setLocation);
   }
 
     , [isOnline]);
