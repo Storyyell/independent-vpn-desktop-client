@@ -55,7 +55,7 @@ const theme = createTheme({
 function App() {
 
   // __electronLog.info('Log from the renderer')
-
+  
   const setAppVersion = useSetRecoilState(appVersionState);
   const [deviceToken, setDeviceToken] = useRecoilState(deviceTokenState);
   const isOnline = useRecoilValue(onlineState);
