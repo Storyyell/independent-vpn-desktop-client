@@ -109,7 +109,6 @@ export {
   refreshCountryList,
   refreshCityList,
   refreshServerList,
-  locationReload
-
+  locationReload,
 };
 

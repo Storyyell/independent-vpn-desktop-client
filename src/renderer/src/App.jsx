@@ -18,9 +18,12 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { deviceTokenState } from './atoms/app/token';
 import { geoCoordinateState } from './atoms/app/geoCordinate';
 import StateSave from './components/StateSave/StateSave';
-import OfflineModal  from './components/OfflineModal/OfflineModal';
+import OfflineModal from './components/OfflineModal/OfflineModal';
 import { useNetworkStatus } from './hooks/NetworkStatus/NetworkStatus';
 import { onlineState } from './atoms/app/onlineState';
+import LoadingSceen from './pages/LoadingScreen/LoadingSceen';
+import { isLoadingState } from './atoms/app/loadingScreeen';
+import { locationReload } from './scripts/utils';
 
 
 const theme = createTheme({
@@ -59,6 +62,7 @@ function App() {
   const setLocation = useSetRecoilState(geoCoordinateState);
   const isOnline = useRecoilValue(onlineState);
   useNetworkStatus();
+  const isLoading = useRecoilValue(isLoadingState);
 
   React.useEffect(() => {
 
@@ -86,23 +90,10 @@ function App() {
     )();
 
     // fetching home ip
-    (() => {
-      if (deviceToken != "") {
-        window.api.getIp(deviceToken)
-          .then(({ data }) => {
-            if (data) {
-              setLocation({
-                lat: data.latitude,
-                lng: data.longitude,
-                ip: data.ip
-              })
-            }
-          })
-          .catch((e) => { });
-      }
-    })();
+    locationReload(deviceToken, setLocation);
+  }
 
-  }, [isOnline]);
+    , [isOnline]);
 
 
 
@@ -119,10 +110,11 @@ function App() {
                       <ThemeProvider theme={theme}>
                         <CssBaseline />
                         <Box className="app svg-background app-padding">
-                          <Header />
-                          <Home />
+                          {isLoading && <LoadingSceen />}
+                          {!isLoading && <Header />}
+                          {!isLoading && <Home />}
                           {/* StateSave want to be moved to app level */}
-                          <StateSave/>
+                          <StateSave />
                           <OfflineModal />
                         </Box>
                       </ThemeProvider>

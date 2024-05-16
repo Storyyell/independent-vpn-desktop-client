@@ -123,9 +123,6 @@ app.whenReady().then(() => {
     // Set app user model id for windows
     electronApp.setAppUserModelId('com.electron')
 
-    // Disable the Alt key
-    globalShortcut.register('Alt', () => { });
-
     // Default open or close DevTools by F12 in development
     // and ignore CommandOrControl + R in production.
     // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
