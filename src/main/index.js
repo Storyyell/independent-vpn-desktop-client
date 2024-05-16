@@ -53,7 +53,9 @@ function createWindow() {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      devTools: process.env.NODE_ENV === 'production' ? false : true // disable the Developer Tools
+
     },
     maximizable: false,
   })
@@ -64,10 +66,13 @@ function createWindow() {
       mainWindow.webContents.closeDevTools();
     });
     // application menu to null to disable default menu behavior in production
-      Menu.setApplicationMenu(null);
-  }else{
+    Menu.setApplicationMenu(null);
+  } else {
     optimizer.watchWindowShortcuts(mainWindow);
   }
+
+  // Disable the default menu
+  mainWindow.setMenu(null)
 
   mainWindow.on('ready-to-show', () => {
     //todo remove this global scope of main window
