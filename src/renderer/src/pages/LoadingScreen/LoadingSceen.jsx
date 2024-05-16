@@ -51,7 +51,7 @@ const LoadingScreen = () => {
       return;
     }
     if(location.ip === ""){
-      setLoaderTxt("Getting location ");
+      setLoaderTxt("Setting-up the system ");
       locationReload(deviceToken, setLocation, 0)
       return;
     }
