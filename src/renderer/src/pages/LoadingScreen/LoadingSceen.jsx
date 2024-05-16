@@ -45,7 +45,6 @@ const LoadingScreen = () => {
 
 
   React.useEffect(() => {
-
     if (deviceToken == "") {
       setLoaderTxt("registering device ");
       return;

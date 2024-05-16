@@ -75,12 +75,12 @@ function locationReload(deviceToken, setLocation, timeout = 2000) {
   setTimeout(() => {
     if (deviceToken != "") {
       window.api.getIp(deviceToken)
-        .then(({ data }) => {
+        .then((data) => {
           if (data) {
             setLocation({
-              lat: data.latitude,
-              lng: data.longitude,
-              ip: data.ip
+              lat: data?.lat,
+              lng: data?.lon,
+              ip: data?.query
             })
           }
         })

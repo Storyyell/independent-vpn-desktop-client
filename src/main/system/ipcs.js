@@ -143,18 +143,14 @@ export async function pullServerConf(device_token, countryCode, cityCode, server
 
 
 export async function getIp(device_token) {
-    const appkey = import.meta.env.VITE_SERVER_APP_KEY;
-    const apiUrl = import.meta.env.VITE_SERVER_API_URL;
+    const ipApikey = import.meta.env.VITE_IP_API_KEY;
+    const apiUrl = "pro.ip-api.com";
 
     let config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: `https://${apiUrl}/ip`,
-        headers: {
-            'x-app-token': appkey,
-            'x-device-token': device_token
-        }
-
+        url: `https://${apiUrl}/json/?key=${ipApikey}`,
+        headers: { }
     };
 
     try {
