@@ -1,11 +1,13 @@
 import { app, shell, BrowserWindow, ipcMain, screen, Tray, Menu } from 'electron'
 import { join } from 'path'
 import { optimizer, is } from '@electron-toolkit/utils'
+import { registerIpcHandlers } from '../../main/ipcHandlers/handlers.js';
 import icon from '../../../resources/icon.png?asset'
 import icon_ from '../../../resources/icon.ico?asset'
-import { registerIpcHandlers } from '../../main/ipcHandlers/handlers.js';
 
 export default function createWindow() {
+
+  let tray = null;
 
   let screen_size = screen.getPrimaryDisplay().workAreaSize
 
@@ -17,7 +19,7 @@ export default function createWindow() {
     height: 652,
     x: screen_size.width - 393 - 40,
     y: screen_size.height - 652 - 50,
-    backgroundColor: '#1E1A1B',
+    backgroundColor: '#171A20',
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -70,19 +72,36 @@ export default function createWindow() {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 
-  // Create the tray icon
-  let trayvar = new Tray(icon_)
-  var contextMenu = Menu.buildFromTemplate([
-    { label: 'Quit', click: function () { app.isQuiting = true; app.quit(); } }
-  ]);
-  trayvar.on('click', function () { mainWindow.show(); });
-  trayvar.setContextMenu(contextMenu)
-
-  trayvar.setToolTip('Independent VPN')
-
-  mainWindow.on('minimize', function (event) {
+  // for managing window minimize
+  function minimizeHandler(event) {
     event.preventDefault();
     mainWindow.hide();
+  }
+
+  // for managing tray
+  ipcMain.handle('toggle-tray', (event, isEnabled) => {
+    if (isEnabled) {
+      if (!tray) {
+        tray = new Tray(icon_)
+        var contextMenu = Menu.buildFromTemplate([
+          { label: 'Quit', click: function () { app.isQuiting = true; app.quit(); } }
+        ]);
+        tray.on('click', function () { mainWindow.show(); });
+        tray.setContextMenu(contextMenu)
+
+        tray.setToolTip('Independent VPN')
+
+        mainWindow.on('minimize', minimizeHandler);
+
+      }
+    } else {
+      if (tray) {
+        tray.destroy();
+        tray = null;
+        mainWindow.removeListener('minimize', minimizeHandler);
+      }
+    }
   });
+
 
 }
