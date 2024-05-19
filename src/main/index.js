@@ -1,20 +1,14 @@
-import { app, shell, BrowserWindow, ipcMain, screen, Tray, Menu } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import log from 'electron-log/main';
-import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
-import icon_ from '../../resources/icon.ico?asset'
 import os from 'os'
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs'
 import path from 'path'
 import { vpnObj } from './system/vpnBase.js'
-import { registerIpcHandlers } from './ipcHandlers/handlers.js';
 import "./utils/axiosTweek.js"
+import createWindow from './window/init.js'
 
-const { globalShortcut } = require('electron');
-
-// todo code want to be splitted across the files for manageability [ scope increased]
 
 let sessionTempDir = {
   path: '',
@@ -36,78 +30,6 @@ console.log = log.log;
 console.log(`log path :=> ${log.transports.file.getFile().path}`);
 
 
-function createWindow() {
-  let screen_size = screen.getPrimaryDisplay().workAreaSize
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    minWidth: 393,
-    minHeight: 652,
-    width: 393,
-    height: 652,
-    x: screen_size.width - 393 - 40,
-    y: screen_size.height - 652 - 50,
-    backgroundColor: '#1E1A1B',
-    show: false,
-    autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
-    webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      sandbox: false,
-      devTools: process.env.NODE_ENV === 'production' ? false : true // disable the Developer Tools
-
-    },
-    maximizable: false,
-  })
-
-  // mainWindow.webContents.openDevTools();
-  if (process.env.NODE_ENV === 'production') {
-    mainWindow.webContents.on('devtools-opened', () => {
-      mainWindow.webContents.closeDevTools();
-    });
-    // application menu to null to disable default menu behavior in production
-    Menu.setApplicationMenu(null);
-  } else {
-    optimizer.watchWindowShortcuts(mainWindow);
-  }
-
-  // Disable the default menu
-  mainWindow.setMenu(null)
-
-  mainWindow.on('ready-to-show', () => {
-    //todo remove this global scope of main window
-    global.mainWindow = mainWindow
-    mainWindow.show()
-  })
-
-  mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url)
-    return { action: 'deny' }
-  })
-
-  registerIpcHandlers(ipcMain);
-
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
-  } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
-  }
-
-  let trayvar = new Tray(icon_)
-  var contextMenu = Menu.buildFromTemplate([
-    { label: 'Quit', click: function () { app.isQuiting = true; app.quit(); } }
-  ]);
-  trayvar.on('click', function () { mainWindow.show(); });
-  trayvar.setContextMenu(contextMenu)
-
-  trayvar.setToolTip('Independent VPN')
-
-  mainWindow.on('minimize', function (event) {
-    event.preventDefault();
-    mainWindow.hide();
-  });
-}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -186,10 +108,6 @@ app.on('will-quit', async () => {
     }
   }
 });
-
-
-
-
 
 // app.disableHardwareAcceleration() 
 
