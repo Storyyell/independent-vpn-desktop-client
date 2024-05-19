@@ -1,4 +1,4 @@
-# sentinel_windows_app
+# independent_vpn_app
 
 ## Project Setup
 ### Install
