@@ -19,6 +19,8 @@ $ npm run dev
 # For windows
 $ npm run build:win
 
+# for macOS and Linux vpn routing rule want to be upated
+
 # For macOS
 $ npm run build:mac
 
