@@ -22,6 +22,7 @@ const api = {
   setDns: (dnsId) => ipcRenderer.invoke('setDns', dnsId),
   adapterSpeed: () => ipcRenderer.invoke('adapterSpeed'),
   openLogger: () => ipcRenderer.invoke('openLogger'),
+  toggleTray: (isEnabled) => ipcRenderer.invoke('toggle-tray', isEnabled),
 
   sysOpen: (...url) => ipcRenderer.invoke('sysOpen', ...url),
 }

@@ -9,6 +9,7 @@ import { countryListState } from '../../atoms/available/countryList';
 import { geoCoordinateState } from '../../atoms/app/geoCordinate';
 import { locationReload, refreshCityList, refreshCountryList } from '../../scripts/utils';
 import { cityListState } from '../../atoms/available/cityList';
+import { SysSettingsContext } from '../../context/SysSettingsContext';
 
 const LoadingScreen = () => {
   const setLoading = useSetRecoilState(isLoadingState);
@@ -18,29 +19,37 @@ const LoadingScreen = () => {
   const [loaderTxt, setLoaderTxt] = React.useState("Loading...");
   const [cityList, setCityList] = useRecoilState(cityListState);
   const [location, setLocation] = useRecoilState(geoCoordinateState);
+  const { SysSettings } = React.useContext(SysSettingsContext);
 
 
   function Loader() {
-  const [progress, setProgress] = React.useState(0);
+    const [progress, setProgress] = React.useState(0);
 
-  React.useEffect(() => {
-    const intervalId = setInterval(() => {
-      setProgress((currentProgress) => (currentProgress + 1) % 4);
-    }, 500);
+    React.useEffect(() => {
+      const intervalId = setInterval(() => {
+        setProgress((currentProgress) => (currentProgress + 1) % 4);
+      }, 500);
 
-    // Clean up the interval on component unmount
-    return () => clearInterval(intervalId);
-  }, []); // Empty array ensures effect runs only once on mount
+      // Clean up the interval on component unmount
+      return () => clearInterval(intervalId);
+    }, []); // Empty array ensures effect runs only once on mount
 
-  return (
-    <>
-      {progress === 0 && "."}
-      {progress === 1 && ".."}
-      {progress === 2 && "..."}
-      {progress === 3 && "...."}
-    </>
-  );
-}
+    // applay tray icon
+    React.useEffect(() => {
+      if (SysSettings?.trayIcon) {
+        window.api.toggleTray(true);
+      }
+    }, [SysSettings]);
+
+    return (
+      <>
+        {progress === 0 && "."}
+        {progress === 1 && ".."}
+        {progress === 2 && "..."}
+        {progress === 3 && "...."}
+      </>
+    );
+  }
 
 
 
@@ -49,7 +58,7 @@ const LoadingScreen = () => {
       setLoaderTxt("registering device ");
       return;
     }
-    if(location.ip === ""){
+    if (location.ip === "") {
       setLoaderTxt("Setting-up the system ");
       locationReload(deviceToken, setLocation, 0)
       return;
@@ -61,7 +70,7 @@ const LoadingScreen = () => {
       return;
     } else {
       setLoaderTxt("Loading cities ");
-      countryList.data.forEach((d)=>{
+      countryList.data.forEach((d) => {
         refreshCityList(deviceToken, d.id, cityList, setCityList)
       })
       setLoading(false);
@@ -100,14 +109,14 @@ const LoadingScreen = () => {
           left: 0,
           width: '100vw',
           py: 3,
-          display:"flex",
-          direction:"row",
-          justifyContent:"center"
+          display: "flex",
+          direction: "row",
+          justifyContent: "center"
         }}
       >
         <Typography>
           {loaderTxt}
-        </Typography><Box sx={{width:"20px", px:0.5}}><Loader /></Box>
+        </Typography><Box sx={{ width: "20px", px: 0.5 }}><Loader /></Box>
       </Box>
     </Box>
   );

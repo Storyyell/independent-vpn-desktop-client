@@ -79,6 +79,7 @@ const VpnSetting = () => {
         variant: 2,
         checked: SysSettings.trayIcon,
         onChange: (checked) => {
+          window.api.toggleTray(checked);
           setSysSettings({ ...SysSettings, trayIcon: checked })
         }
       }
