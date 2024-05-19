@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow } from 'electron'
 import log from 'electron-log/main';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import os from 'os'
