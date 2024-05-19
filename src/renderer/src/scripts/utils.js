@@ -23,7 +23,7 @@ async function refreshCityList(deviceToken, countryId, cityList, setCityList) {
   const cityObj = cityList?.[countryId];
 
   if (cityObj) {
-    const lastRefreshTimestamp = cityObj.timestamp; 
+    const lastRefreshTimestamp = cityObj.timestamp;
 
     if (((now - lastRefreshTimestamp) < dataValidityPeroid) && deviceToken && countryId) {
       return cityObj.data || [];
@@ -71,7 +71,7 @@ async function refreshServerList(countryId, cityId, setServerList, serverList, d
 }
 
 
-function locationReload(deviceToken, setLocation, timeout = 2000) {
+function locationReload(deviceToken, setLocation, timeout = 1000) {
   setTimeout(() => {
     if (deviceToken != "") {
       window.api.getIp(deviceToken)
