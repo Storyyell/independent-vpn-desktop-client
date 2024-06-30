@@ -38,3 +38,5 @@ VITE_SERVER_API_URL=<sentinel api url>
 VITE_MAPBOX_KEY=<mappbox api key>
 VITE_IP_API_KEY=<pro-ipapi key>
 ```
+
+project managed by Abhishek Dhobe
