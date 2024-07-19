@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Stack, Typography } from '@mui/material'
-import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
+import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base';
 import { styled } from '@mui/system';
 
 
