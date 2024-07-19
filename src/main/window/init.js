@@ -5,14 +5,14 @@ import { registerIpcHandlers } from '../../main/ipcHandlers/handlers.js';
 import icon from '../../../resources/icon.png?asset'
 import icon_ from '../../../resources/icon.ico?asset'
 
-export default function createWindow() {
+export default function createWindow(mainWindow) {
 
   let tray = null;
 
   let screen_size = screen.getPrimaryDisplay().workAreaSize
 
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     minWidth: 393,
     minHeight: 652,
     width: 393,

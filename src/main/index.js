@@ -19,6 +19,7 @@ global.sessionTempDir = sessionTempDir; // Todo remove this global variable
 global.vpnConnStatus = false;
 
 global.adapterName = "independent_vpn";
+let mainWindow;
 
 
 // initialize the logger
@@ -58,12 +59,12 @@ app.whenReady().then(() => {
       optimizer.watchWindowShortcuts(window)
     })
 
-    createWindow()
+    createWindow(mainWindow)
 
     app.on('activate', function () {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
-      if (BrowserWindow.getAllWindows().length === 0) createWindow()
+      if (BrowserWindow.getAllWindows().length === 0) createWindow(mainWindow)
     })
 
   }
