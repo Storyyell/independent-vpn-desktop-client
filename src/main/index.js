@@ -25,7 +25,7 @@ global.adapterName = "independent_vpn";
 log.initialize({ spyRendererConsole: true });
 
 // redirect console.log to the logger
-console.log = log.log;
+Object.assign(console, log.functions);
 
 console.log(`log path :=> ${log.transports.file.getFile().path}`);
 
