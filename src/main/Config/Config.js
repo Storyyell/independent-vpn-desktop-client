@@ -4,7 +4,7 @@ import path from 'path'
 
 class Config {
     constructor() {
-        if (Config.instance instanceof Config) {
+        if (Config.instance) {
             return Config.instance;
         }
 
@@ -17,6 +17,8 @@ class Config {
         // loading from env
         this.apiDomain = import.meta.env.VITE_SERVER_API_URL
         this.appKey = import.meta.env.VITE_SERVER_APP_KEY
+
+        Config.instance = this
     }
 
     static getInstance() {
