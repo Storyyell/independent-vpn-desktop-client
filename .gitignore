@@ -7,5 +7,5 @@ resources/bin/config.json
 .env
 
 
-test/
-src/main/system/
+# test/
+# src/main/system/
