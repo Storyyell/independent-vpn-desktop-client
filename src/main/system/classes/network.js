@@ -96,7 +96,7 @@ class Network{
   async getIPv4FromDomain(domain) {
     try {
       if (net.isIPv4(domain)) {
-        return domain;
+        return domain; // Already an ipv4 address
       } else {
         return new Promise((resolve, reject) => {
           dns.resolve4(domain, (err, addresses) => {
@@ -109,6 +109,7 @@ class Network{
         });
       }
     } catch (error) {
+      console.error('error getting ipv4 from domain')
       throw new Error(error);
     }
   }
@@ -174,6 +175,8 @@ class Network{
     }
   }
 
+
+  
 }
 
 export default Network

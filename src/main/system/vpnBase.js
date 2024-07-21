@@ -71,6 +71,8 @@ export async function vpnConnet(serverParms) {
             rendererSend({ message: 'VPN connection initializing...', ...(vpnObj.statusObj()) });
             rendererSend({ message: 'Fetching server configuration...', ...(vpnObj.statusObj()) });
             const res = await apiInstance.pullServerConf(serverParms.countryCode, serverParms.cityCode, serverParms.serverId);
+            console.log(apiInstance.extractVpnConf(res));
+            return ;
             const serverObj = res.data;
             const { uuid, address: server_address, listen_port } = await saveV2rayConfig(serverObj);
 

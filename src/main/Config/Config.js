@@ -41,6 +41,28 @@ class Config {
       }
     }
 
+    createConfigDir() {
+      try {
+        if (!fs.existsSync(this.configDirPath)) {
+            fs.mkdirSync(this.configDirPath, { recursive: true });
+        }
+      } catch (error) {
+        console.error('error creating config directory')
+        throw error        
+      }
+    }
+
+    deleteConfigDir() {
+      try {
+        if (fs.existsSync(this.configDirPath)) {
+            fs.rmdirSync(this.configDirPath, { recursive: true });
+        }
+      } catch (error) {
+        console.error('error deleting config directory')
+        throw error        
+      }
+    }
+
 }
 
 export default Config;

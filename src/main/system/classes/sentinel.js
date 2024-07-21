@@ -151,6 +151,151 @@ class SENTINEL_API {
     }
   }
 
+  extractVpnConf(vpnPayloadobfs) {
+    const { data:{protocol, payload, uid } } = vpnPayloadobfs;
+    
+    if (protocol !== 'V2RAY') {
+      throw new Error('Unsupported VPN protocol');
+    }
+    return this.decodeV2RAYConf(payload, uid);
+  }
+
+  decodeV2RAYConf(payload, uid) {
+    try {
+        let bytes_ = Buffer.from(atob(payload), 'binary');
+        
+        if (bytes_.length != 7) {
+            return null;
+        }
+        
+        let address = Array.from(bytes_.slice(0, 4)).join('.');
+        
+        let port = (bytes_[4] << 8) + bytes_[5];
+        
+        let transport_map = {
+            1: "tcp",
+            2: "mkcp",
+            3: "websocket",
+            4: "http",
+            5: "domainsocket",
+            6: "quic",
+            7: "gun",
+            8: "grpc",
+        };
+        let transport = transport_map[bytes_[6]] || "";
+
+        // now we have uid, address, port, transport
+
+        let config = `{
+          "dns": {
+              "hosts": {
+                  "domain:googleapis.cn": "googleapis.com"
+              },
+              "servers": [
+                  "1.1.1.1"
+              ]
+          },
+          "inbounds": [
+              {
+                  "listen": "127.0.0.1",
+                  "port": 10808,
+                  "protocol": "socks",
+                  "settings": {
+                      "auth": "noauth",
+                      "udp": true,
+                      "userLevel": 8
+                  },
+                  "sniffing": {
+                      "destOverride": [
+                          "http",
+                          "tls"
+                      ],
+                      "metadataOnly": false,
+                      "routeOnly": false,
+                      "excludedDomains": {},
+                      "enabled": true
+                  },
+                  "tag": "socks"
+              }
+          ],
+          "log": {
+              "loglevel": "info"
+          },
+          "outbounds": [
+              {
+                  "mux": {
+                      "concurrency": 8,
+                      "enabled": false
+                  },
+                  "protocol": "vmess",
+                  "settings": {
+                      "vnext": [
+                          {
+                              "address": "${address}",
+                              "port": ${port},
+                              "users": [
+                                  {
+                                      "alterId": 0,
+                                      "encryption": "",
+                                      "flow": "",
+                                      "id": "${uid}",
+                                      "level": 8,
+                                      "security": "auto"
+                                  }
+                              ]
+                          }
+                      ]
+                  },
+                  "streamSettings": {
+                      "network": "grpc",
+                      "grpcSettings": {
+                          "serviceName": "",
+                          "multiMode": false
+                      }
+                  },
+                  "tag": "proxy"
+              },
+              {
+                  "protocol": "freedom",
+                  "settings": {},
+                  "tag": "direct"
+              },
+              {
+                  "protocol": "blackhole",
+                  "settings": {
+                      "response": {
+                          "type": "http"
+                      }
+                  },
+                  "tag": "block"
+          }
+        ],
+        "routing": {
+          "domainStrategy": "IPIfNonMatch",
+          "rules": [
+            {
+              "ip": [
+                          "1.1.1.1"
+                      ],
+                      "outboundTag": "proxy",
+                      "port": "53",
+                      "type": "field"
+                  }
+              ]
+          }
+        }`;
+
+        return {config,
+                  port,
+                  uid,
+                  endpoint: address,
+                };
+    } catch (e) {
+        console.error('v2ray config decode error');
+        throw e;
+    }
+    }
+
 }
 
 export default SENTINEL_API;

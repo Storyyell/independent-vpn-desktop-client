@@ -11,9 +11,11 @@ import { adapterSpeed } from '../system/stats/adapter.js'
 import SENTINEL_API from '../system/classes/sentinel.js'
 import DNS from '../system/classes/dns.js'
 import Config from '../Config/Config.js'
+import VPN from '../system/classes/vpn.js'
 
 const sentinel = new SENTINEL_API();
 const dns = new DNS();
+// const vpnInstance = new VPN();
 
 
 export function registerIpcHandlers(ipcMain) {
@@ -21,12 +23,15 @@ export function registerIpcHandlers(ipcMain) {
 
   ipcMain.handle('triggerConnection', async (event, serverParms) => {
     console.log('vpn connection trigger on main process')
-    return await vpnConnet(serverParms);
+    // return await vpnConnet(serverParms);
+    // return await vpnInstance.start(serverParms);
+
   })
 
   ipcMain.handle('triggerDisconnection', async (event) => {
     console.log('vpn disconnection trigger on main process')
-    return await vpnDisconnect()
+    // return await vpnDisconnect()
+    // return await vpnInstance.stop()
   })
 
   ipcMain.handle('vpnConnStatus', (event, serverObj) => {
