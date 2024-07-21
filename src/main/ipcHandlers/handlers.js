@@ -10,12 +10,14 @@ import {
 import { adapterSpeed } from '../system/stats/adapter.js'
 import SENTINEL_API from '../system/classes/sentinel.js'
 import DNS from '../system/classes/dns.js'
+import Config from '../Config/Config.js'
 
 const sentinel = new SENTINEL_API();
 const dns = new DNS();
 
 
 export function registerIpcHandlers(ipcMain) {
+  const appConfig = new Config();
 
   ipcMain.handle('triggerConnection', async (event, serverParms) => {
     console.log('vpn connection trigger on main process')
@@ -102,7 +104,7 @@ export function registerIpcHandlers(ipcMain) {
   })
   ipcMain.handle('setDns', async (event, dnsId) => { dns.setCurrentDNSIndex(dnsId || 0) })
 
-  ipcMain.handle('adapterSpeed', async (event) => { return adapterSpeed(global.adapterName); });
+  ipcMain.handle('adapterSpeed', async (event) => { return adapterSpeed(appConfig.adapterName); });
 
   ipcMain.handle('openLogger', async (event) => {
     return openLogFile();

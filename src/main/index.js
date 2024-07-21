@@ -18,7 +18,6 @@ let sessionTempDir = {
 global.sessionTempDir = sessionTempDir; // Todo remove this global variable 
 global.vpnConnStatus = false;
 
-global.adapterName = "independent_vpn";
 let mainWindow;
 
 
