@@ -10,11 +10,11 @@ import dns from "dns";
 import net from "net";
 const https = require('https');
 import { rendererSend } from "./utils";
-import { dnsList } from "./dns/dnsList";
 import SENTINEL_API from "./classes/sentinel";
+import DNS from "./classes/dns";
 
-const pullServerConf = new SENTINEL_API().pullServerConf
-
+const apiInstance = new SENTINEL_API();
+const dnsInstance = new DNS();
 
 var vpnObj = {
     connected: false,
@@ -34,7 +34,6 @@ var vpnObj = {
     serverAddress: null,
     serverPort: null,
     serverUUID: null,
-    dnsIndex: 0,
 
     statusObj: function () {
         return {
@@ -56,6 +55,7 @@ var vpnObj = {
 // todo set custom dns for all external adapter
 
 export async function vpnConnet(serverParms) {
+
     return new Promise(async (resolve, reject) => {
         vpnObj.connectionProgress = true;
         // console.log(global.sessionTempDir.path);
@@ -70,7 +70,7 @@ export async function vpnConnet(serverParms) {
             console.log("VPN connection initializing...");
             rendererSend({ message: 'VPN connection initializing...', ...(vpnObj.statusObj()) });
             rendererSend({ message: 'Fetching server configuration...', ...(vpnObj.statusObj()) });
-            const res = await pullServerConf(serverParms.countryCode, serverParms.cityCode, serverParms.serverId);
+            const res = await apiInstance.pullServerConf(serverParms.countryCode, serverParms.cityCode, serverParms.serverId);
             const serverObj = res.data;
             const { uuid, address: server_address, listen_port } = await saveV2rayConfig(serverObj);
 
@@ -83,8 +83,6 @@ export async function vpnConnet(serverParms) {
             const serverIp = await getIPv4(server_address);
             vpnObj.serverIp = serverIp;
             console.log(`server ip: ${vpnObj.serverIp}`);
-            if (!(vpnObj.dnsIndex) || vpnObj.dnsIndex >= dnsList.length || vpnObj.dnsIndex < 0) { vpnObj.dnsIndex = 0; }
-            console.log(`dns selected : ${dnsList[vpnObj.dnsIndex].name}`);
             try {
                 await vpnObj.triggerConnection(gateway);
                 resolve(true);
@@ -94,6 +92,7 @@ export async function vpnConnet(serverParms) {
         } catch (e) {
             console.log("error in VPN connection: " + e.message);
             await vpnObj.triggerDisconnection();
+            throw e;
             reject(false);
         }
     });
@@ -283,17 +282,17 @@ async function setStaticIP() {
 
 async function setDnsServer() {
     console.log('enabling custom DNS server');
-    await exec(`netsh interface ipv4 set dnsservers name="independent_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv4[0]} register=none validate=no`);
-    await exec(`netsh interface ipv4 add dnsservers name="independent_vpn" address=${dnsList[vpnObj.dnsIndex].ipv4[1]} index=2 validate=no`);
+    await exec(`netsh interface ipv4 set dnsservers name="independent_vpn" static address=${dnsInstance.getCurrentDNS().ipv4[0]} register=none validate=no`);
+    await exec(`netsh interface ipv4 add dnsservers name="independent_vpn" address=${dnsInstance.getCurrentDNS().ipv4[1]} index=2 validate=no`);
 
-    vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 set dnsservers name="independent_vpn" static address=${dnsList[vpnObj.dnsIndex].ipv6[0]} register=none validate=no`);
-    vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 add dnsservers name="independent_vpn" address=${dnsList[vpnObj.dnsIndex].ipv6[1]} index=2 validate=no`);
+    vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 set dnsservers name="independent_vpn" static address=${dnsInstance.getCurrentDNS().ipv6[0]} register=none validate=no`);
+    vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 add dnsservers name="independent_vpn" address=${dnsInstance.getCurrentDNS().ipv6[1]} index=2 validate=no`);
 
     // Flush DNS after setting DNS server
 
     // for default interface
-    await exec(`netsh interface ipv4 set dnsservers name="${vpnObj.defaultInterface}" static address=${dnsList[vpnObj.dnsIndex].ipv4[0]} register=none validate=no`)
-    vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 set dnsservers name="${vpnObj.defaultInterface}" static address=${dnsList[vpnObj.dnsIndex].ipv6[0]} register=none validate=no`)
+    await exec(`netsh interface ipv4 set dnsservers name="${vpnObj.defaultInterface}" static address=${dnsInstance.getCurrentDNS().ipv4[0]} register=none validate=no`)
+    vpnObj.gatewayIps.ipv6Support && await exec(`netsh interface ipv6 set dnsservers name="${vpnObj.defaultInterface}" static address=${dnsInstance.getCurrentDNS().ipv6[0]} register=none validate=no`)
 
     await exec('ipconfig /flushdns');
 }

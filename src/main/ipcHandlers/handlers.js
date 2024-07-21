@@ -7,11 +7,12 @@ import {
   getVpnMetric,
   openLogFile
 } from '../system/ipcs.js'
-import { dnsList } from '../system/dns/dnsList.js'
 import { adapterSpeed } from '../system/stats/adapter.js'
 import SENTINEL_API from '../system/classes/sentinel.js'
+import DNS from '../system/classes/dns.js'
 
 const sentinel = new SENTINEL_API();
+const dns = new DNS();
 
 
 export function registerIpcHandlers(ipcMain) {
@@ -94,12 +95,12 @@ export function registerIpcHandlers(ipcMain) {
   ipcMain.handle('getDnsList', async (event) => {
 
     return {
-      dnsList: dnsList || [],
-      selectedDns: vpnObj.dnsIndex || 0
+      dnsList: dns.getDNSList(),
+      selectedDns: dns.getCurrentDNSIndex()
     };
 
   })
-  ipcMain.handle('setDns', async (event, dnsId) => { vpnObj.dnsIndex = dnsId || 0 })
+  ipcMain.handle('setDns', async (event, dnsId) => { dns.setCurrentDNSIndex(dnsId || 0) })
 
   ipcMain.handle('adapterSpeed', async (event) => { return adapterSpeed(global.adapterName); });
 
@@ -109,3 +110,6 @@ export function registerIpcHandlers(ipcMain) {
 
 
 }
+
+// ipcMain.handle('setDns', async (event, dnsId) => { vpnObj.dnsIndex = dnsId || 0 })
+
