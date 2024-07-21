@@ -3,7 +3,6 @@ import { join } from 'path'
 import { optimizer, is } from '@electron-toolkit/utils'
 import { registerIpcHandlers } from '../../main/ipcHandlers/handlers.js';
 import icon from '../../../resources/icon.png?asset'
-import icon_ from '../../../resources/icon.ico?asset'
 
 export default function createWindow(mainWindow) {
 
@@ -82,7 +81,7 @@ export default function createWindow(mainWindow) {
   ipcMain.handle('toggle-tray', (event, isEnabled) => {
     if (isEnabled) {
       if (!tray) {
-        tray = new Tray(icon_)
+        tray = new Tray(icon);
         var contextMenu = Menu.buildFromTemplate([
           { label: 'Quit', click: function () { app.isQuiting = true; app.quit(); } }
         ]);
