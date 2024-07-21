@@ -21,8 +21,8 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
     "@fontsource/roboto": "^5.0.12",
     "@mui/base": "^5.0.0-beta.40",
     "@mui/icons-material": "^5.15.12",
@@ -36,17 +36,17 @@
     "mapbox-gl": "^3.3.0",
     "recoil": "^0.7.7",
     "socks": "^2.8.1",
-    "uuid": "^9.0.1"
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^1.0.2",
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
     "@vitejs/plugin-react": "^4.2.1",
-    "electron": "^28.2.0",
+    "electron": "^31.2.1",
     "electron-builder": "^24.9.1",
     "electron-vite": "^2.0.0",
-    "eslint": "^8.56.0",
-    "eslint-plugin-react": "^7.33.2",
+    "eslint": "^9.7.0",
+    "eslint-plugin-react": "^7.35.0",
     "prettier": "^3.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
