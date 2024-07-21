@@ -9,9 +9,11 @@ import { saveV2rayConfig } from "./v2rayConfig";
 import dns from "dns";
 import net from "net";
 const https = require('https');
-import { pullServerConf } from "./ipcs";
 import { rendererSend } from "./utils";
 import { dnsList } from "./dns/dnsList";
+import SENTINEL_API from "./classes/sentinel";
+
+const pullServerConf = new SENTINEL_API().pullServerConf
 
 
 var vpnObj = {
@@ -68,7 +70,7 @@ export async function vpnConnet(serverParms) {
             console.log("VPN connection initializing...");
             rendererSend({ message: 'VPN connection initializing...', ...(vpnObj.statusObj()) });
             rendererSend({ message: 'Fetching server configuration...', ...(vpnObj.statusObj()) });
-            const res = await pullServerConf(serverParms.device_token, serverParms.countryCode, serverParms.cityCode, serverParms.serverId);
+            const res = await pullServerConf(serverParms.countryCode, serverParms.cityCode, serverParms.serverId);
             const serverObj = res.data;
             const { uuid, address: server_address, listen_port } = await saveV2rayConfig(serverObj);
 

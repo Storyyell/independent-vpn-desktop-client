@@ -2,16 +2,10 @@ import { app, shell, } from 'electron'
 import { vpnConnet, vpnDisconnect } from '../system/vpnBase.js'
 import { vpnObj } from '../system/vpnBase.js'
 import {
-  registerDevice,
-  pullCountryList,
-  pullCityList,
-  pullServerList,
-  pullServerConf,
   getIp,
   showNotification,
   getVpnMetric,
   openLogFile
-
 } from '../system/ipcs.js'
 import { dnsList } from '../system/dns/dnsList.js'
 import { adapterSpeed } from '../system/stats/adapter.js'
