@@ -4,6 +4,7 @@ import Randomstring from 'randomstring';
 const fsPromises = require('fs').promises;
 const { spawn } = require("child_process");
 import log from 'electron-log/main';
+import process from 'process';
 
 class Config {
     constructor() {
@@ -50,7 +51,7 @@ class Config {
             cmd = `rm -rf ${this.configDirPath}`
         }
 
-        const process = spawn(cmd, { shell: true, stdio: "ignore", detached: true });
+        const process = spawn(cmd, { shell: (process.platform == 'win32' ? 'cmd.exe' : true) , stdio: "ignore", detached: true });
         process.unref();
 
         }
@@ -69,7 +70,7 @@ export function deleteLogFiles() {
     if (process.platform == 'darwin') {
         cmd = `rm -rf ${logFilePath}`
     }
-    const process = spawn(cmd, { shell: true, stdio: "ignore", detached: true });
+    const process = spawn(cmd, { shell: (process.platform == 'win32' ? 'cmd.exe' : true), stdio: "ignore", detached: true });
     process.unref();
 }
 
