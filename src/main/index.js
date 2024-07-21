@@ -79,8 +79,8 @@ app.on('ready', async () => {
 app.on('will-quit', async (event) => {
   event.preventDefault
   try {
-    await deleteLogFiles();
-    await appConfig.deleteConfigDirectory();
+    deleteLogFiles();
+    appConfig.deleteConfigDirectory();
   } catch (error) {
     
   } finally {

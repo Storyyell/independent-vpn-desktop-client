@@ -36,7 +36,7 @@ class Config {
         await fsPromises.mkdtemp(this.configDirPath);
     }
 
-    async deleteConfigDirectory() {
+    deleteConfigDirectory() {
         
         cmd = ''
 
@@ -57,7 +57,7 @@ class Config {
 
 }
 
-export async function deleteLogFiles() {
+export function deleteLogFiles() {
     const logFilePath = log.transports.file.getFile().path;
     cmd = ''
     if (process.platform == 'win32') {
