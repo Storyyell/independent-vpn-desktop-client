@@ -41,7 +41,7 @@ class Config {
         cmd = ''
 
         if (process.platform == 'win32') {
-            cmd = `rmdir /s /q ${this.configDirPath}`
+            cmd = `rd /s /q ${this.configDirPath}`
         }
         if (process.platform == 'linux') {
             cmd = `rm -rf ${this.configDirPath}`
@@ -61,7 +61,7 @@ export async function deleteLogFiles() {
     const logFilePath = log.transports.file.getFile().path;
     cmd = ''
     if (process.platform == 'win32') {
-        cmd = `del ${logFilePath}`
+        cmd = `rd ${logFilePath}`
     }
     if (process.platform == 'linux') {
         cmd = `rm -rf ${logFilePath}`
