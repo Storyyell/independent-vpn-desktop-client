@@ -35,7 +35,7 @@ class SENTINEL_API {
       this.deviceToken = response.data?.data?.token;
       return this.deviceToken;
     } catch (error) {
-      console.error("registerDevice error: ", error);
+      console.error("registerDevice error ");
       throw error;
     }
   }
@@ -65,7 +65,7 @@ class SENTINEL_API {
       const response = await axios.request(config);
       return response.data;
     } catch (error) {
-      console.error("pullCountryList error:");
+      console.error("pullCountryList error");
       throw error;
     }
   }
@@ -91,7 +91,7 @@ class SENTINEL_API {
       const response = await axios.request(config);
       return response.data;
     } catch (error) {
-      console.error("pullCityList error:");
+      console.error("pullCityList error");
       throw error;
     }
   }
@@ -120,7 +120,7 @@ class SENTINEL_API {
       const response = await axios.request(config);
       return response.data;
     } catch (error) {
-      console.error("pullServerList error:");
+      console.error("pullServerList error");
       throw error;
     }
   }
@@ -146,8 +146,8 @@ class SENTINEL_API {
       const response = await axios.request(config);
       return response.data;
     } catch (error) {
-      console.error("pullServerConf error:");
-      throw new Error('server config fetch failed');
+      console.error("pullServerConf error");
+      throw error
     }
   }
 
