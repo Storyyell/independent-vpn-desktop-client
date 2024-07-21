@@ -50,12 +50,11 @@ class V2RAY extends Network{
   }
 
   v2rayBinaryPath(){
-    if (this.platform !== 'win32'){
-      throw new Error('v2ray binary not supported on this platform')      
-    }
     // 4 windows
-    if (this.binaryPath){return this.binaryPath}  
-    return path.join(this.binaryDirPath, 'v2ray.exe')
+    if (this.platform === 'win32'){
+      if (this.binaryPath){return this.binaryPath}  
+      return path.join(this.binaryDirPath, 'v2ray.exe')
+    }
   }
 
   async connect({config, endpoint, port, uid}){
