@@ -93,25 +93,25 @@ class Network{
   }
 
 
-async getIPv4FromDomain(domain) {
-  try {
-    if (net.isIPv4(domain)) {
-      return domain;
-    } else {
-      return new Promise((resolve, reject) => {
-        dns.resolve4(domain, (err, addresses) => {
-          if (err) {
-            reject('Failed to resolve domain to ipv4');
-          } else {
-            resolve(addresses[0]);
-          }
+  async getIPv4FromDomain(domain) {
+    try {
+      if (net.isIPv4(domain)) {
+        return domain;
+      } else {
+        return new Promise((resolve, reject) => {
+          dns.resolve4(domain, (err, addresses) => {
+            if (err) {
+              reject('Failed to resolve domain to ipv4');
+            } else {
+              resolve(addresses[0]);
+            }
+          });
         });
-      });
+      }
+    } catch (error) {
+      throw new Error(error);
     }
-  } catch (error) {
-    throw new Error(error);
   }
-}
 
 
   async checkSocksInternetConnectivity(proxyIp, proxyPort) {
