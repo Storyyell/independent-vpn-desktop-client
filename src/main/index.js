@@ -8,18 +8,14 @@ import path from 'path'
 import { vpnObj } from './system/vpnBase.js'
 import "./utils/axiosTweek.js"
 import createWindow from './window/init.js'
+import Config from './Config/Config.js';
 
 
-let sessionTempDir = {
-  path: '',
-  uuid: uuidv4()
-};
-
-global.sessionTempDir = sessionTempDir; // Todo remove this global variable 
 global.vpnConnStatus = false;
 
 let mainWindow;
 
+const appConfig = new Config();
 
 // initialize the logger
 log.initialize({ spyRendererConsole: true });
@@ -80,23 +76,15 @@ app.on('window-all-closed', () => {
 })
 
 app.on('ready', () => {
-  const tempDir = os.tmpdir();
-
-  fs.mkdtemp(path.join(tempDir, sessionTempDir.uuid), (err, folder) => {
-    if (err) throw err;
-    sessionTempDir.path = folder;
-
-  });
-
+  fs.mkdtemp(appConfig.configDirPath, (err, folder) => {if (err) throw err;});
 })
 
 app.on('will-quit', async () => {
   await vpnObj.triggerDisconnection();
 
-  //Todo: remove file just after connection and use protobuff to store the data
-  if (global.sessionTempDir.path) {
+  if (appConfig.configDirPath) {
     try {
-      fs.rmSync(global.sessionTempDir.path, { recursive: true });
+      fs.rmSync(appConfig.configDirPath, { recursive: true });
       fs.rmSync(log.transports.file.getFile().path);
     } catch (err) {
       console.error(err);

@@ -12,6 +12,7 @@ const https = require('https');
 import { rendererSend } from "./utils";
 import SENTINEL_API from "./classes/sentinel";
 import DNS from "./classes/dns";
+import Config from "../Config/Config";
 
 const apiInstance = new SENTINEL_API();
 const dnsInstance = new DNS();
@@ -58,7 +59,6 @@ export async function vpnConnet(serverParms) {
 
     return new Promise(async (resolve, reject) => {
         vpnObj.connectionProgress = true;
-        // console.log(global.sessionTempDir.path);
 
         try {
             const gateway = await getDefaultGateway();
@@ -114,7 +114,8 @@ export async function vpnConnetFx() {
 
         const v2rayPath = path.join(basePath, 'v2ray.exe');
         // const configPath = path.join(basePath, 'config.json');
-        const configPath = path.join(global.sessionTempDir.path, `${global.sessionTempDir.uuid}.json`);
+        const appConfig = new Config();
+        const configPath = appConfig.configPath;
 
 
         const v2ray = spawn(v2rayPath, ['-config', configPath],);

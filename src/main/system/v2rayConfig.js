@@ -1,13 +1,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import Config from '../Config/Config';
 const atob = require('atob');
 
 
 export async function saveV2rayConfig(serverObj) {
+
+    const appConfig = new Config();
     let vpn_profile = decode_v2ray_vpn_profile(serverObj.payload, serverObj.uid);
     if (vpn_profile) {
         try {
-            const filePath = path.join(global.sessionTempDir.path, `${global.sessionTempDir.uuid}.json`);
+            const filePath = appConfig.configPath
             const directoryPath = path.dirname(filePath);
             if (!fs.existsSync(directoryPath)) {
                 fs.mkdirSync(directoryPath, { recursive: true });
