@@ -75,21 +75,18 @@ app.on('window-all-closed', () => {
   }
 })
 
-app.on('ready', () => {
-  fs.mkdtemp(appConfig.configDirPath, (err, folder) => {if (err) throw err;});
+app.on('ready', async () => {
+  await appConfig.createConfigDir();
 })
 
 app.on('will-quit', async () => {
-  await vpnObj.triggerDisconnection();
 
-  if (appConfig.configDirPath) {
-    try {
-      fs.rmSync(appConfig.configDirPath, { recursive: true });
-      fs.rmSync(log.transports.file.getFile().path);
-    } catch (err) {
-      console.error(err);
-    }
-  }
+  // await vpnObj.triggerDisconnection();
+
+  const logFilePath = log.transports.file.getFile().path;
+  fs.unlink(logFilePath);
+  appConfig.deleteConfigDirectory();
+
 });
 
 // app.disableHardwareAcceleration() 

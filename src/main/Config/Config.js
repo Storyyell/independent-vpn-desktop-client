@@ -41,28 +41,39 @@ class Config {
       }
     }
 
-    createConfigDir() {
+    async createConfigDir() {
+      const configDirPath = this.configDirPath;
       try {
-        if (!fs.existsSync(this.configDirPath)) {
-            fs.mkdirSync(this.configDirPath, { recursive: true });
-        }
+        await fs.access(configDirPath).catch(async (err) => {
+          if (err.code === 'ENOENT') {
+            await fs.mkdir(configDirPath, { recursive: true });
+          } else {
+            throw err;
+          }
+        });
       } catch (error) {
-        console.error('error creating config directory')
-        throw error        
+        console.error('Error creating config directory');
       }
-    }
+  }
 
-    deleteConfigDir() {
-      try {
-        if (fs.existsSync(this.configDirPath)) {
-            fs.rmdirSync(this.configDirPath, { recursive: true });
+    async deleteConfigDirectory() {
+      if (this.configDirPath) {
+        try {
+          const dirPath = this.configDirPath;
+          try {
+            await fs.access(dirPath);
+          } catch (err) {
+            return;
+          }
+          const files = await fs.readdir(dirPath);
+          await Promise.all(files.map(file => fs.unlink(path.join(dirPath, file))));
+          await fs.rmdir(dirPath);
+          await fs.unlink(logFilePath);
+        } catch (err) {
+          console.error('Error removing directory and files:', err);
         }
-      } catch (error) {
-        console.error('error deleting config directory')
-        throw error        
-      }
+        }
     }
 
 }
-
 export default Config;

@@ -36,8 +36,8 @@ class VPN{
     try {
 
       if(this.protocol === 'V2RAY'){
-        res = this.apiInstance.pullServerConf(countryCode, cityCode, serverId)
-        v2rayConf = this.apiInstance.extractVpnConf(res)
+        const res = await this.apiInstance.pullServerConf(countryCode, cityCode, serverId)
+        const v2rayConf = this.apiInstance.extractVpnConf(res)
 
         await this.v2ray.connect(v2rayConf);
       }

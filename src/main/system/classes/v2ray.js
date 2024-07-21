@@ -73,7 +73,7 @@ class V2RAY extends Network{
       this.processTree.resolvingServerIp = true
       await this.establishTunnel()
       this.processTree.establishTunnel = true
-      await this.deleteConfigFromDisk()
+      // await this.deleteConfigFromDisk()
 
       return true
     } catch (error) {
@@ -85,7 +85,7 @@ class V2RAY extends Network{
   async disconnect(){
     try {
 
-      await this.closeTunnel()
+      // await this.closeTunnel()
       await this.deleteConfigFromDisk()
       this.processTree = {
         writeConfigToDisk: false,
@@ -157,21 +157,28 @@ class V2RAY extends Network{
   }}
 
 
-  async writeConfiToDisk(config){
-    try {
-      if(!config){throw new Error('config is required')}
-      
-      const filename = this.v2rayconffname
-      const configPath = path.join(this.appConfig.configDirPath, filename)
-      
-      if (!fs.existsSync(configPath)) {fs.mkdirSync(configPath, { recursive: true });}
-      await fs.promises.writeFile(configPath, JSON.stringify(config), { flag: 'w' });
-      return configPath
-    } catch (error) {
-      console.error('error writing v2ray config to disk')
-      throw error
+async writeConfigToDisk(config) {
+  try {
+    if (!config) {
+      throw new Error('config is required');
     }
+
+    const filename = this.v2rayconffname;
+    const configDirPath = this.appConfig.configDirPath;
+    const configPath = path.join(configDirPath, filename);
+
+    if (!fs.existsSync(configDirPath)) {
+      fs.mkdirSync(configDirPath, { recursive: true });
+    }
+
+    await fs.promises.writeFile(configPath, JSON.stringify(config), { flag: 'w' });
+    return configPath;
+  } catch (error) {
+    console.error('Error writing v2ray config to disk', error);
+    throw error;
   }
+}
+
 
   async deleteConfigFromDisk(){
       const filename = this.v2rayconffname

@@ -24,7 +24,7 @@ export function registerIpcHandlers(ipcMain) {
   ipcMain.handle('triggerConnection', async (event, serverParms) => {
     console.log('vpn connection trigger on main process')
     // return await vpnConnet(serverParms);
-    return await vpnInstance.start(serverParms);
+    return await vpnInstance.start({protocol: "V2RAY", ...serverParms});
 
   })
 
