@@ -67,7 +67,7 @@ class V2RAY extends Network{
     this.port = port
     this.uid = uid
     try {
-      await this.writeConfiToDisk(config);
+      await this.writeConfigToDisk(config);
       this.processTree.writeConfigToDisk = true
       this.serverIp = await this.getIPv4FromDomain(endpoint)
       this.processTree.resolvingServerIp = true
