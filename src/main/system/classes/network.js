@@ -115,9 +115,11 @@ class Network{
 
 
   async checkSocksInternetConnectivity(proxyIp, proxyPort) {
+
+    const connectivityCheckDomain = 'www.google.com';
     try {
       const options = {
-        hostname: 'www.google.com',
+        hostname: connectivityCheckDomain,
         port: 443,
         path: '/',
         method: 'GET',
@@ -167,13 +169,11 @@ class Network{
         req.end();
       });
     } catch (error) {
-      console.error(`Error: ${error.message}`);
+      console.error(`internet connectivity check failed`);
       throw new Error(`Internet connectivity check failed: ${error.message}`);
     }
   }
 
-
-  
 }
 
 export default Network
