@@ -1,6 +1,7 @@
-import { v4 as uuidv4 } from 'uuid';
 import os from 'os'
 import path from 'path'
+import Randomstring from 'randomstring';
+import { mkdtemp, rm } from 'node:fs/promises';
 
 class Config {
     constructor() {
@@ -8,9 +9,9 @@ class Config {
             return Config.instance;
         }
 
-        const uniqueString = uuidv4()
+        const uniqueString = Randomstring.generate();
 
-        this.tmpdir = String(os.tmpdir)
+        this.tmpdir = os.tmpdir()
         this.configDirPath = path.join(this.tmpdir, uniqueString)
         this.configPath = path.join(this.tmpdir, uniqueString, 'config.json')
         this.adapterName = 'independent_vpn'
@@ -29,50 +30,12 @@ class Config {
         return Config.instance;
     }
 
-    // getting value from config
-    get(key) {
-      return this[key];
-    }
-
-    // setting value to config
-    set(key, value) {
-      if (this.settings.hasOwnProperty(key)) {
-        this.settings[key] = value;
-      }
-    }
-
     async createConfigDir() {
-      const configDirPath = this.configDirPath;
-      try {
-        await fs.access(configDirPath).catch(async (err) => {
-          if (err.code === 'ENOENT') {
-            await fs.mkdir(configDirPath, { recursive: true });
-          } else {
-            throw err;
-          }
-        });
-      } catch (error) {
-        console.error('Error creating config directory');
-      }
-  }
+        await mkdtemp(this.configDirPath);
+    }
 
     async deleteConfigDirectory() {
-      if (this.configDirPath) {
-        try {
-          const dirPath = this.configDirPath;
-          try {
-            await fs.access(dirPath);
-          } catch (err) {
-            return;
-          }
-          const files = await fs.readdir(dirPath);
-          await Promise.all(files.map(file => fs.unlink(path.join(dirPath, file))));
-          await fs.rmdir(dirPath);
-          await fs.unlink(logFilePath);
-        } catch (err) {
-          console.error('Error removing directory and files:', err);
-        }
-        }
+        await rm(this.configDirPath, { force: true, recursive: true });
     }
 
 }

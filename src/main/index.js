@@ -1,14 +1,11 @@
 import { app, BrowserWindow } from 'electron'
 import log from 'electron-log/main';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import os from 'os'
-import { v4 as uuidv4 } from 'uuid';
-import fs from 'fs'
-import path from 'path'
-import { vpnObj } from './system/vpnBase.js'
+// import { vpnObj } from './system/vpnBase.js'
 import "./utils/axiosTweek.js"
 import createWindow from './window/init.js'
 import Config from './Config/Config.js';
+const fsPromises = require('fs').promises;
 
 
 global.vpnConnStatus = false;
@@ -79,13 +76,18 @@ app.on('ready', async () => {
   await appConfig.createConfigDir();
 })
 
-app.on('will-quit', async () => {
-
-  // await vpnObj.triggerDisconnection();
-
-  const logFilePath = log.transports.file.getFile().path;
-  fs.unlink(logFilePath);
-  appConfig.deleteConfigDirectory();
+app.on('will-quit', async (event) => {
+  event.preventDefault
+  try {
+    // await vpnObj.triggerDisconnection();
+    // const logFilePath = log.transports.file.getFile().path;
+    // await fsPromises.rm(logFilePath, { force: true});
+    await appConfig.deleteConfigDirectory();
+  } catch (error) {
+    
+  } finally {
+    app.quit();
+  }
 
 });
 
