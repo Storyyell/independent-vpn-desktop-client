@@ -4,7 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 // import { vpnObj } from './system/vpnBase.js'
 import "./utils/axiosTweek.js"
 import createWindow from './window/init.js'
-import Config from './Config/Config.js';
+import Config, { deleteLogFiles } from './Config/Config.js';
 const fsPromises = require('fs').promises;
 
 
@@ -79,9 +79,7 @@ app.on('ready', async () => {
 app.on('will-quit', async (event) => {
   event.preventDefault
   try {
-    // await vpnObj.triggerDisconnection();
-    // const logFilePath = log.transports.file.getFile().path;
-    // await fsPromises.rm(logFilePath, { force: true});
+    await deleteLogFiles();
     await appConfig.deleteConfigDirectory();
   } catch (error) {
     

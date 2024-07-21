@@ -1,7 +1,9 @@
 import os from 'os'
 import path from 'path'
 import Randomstring from 'randomstring';
-import { mkdtemp, rm } from 'node:fs/promises';
+const fsPromises = require('fs').promises;
+const { spawn } = require("child_process");
+import log from 'electron-log/main';
 
 class Config {
     constructor() {
@@ -31,12 +33,44 @@ class Config {
     }
 
     async createConfigDir() {
-        await mkdtemp(this.configDirPath);
+        await fsPromises.mkdtemp(this.configDirPath);
     }
 
     async deleteConfigDirectory() {
-        await rm(this.configDirPath, { force: true, recursive: true });
-    }
+        
+        cmd = ''
+
+        if (process.platform == 'win32') {
+            cmd = `rmdir /s /q ${this.configDirPath}`
+        }
+        if (process.platform == 'linux') {
+            cmd = `rm -rf ${this.configDirPath}`
+        }
+        if (process.platform == 'darwin') {
+            cmd = `rm -rf ${this.configDirPath}`
+        }
+
+        const process = spawn(cmd, { shell: true, stdio: "ignore", detached: true });
+        process.unref();
+
+        }
 
 }
+
+export async function deleteLogFiles() {
+    const logFilePath = log.transports.file.getFile().path;
+    cmd = ''
+    if (process.platform == 'win32') {
+        cmd = `del ${logFilePath}`
+    }
+    if (process.platform == 'linux') {
+        cmd = `rm -rf ${logFilePath}`
+    }
+    if (process.platform == 'darwin') {
+        cmd = `rm -rf ${logFilePath}`
+    }
+    const process = spawn(cmd, { shell: true, stdio: "ignore", detached: true });
+    process.unref();
+}
+
 export default Config;
