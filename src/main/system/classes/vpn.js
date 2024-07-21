@@ -6,8 +6,8 @@ class VPN{
       return VPN.instance;
     }
 
-    this.platfrom = process.platform;
     this.protocol = 'V2RAY'; // V2RAY, WIREGUARD
+    this.platfrom = process.platform;
     this.v2ray = new V2RAY();
 
     this.isConnected = false

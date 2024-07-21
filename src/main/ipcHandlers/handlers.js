@@ -112,6 +112,3 @@ export function registerIpcHandlers(ipcMain) {
 
 
 }
-
-// ipcMain.handle('setDns', async (event, dnsId) => { vpnObj.dnsIndex = dnsId || 0 })
-
