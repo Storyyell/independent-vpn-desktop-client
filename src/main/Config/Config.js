@@ -10,8 +10,9 @@ class Config {
 
         const uniqueString = uuidv4()
 
-        this.configDirPath = path.join(os.tmpdir, uniqueString)
-        this.configPath = path.join(os.tmpdir, uniqueString, 'config.json')
+        this.tmpdir = String(os.tmpdir)
+        this.configDirPath = path.join(this.tmpdir, uniqueString)
+        this.configPath = path.join(this.tmpdir, uniqueString, 'config.json')
         this.adapterName = 'independent_vpn'
 
         // loading from env

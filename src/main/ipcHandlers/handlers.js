@@ -15,6 +15,9 @@ import {
 } from '../system/ipcs.js'
 import { dnsList } from '../system/dns/dnsList.js'
 import { adapterSpeed } from '../system/stats/adapter.js'
+import SENTINEL_API from '../system/classes/sentinel.js'
+
+const sentinel = new SENTINEL_API();
 
 
 export function registerIpcHandlers(ipcMain) {
@@ -34,24 +37,27 @@ export function registerIpcHandlers(ipcMain) {
   })
 
   ipcMain.handle('registerDevice', async () => {
-    // console.log('device registration triggered on main process')
-    return registerDevice()
+    return sentinel.registerDevice()
   })
 
-  ipcMain.handle('getCountries', async (event, args) => {
-    return pullCountryList(args)
+  ipcMain.handle('setDeviceToken', async (event, device_token) => {
+    return sentinel.setDeviceToken(device_token)
+  })
+
+  ipcMain.handle('getCountries', async (event, device_token) => {
+    return sentinel.pullCountryList()
   })
 
   ipcMain.handle('getCities', async (event, device_token, countryCode) => {
-    return pullCityList(device_token, countryCode)
+    return sentinel.pullCityList(countryCode)
   })
 
   ipcMain.handle('getServers', async (event, device_token, countryCode, cityCode) => {
-    return pullServerList(device_token, countryCode, cityCode)
+    return sentinel.pullServerList(countryCode, cityCode)
   })
 
   ipcMain.handle('getServerConf', async (event, device_token, countryCode, cityCode, serverId) => {
-    return pullServerConf(device_token, countryCode, cityCode, serverId)
+    return sentinel.pullServerConf(countryCode, cityCode, serverId)
   })
 
   ipcMain.handle('sysOpen', async (event, ...url) => {

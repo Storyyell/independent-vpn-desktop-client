@@ -78,11 +78,14 @@ function App() {
         if (deviceToken == "") {
           window.api.registerDevice()
             .then((res) => {
-              setDeviceToken(res)
+              window.api.setDeviceToken(res);
+              setDeviceToken(res);
             })
             .catch((e) => {
               log.error(e)
             })
+        }else{
+          window.api.setDeviceToken(deviceToken);
         }
       }
     )();

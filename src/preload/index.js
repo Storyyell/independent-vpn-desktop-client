@@ -7,6 +7,7 @@ import { getVpnMetric } from '../main/system/ipcs'
 // Custom APIs for renderer
 const api = {
   registerDevice: () => ipcRenderer.invoke('registerDevice'),
+  setDeviceToken: (token) => ipcRenderer.invoke('setDeviceToken', token),
   getCountries: (device_token) => ipcRenderer.invoke('getCountries', device_token),
   getCities: (device_token, countryCode) => ipcRenderer.invoke('getCities', device_token, countryCode),
   getServers: (device_token, countryCode, cityCode) => ipcRenderer.invoke('getServers', device_token, countryCode, cityCode),

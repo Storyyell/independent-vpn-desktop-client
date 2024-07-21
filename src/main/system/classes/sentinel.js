@@ -40,6 +40,10 @@ class SENTINEL_API {
     }
   }
 
+  setDeviceToken(token) {
+    this.deviceToken = token;
+  }
+
   async pullCountryList() {
     const appkey = this.appConfig.appKey;
     const apiUrl = this.appConfig.apiDomain;
