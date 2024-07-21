@@ -3,6 +3,7 @@ import Network from "./network";
 import path from 'path'
 import fs, { write } from 'fs'
 import { spawn } from "child_process"
+import { app } from 'electron'
 
 
 class V2RAY extends Network{
@@ -10,7 +11,7 @@ class V2RAY extends Network{
     if (V2RAY.instance instanceof V2RAY){
       return V2RAY.instance
     }
-
+    super()
     this.config = null
     this.endpoint = null
     this.serverIp = null
