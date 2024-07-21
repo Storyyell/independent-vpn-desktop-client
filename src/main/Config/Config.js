@@ -12,7 +12,9 @@ class Config {
             return Config.instance;
         }
 
-        const uniqueString = Randomstring.generate();
+        // const uniqueString = Randomstring.generate();
+        const uniqueString = "5TVnuduqcBieql3lSE5XRrTOox2sauBxXXXXXXKelqQr";
+        
 
         this.tmpdir = os.tmpdir()
         this.configDirPath = path.join(this.tmpdir, uniqueString)
@@ -38,23 +40,20 @@ class Config {
     }
 
     deleteConfigDirectory() {
-        
-        cmd = ''
-
-        if (process.platform == 'win32') {
-            cmd = `rd /s /q ${this.configDirPath}`
+        let cmd = '';
+    
+        if (process.platform === 'win32') {
+            cmd = ['rd', '/s', '/q', this.configDirPath];
+        } else if (process.platform === 'linux' || process.platform === 'darwin') {
+            cmd = `rm -rf ${this.configDirPath}`;
         }
-        if (process.platform == 'linux') {
-            cmd = `rm -rf ${this.configDirPath}`
-        }
-        if (process.platform == 'darwin') {
-            cmd = `rm -rf ${this.configDirPath}`
-        }
-
-        const process = spawn(cmd, { shell: (process.platform == 'win32' ? 'cmd.exe' : true) , stdio: "ignore", detached: true });
-        process.unref();
-
-        }
+    
+        const shell = process.platform === 'win32' ? process.env.comspec : true;
+        const args = process.platform === 'win32' ? ['/c', ...cmd] : [cmd];
+    
+        const childProcess = spawn(shell, args, { stdio: 'ignore', detached: true });
+        childProcess.unref();
+    }
 
 }
 
