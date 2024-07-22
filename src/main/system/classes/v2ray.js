@@ -33,10 +33,10 @@ class V2RAY extends Network{
     this.tun2socksProcess = null
 
     this.processTree = {
-      writeConfigToDisk: false,
-      resolvingServerIp: false,
-      establishV2RAYTunnel: false,
-      v2rayConfigCleaned: false,
+      isConfigToDisk: false,
+      isResolvedServerIp: false,
+      isEstablishV2RAYTunnel: false,
+      isv2rayConfigCleaned: false,
       isEstablishedInternalTunnel: false,
       isInternetConnectivityCheckPassed : false,
     }
@@ -84,13 +84,13 @@ class V2RAY extends Network{
     try {
       
       await this.writeConfigToDisk(config);
-      this.processTree.writeConfigToDisk = true;
+      this.processTree.isConfigToDisk = true;
       this.serverIp = await this.getIPv4FromDomain(endpoint);
-      this.processTree.resolvingServerIp = true;
+      this.processTree.isResolvedServerIp = true;
       await this.establishV2RAYTunnel();
-      this.processTree.establishV2RAYTunnel = true;
+      this.processTree.isEstablishV2RAYTunnel = true;
       await this.deleteConfigFromDisk();
-      this.v2rayConfigCleaned = true;
+      this.isv2rayConfigCleaned = true;
       await this.checkSocksInternetConnectivity('127.0.0.1', 10808);
       this.isInternetConnectivityCheckPassed = true;
       await this.startInternalTunnel();
