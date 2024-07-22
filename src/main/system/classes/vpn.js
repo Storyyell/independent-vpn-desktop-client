@@ -1,4 +1,3 @@
-import { FastForward } from '@mui/icons-material';
 import SENTINEL_API from './sentinel';
 import V2RAY from './v2ray'
 
@@ -59,9 +58,10 @@ class VPN{
 
     try {
       if(this.protocol === 'V2RAY'){
-        await this.v2ray.disconnect();
+        // await this.v2ray.disconnect();
 
-      }}
+      }
+    }
       catch (error) {
         console.error(error)
       }

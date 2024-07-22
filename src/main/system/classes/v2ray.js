@@ -1,7 +1,8 @@
 import Config from "../../Config/Config";
 import Network from "./network";
 import path from 'path'
-import fs, { write } from 'fs'
+import fs, { mkdir } from 'fs'
+const fsPromises = require('fs').promises;
 import { spawn } from "child_process"
 import { app } from 'electron'
 
@@ -24,6 +25,7 @@ class V2RAY extends Network{
     
     this.appConfig = new Config()
     this.v2rayconffname = 'v2ray_config.json'
+    this.v2rayconfpath = path.join(this.appConfig.configDirPath, this.v2rayconffname)
 
     // process objects
     this.v2rayProcess = null
@@ -66,6 +68,7 @@ class V2RAY extends Network{
     this.endpoint = endpoint
     this.port = port
     this.uid = uid
+
     try {
       await this.writeConfigToDisk(config);
       this.processTree.writeConfigToDisk = true
@@ -73,12 +76,12 @@ class V2RAY extends Network{
       this.processTree.resolvingServerIp = true
       await this.establishTunnel()
       this.processTree.establishTunnel = true
-      // await this.deleteConfigFromDisk()
+      await this.deleteConfigFromDisk()
 
       return true
     } catch (error) {
-      await this.disconnect()
-      return false
+      // await this.disconnect()
+      throw error
     }
   }
   
@@ -102,8 +105,8 @@ class V2RAY extends Network{
     try {
       return new Promise((resolve, reject) => {
 
-        const configPath = path.join(this.appConfig.configDirPath, this.v2rayconffname);
-        const v2rayBinPath = this.v2rayBinaryPath;
+        const configPath = this.v2rayconfpath;
+        const v2rayBinPath = this.v2rayBinaryPath();
 
         const v2ray = spawn(v2rayBinPath, ['-config', configPath]);
         this.v2rayProcess = v2ray;
@@ -120,10 +123,8 @@ class V2RAY extends Network{
 
         async function onDataReceived(data) {
           const output = data.toString();
-
           if (output.includes('started')) {
             v2ray.stdout.removeListener('data', onDataReceived);
-            vpnObj.v2ray = v2ray;
             try {
               resolve(true);
             } catch (error) {
@@ -158,41 +159,40 @@ class V2RAY extends Network{
 
 
 async writeConfigToDisk(config) {
-  try {
-    if (!config) {
-      throw new Error('config is required');
+    try {
+      if (!config) {
+        throw new Error('config is required');
+      }
+
+      const configDirPath = this.appConfig.configDirPath;
+
+      if (!fs.existsSync(configDirPath)) {
+        await fsPromises.mkdir(configDirPath, { recursive: true });
+      }
+
+      try {
+        await fsPromises.access(configDirPath)
+      } catch (error) {
+        fsPromises.mkdir(configDirPath, {recursive: true})      
+      }
+      await fs.promises.writeFile(this.v2rayconfpath, config, { flag: 'w' });
+      return true;
+    } catch (error) {
+      console.error('Error writing v2ray config to disk', error);
+      throw error;
     }
-
-    const filename = this.v2rayconffname;
-    const configDirPath = this.appConfig.configDirPath;
-    const configPath = path.join(configDirPath, filename);
-
-    if (!fs.existsSync(configDirPath)) {
-      fs.mkdirSync(configDirPath, { recursive: true });
-    }
-
-    await fs.promises.writeFile(configPath, JSON.stringify(config), { flag: 'w' });
-    return configPath;
-  } catch (error) {
-    console.error('Error writing v2ray config to disk', error);
-    throw error;
   }
-}
 
 
   async deleteConfigFromDisk(){
-      const filename = this.v2rayconffname
-      const configPath = path.join(this.appConfig.configDirPath, filename)
-      try {
-        if (fs.existsSync(configPath)) {
-          fs.unlinkSync(configPath)
+        try {
+          await fsPromises.access(this.v2rayconfpath)
+          await fsPromises.rm(this.v2rayconfpath)
+        } catch (error) {
+          
         }
-        return configPath
-    }catch (error) {
-      console.error('error deleting v2ray config from disk')
-      throw error
+        return true
     }
-  }
 
 }
 

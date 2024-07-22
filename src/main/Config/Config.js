@@ -1,6 +1,6 @@
 import os from 'os'
 import path from 'path'
-import Randomstring from 'randomstring';
+// import Randomstring from 'randomstring';
 const fsPromises = require('fs').promises;
 const { spawn } = require("child_process");
 import log from 'electron-log/main';
@@ -13,7 +13,7 @@ class Config {
         }
 
         // const uniqueString = Randomstring.generate();
-        const uniqueString = "5TVnuduqcBieql3lSE5XRrTOox2sauBxXXXXXXKelqQr";
+        const uniqueString = "949725481000034";
         
 
         this.tmpdir = os.tmpdir()
@@ -36,7 +36,7 @@ class Config {
     }
 
     async createConfigDir() {
-        await fsPromises.mkdtemp(this.configDirPath);
+        await fsPromises.mkdir(this.configDirPath, {recursive: true});
     }
 
     deleteConfigDirectory() {
