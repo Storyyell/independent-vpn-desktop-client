@@ -15,7 +15,7 @@ class Network extends AdapterUils{
     if (Network.instance){
       return VPNCore.instance
     }
-    Super()
+    super()
     this.GatewayIp = null
     this.GatewayAdapterName = null
     this.GatewayIps = null
