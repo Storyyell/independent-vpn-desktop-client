@@ -82,7 +82,7 @@ function App() {
               setDeviceToken(res);
             })
             .catch((e) => {
-              log.error(e)
+              console.error(e)
             })
         }else{
           window.api.setDeviceToken(deviceToken);

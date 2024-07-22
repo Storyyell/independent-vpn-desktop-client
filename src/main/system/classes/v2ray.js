@@ -21,7 +21,8 @@ class V2RAY extends Network{
 
     this.platform = process.platform
     this.binaryDirPath = this.publicDirPath()
-    this.binaryPath = this.v2rayBinaryPath()
+    this.v2rayBinaryPath = this.v2rayBinaryPathFx()
+    this.tun2socksBinPath = this.tun2socksBinaryPathFx()
     
     this.appConfig = new Config()
     this.v2rayconffname = 'v2ray_config.json'
@@ -34,7 +35,7 @@ class V2RAY extends Network{
     this.processTree = {
       writeConfigToDisk: false,
       resolvingServerIp: false,
-      establishTunnel: false,
+      establishV2RAYTunnel: false,
     }
 
     V2RAY.instance = this
@@ -51,11 +52,19 @@ class V2RAY extends Network{
     return basePath
   }
 
-  v2rayBinaryPath(){
+  v2rayBinaryPathFx(){
     // 4 windows
     if (this.platform === 'win32'){
-      if (this.binaryPath){return this.binaryPath}  
+      if (this.v2rayBinaryPath){return this.v2rayBinaryPath}  
       return path.join(this.binaryDirPath, 'v2ray.exe')
+    }
+  }
+
+  tun2socksBinaryPathFx(){
+    // 4 windows
+    if (this.platform === 'win32'){
+      if (this.tun2socksBinPath){return this.tun2socksBinPath}  
+      return path.join(this.binaryDirPath, 'tun2socks.exe')
     }
   }
 
@@ -70,13 +79,16 @@ class V2RAY extends Network{
     this.uid = uid
 
     try {
+      
       await this.writeConfigToDisk(config);
-      this.processTree.writeConfigToDisk = true
-      this.serverIp = await this.getIPv4FromDomain(endpoint)
-      this.processTree.resolvingServerIp = true
-      await this.establishTunnel()
-      this.processTree.establishTunnel = true
-      await this.deleteConfigFromDisk()
+      this.processTree.writeConfigToDisk = true;
+      this.serverIp = await this.getIPv4FromDomain(endpoint);
+      this.processTree.resolvingServerIp = true;
+      await this.establishV2RAYTunnel();
+      this.processTree.establishV2RAYTunnel = true;
+      await this.deleteConfigFromDisk();
+      await this.checkSocksInternetConnectivity('127.0.0.1', 10808);
+      await this.startInternalTunnel();
 
       return true
     } catch (error) {
@@ -93,7 +105,7 @@ class V2RAY extends Network{
       this.processTree = {
         writeConfigToDisk: false,
         resolvingServerIp: false,
-        establishTunnel: false,
+        establishV2RAYTunnel: false,
       }
       return true
     } catch (error) {
@@ -101,12 +113,12 @@ class V2RAY extends Network{
   }}
 
 
-  async establishTunnel() {
+  async establishV2RAYTunnel() {
     try {
       return new Promise((resolve, reject) => {
 
         const configPath = this.v2rayconfpath;
-        const v2rayBinPath = this.v2rayBinaryPath();
+        const v2rayBinPath = this.v2rayBinaryPath;
 
         const v2ray = spawn(v2rayBinPath, ['-config', configPath]);
         this.v2rayProcess = v2ray;
@@ -140,7 +152,7 @@ class V2RAY extends Network{
     }
   }
 
-  async closeTunnel() {
+  async closeV2RAYTunnel() {
     try {
       return new Promise((resolve, reject) => {
         if (this.v2rayProcess) {
@@ -156,6 +168,44 @@ class V2RAY extends Network{
     } catch (error) {
       throw new Error('An unexpected error occurred while closing the tunnel');
   }}
+
+  async startInternalTunnel(){
+    return new Promise((resolve, reject)=>{
+
+      const tun2socksBinPath = this.tun2socksBinPath
+
+      const tun2socks = spawn(tun2socksBinPath, [
+        '-tcp-auto-tuning',
+        '-device', `tun://${this.appConfig.adapterName}`,
+        '-proxy', 'socks5://127.0.0.1:10808'
+      ]);
+      this.tun2socksProcess = tun2socks;
+
+      tun2socks.on('error', async (error) => {
+        console.error(`Failed to start tun2socks process`);
+        reject(false);
+      });
+
+      tun2socks.on('close', async (code) => {
+        console.log(`tun2socks process exited with code ${code}`);
+        reject(false);
+      });
+
+      const onDataReceived = async (data) => {
+        const output = data.toString();
+      
+        if (output.includes(`level=info msg="[STACK] tun://${this.appConfig.adapterName} <-> socks5://127.0.0.1:10808'`)) {
+          tun2socks.stdout.removeListener('data', onDataReceived);
+          resolve(true);
+        }
+      };
+
+      tun2socks.stdout.on('data', onDataReceived);
+    })
+    }
+
+  async stopInternalTunnel(){}
+
 
 
 async writeConfigToDisk(config) {

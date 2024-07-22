@@ -18,7 +18,7 @@ function DeviceTokenProvider({ children }) {
                     setDeviceToken(res)
                 })
                 .catch((e) => {
-                    log.error(e)
+                    console.error(e)
                 })
         } else {
             setDeviceToken(token);
