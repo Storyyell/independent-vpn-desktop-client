@@ -8,14 +8,14 @@ import dns from "dns";
 import net from "net";
 import https from 'https';
 import { SocksClient } from 'socks';
+import AdapterUils from './adapter';
 
-class Network{
+class Network extends AdapterUils{
   constructor (){
     if (Network.instance){
       return VPNCore.instance
     }
-
-
+    Super()
     this.GatewayIp = null
     this.GatewayAdapterName = null
     this.GatewayIps = null

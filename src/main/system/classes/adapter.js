@@ -91,3 +91,5 @@ class AdapterUils {
   }
 
 }
+
+export default AdapterUils;
