@@ -160,21 +160,47 @@ class V2RAY extends Network{
   }
 
   async closeV2RAYTunnel() {
-    try {
-      return new Promise((resolve, reject) => {
-        if (this.v2rayProcess) {
-          this.v2rayProcess.kill('SIGINT');
-          this.v2rayProcess.on('close', (code) => {
-            console.log(`v2ray process exited with code ${code}`);
-            resolve(true);
-          });
-        } else {
-          resolve(true);
+    return new Promise((resolve, reject) => {
+
+      const handleCleanup = () => {
+        this.v2rayProcess = null;
+        if (this.processTree) {
+          this.processTree.isEstablishV2RAYTunnel = false;
         }
-      });
-    } catch (error) {
-      throw new Error('An unexpected error occurred while closing the tunnel');
-  }}
+      };
+
+      if (!this.v2rayProcess) {
+        console.warn("No v2ray process found to close.");
+        handleCleanup();
+        resolve(true);
+        return;
+      }
+
+      try {
+        // Attempt to gracefully stop the v2ray process
+        this.v2rayProcess.kill('SIGINT');
+
+        const handleProcessClosure = (eventName, detail) => {
+          return (code) => {
+            console.log(`v2ray process ${eventName}: ${detail}${code !== undefined ? ` with code ${code}` : ''}`);
+            handleCleanup();
+            resolve(eventName === 'close' || eventName === 'exit');
+          };
+        };
+
+        this.v2rayProcess.once('close', handleProcessClosure('exited', ''));
+        this.v2rayProcess.once('error', handleProcessClosure('failed to close', 'due to an error '));
+        this.v2rayProcess.once('exit', handleProcessClosure('exited', ''));
+        this.v2rayProcess.once('disconnect', handleProcessClosure('disconnected', ''));
+
+      } catch (error) {
+        console.error(`Exception in closing v2ray process: ${error.message}`);
+        handleCleanup();
+        resolve(false);
+      }
+    });
+  }
+
 
   async startInternalTunnel(){
     return new Promise((resolve, reject)=>{
@@ -211,35 +237,72 @@ class V2RAY extends Network{
     })
     }
 
-  async stopInternalTunnel(){}
+  async stopInternalTunnel() {
+    return new Promise((resolve, reject) => {
 
+      const handleCleanup = () => {
+        this.tun2socksProcess = null;
+        if (this.processTree) {
+          this.processTree.isEstablishedInternalTunnel = false;
+        }
+      };
 
-
-async writeConfigToDisk(config) {
-    try {
-      if (!config) {
-        throw new Error('config is required');
-      }
-
-      const configDirPath = this.appConfig.configDirPath;
-
-      if (!fs.existsSync(configDirPath)) {
-        await fsPromises.mkdir(configDirPath, { recursive: true });
+      if (!this.tun2socksProcess) {
+        console.warn("No tun2socks process found to stop.");
+        handleCleanup();
+        resolve(true);
+        return;
       }
 
       try {
-        await fsPromises.access(configDirPath)
+        // Attempt to gracefully stop the tun2socks process
+        this.tun2socksProcess.kill('SIGINT');
+
+        const handleProcessClosure = (eventName, detail) => {
+          return (code) => {
+            console.log(`tun2socks process ${eventName}: ${detail}${code !== undefined ? ` with code ${code}` : ''}`);
+            handleCleanup();
+            resolve(eventName === 'close' || eventName === 'exit');
+          };
+        };
+
+        this.tun2socksProcess.once('close', handleProcessClosure('exited', ''));
+        this.tun2socksProcess.once('error', handleProcessClosure('failed to close', 'due to an error '));
+        this.tun2socksProcess.once('exit', handleProcessClosure('exited', ''));
+        this.tun2socksProcess.once('disconnect', handleProcessClosure('disconnected', ''));
+
       } catch (error) {
-        fsPromises.mkdir(configDirPath, {recursive: true})      
+        console.error(`Exception in stopping tun2socks process: ${error.message}`);
+        handleCleanup();
+        resolve(false);
       }
-      await fs.promises.writeFile(this.v2rayconfpath, config, { flag: 'w' });
-      return true;
-    } catch (error) {
-      console.error('Error writing v2ray config to disk', error);
-      throw error;
-    }
+    });
   }
 
+  async writeConfigToDisk(config) {
+      try {
+        if (!config) {
+          throw new Error('config is required');
+        }
+
+        const configDirPath = this.appConfig.configDirPath;
+
+        if (!fs.existsSync(configDirPath)) {
+          await fsPromises.mkdir(configDirPath, { recursive: true });
+        }
+
+        try {
+          await fsPromises.access(configDirPath)
+        } catch (error) {
+          fsPromises.mkdir(configDirPath, {recursive: true})      
+        }
+        await fs.promises.writeFile(this.v2rayconfpath, config, { flag: 'w' });
+        return true;
+      } catch (error) {
+        console.error('Error writing v2ray config to disk', error);
+        throw error;
+      }
+    }
 
   async deleteConfigFromDisk(){
         try {
