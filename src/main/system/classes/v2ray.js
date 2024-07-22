@@ -36,6 +36,9 @@ class V2RAY extends Network{
       writeConfigToDisk: false,
       resolvingServerIp: false,
       establishV2RAYTunnel: false,
+      v2rayConfigCleaned: false,
+      isEstablishedInternalTunnel: false,
+      isInternetConnectivityCheckPassed : false,
     }
 
     V2RAY.instance = this
@@ -87,11 +90,15 @@ class V2RAY extends Network{
       await this.establishV2RAYTunnel();
       this.processTree.establishV2RAYTunnel = true;
       await this.deleteConfigFromDisk();
+      this.v2rayConfigCleaned = true;
       await this.checkSocksInternetConnectivity('127.0.0.1', 10808);
+      this.isInternetConnectivityCheckPassed = true;
       await this.startInternalTunnel();
+      this.isEstablishedInternalTunnel = true;
 
       return true
     } catch (error) {
+      console.log(this.processTree)
       // await this.disconnect()
       throw error
     }
@@ -194,7 +201,7 @@ class V2RAY extends Network{
       const onDataReceived = async (data) => {
         const output = data.toString();
       
-        if (output.includes(`level=info msg="[STACK] tun://${this.appConfig.adapterName} <-> socks5://127.0.0.1:10808'`)) {
+        if (output.includes(`level=info msg="[STACK] tun://${this.appConfig.adapterName} <-> socks5://127.0.0.1:10808"`)) {
           tun2socks.stdout.removeListener('data', onDataReceived);
           resolve(true);
         }
