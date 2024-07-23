@@ -114,7 +114,7 @@ class V2RAY extends Network{
 
       try {
         await this.deleteConfigFromDisk();
-        this.isv2rayConfigCleaned = true;
+        this.processTree.isv2rayConfigCleaned = true;
       } catch (error) {
         console.error('Failed to clean up v2ray config from disk', error);
         throw new Error(error);
@@ -122,14 +122,14 @@ class V2RAY extends Network{
 
       try {
         await this.checkSocksInternetConnectivity('127.0.0.1', 10808);
-        this.isInternetConnectivityCheckPassed = true;
+        this.processTree.isInternetConnectivityCheckPassed = true;
       } catch (error) {
         throw new Error('Failed to check internet connectivity through socks proxy');        
       }
 
       try {
         await this.startInternalTunnel();
-        this.isEstablishedInternalTunnel = true;
+        this.processTree.isEstablishedInternalTunnel = true;
       } catch (error) {
         console.error('Failed to establish internal tunnel');
         await this.stopInternalTunnel();
@@ -138,7 +138,7 @@ class V2RAY extends Network{
 
       try {
         await this.assignStaticIp();
-        this.isAdapterIpAssigned = true;
+        this.processTree.isAdapterIpAssigned = true;
       } catch (error) {
         console.error('Failed to assign static IP to adapter');
         await  this.removeStaticIp();
@@ -148,7 +148,7 @@ class V2RAY extends Network{
 
       try {
         await this.assignDns();
-        this.isDnsAssigned = true;
+        this.processTree.isDnsAssigned = true;
       } catch (error) {
         console.error('Failed to assign DNS');
         await  this.removeDns();
@@ -157,7 +157,7 @@ class V2RAY extends Network{
 
       try {
         await this.assignGlobalTrafficRouteRule();
-        this.isGlobalTrafficRouteRuleAssigned = true;
+        this.processTree.isGlobalTrafficRouteRuleAssigned = true;
       } catch (error) {
         console.error('Failed to assign global traffic route rule');
         await this.removeGlobalTrafficRouteRule();
@@ -166,7 +166,7 @@ class V2RAY extends Network{
 
       try {
         await this.getGatewayAdapterIp();
-        this.isGatewayAdapterIpResolved = true;
+        this.processTree.isGatewayAdapterIpResolved = true;
       } catch (error) {
         console.error('Failed to get gateway adapter IP');
         throw new Error(error);        
@@ -174,7 +174,7 @@ class V2RAY extends Network{
 
       try {
         await this.vpnTrafficRouteRule(this.serverIp, this.GatewayIp);
-        this.isVpnTrafficRouteRuleAssigned = true;
+        this.processTree.isVpnTrafficRouteRuleAssigned = true;
       } catch (error) {
         console.error('Failed to assign VPN traffic route rule');
         await this.removeVpnTrafficRouteRule();
