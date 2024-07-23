@@ -18,7 +18,8 @@ function DeviceTokenProvider({ children }) {
                     setDeviceToken(res)
                 })
                 .catch((e) => {
-                    console.error(e)
+                    // console.error(e)
+                    console.error('Device registration failed')
                 })
         } else {
             setDeviceToken(token);

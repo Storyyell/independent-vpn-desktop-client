@@ -82,7 +82,8 @@ function App() {
               setDeviceToken(res);
             })
             .catch((e) => {
-              console.error(e)
+              // console.error(e)
+              console.error('Device registration failed')
             })
         }else{
           window.api.setDeviceToken(deviceToken);
