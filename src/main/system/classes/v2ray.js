@@ -5,6 +5,7 @@ import fs, { mkdir } from 'fs'
 const fsPromises = require('fs').promises;
 import { spawn } from "child_process"
 import { app } from 'electron'
+import { is } from "@electron-toolkit/utils";
 
 
 class V2RAY extends Network{
@@ -194,17 +195,35 @@ class V2RAY extends Network{
   async disconnect(){
     try {
 
-      // await this.closeTunnel()
-      await this.deleteConfigFromDisk()
-      this.processTree = {
-        writeConfigToDisk: false,
-        resolvingServerIp: false,
-        establishV2RAYTunnel: false,
-      }
+      if (this.processTree.isGlobalTrafficRouteRuleAssigned){await this.removeGlobalTrafficRouteRule()}
+      if (this.processTree.isVpnTrafficRouteRuleAssigned){await this.removeVpnTrafficRouteRule()}
+      if (this.processTree.isDnsAssigned){await this.removeDns()}
+      if (this.processTree.isAdapterIpAssigned){await this.removeStaticIp()}
+      if (this.processTree.isEstablishedInternalTunnel){await this.stopInternalTunnel()}
+      if (this.processTree.isEstablishV2RAYTunnel){await this.closeV2RAYTunnel()}
+      if (this.processTree.isConfigToDisk){await this.deleteConfigFromDisk()}
+
       return true
+      
     } catch (error) {
       return false
-  }}
+    } finally {
+      this.processTree ={
+        isConfigToDisk: false,
+        isResolvedServerIp: false,
+        isEstablishV2RAYTunnel: false,
+        isv2rayConfigCleaned: false,
+        isEstablishedInternalTunnel: false,
+        isInternetConnectivityCheckPassed : false,
+        isAdapterIpAssigned: false,
+        isDnsAssigned: false,
+        isGlobalTrafficRouteRuleAssigned: false,
+        isGatewayAdapterIpResolved: false,
+        isVpnTrafficRouteRuleAssigned
+      }
+    }
+
+  }
 
 
   async establishV2RAYTunnel() {
