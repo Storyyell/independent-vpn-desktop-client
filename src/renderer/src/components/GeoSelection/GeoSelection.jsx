@@ -6,18 +6,19 @@ import Divider from '@mui/material/Divider';
 import { Stack } from '@mui/material';
 import { ServerListContext } from '../../context/ServerListContext';
 import { SelectionContext } from '../../context/SelectionContext';
-import { DeviceTokenContext } from '../../context/DeviceTokenContext';
 import { FavListContext } from '../../context/FavContext';
 import CountryList from './CountryList';
 import CityList from './CityList';
 import GeoSelHeader from './GeoSelHeader';
 import { refreshCityList, refreshCountryList } from '../../scripts/utils';
 import backgroundImage from '../../assets/background.svg';
+import { useRecoilValue } from 'recoil';
+import { deviceTokenState } from '../../atoms/app/token';
 
 const GeoSelection = (props) => {
 
   const { serverList, setServerList } = React.useContext(ServerListContext);
-  const { deviceToken } = React.useContext(DeviceTokenContext);
+  const deviceToken = useRecoilValue(deviceTokenState);
   const [loadCityList, setLoadCityList] = React.useState(false)
   const { setSelectedItems } = React.useContext(SelectionContext);
 

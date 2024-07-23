@@ -4,7 +4,8 @@ import { Box, Button, Chip, Divider, Grid, List, ListItem, ListItemButton, MenuI
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Switch from '@mui/material/Switch';
 import SettingsItem from '../../components/SettingsItem/SettingsItem';
-import { DeviceTokenContext } from '../../context/DeviceTokenContext';
+import { useRecoilValue } from 'recoil';
+import { deviceTokenState } from '../../atoms/app/token';
 
 
 function stringToUniqueNumber(input) {
@@ -20,7 +21,7 @@ function stringToUniqueNumber(input) {
 stringToUniqueNumber("YourString");
 
 const HomeSettings = (props) => {
-  const { deviceToken } = React.useContext(DeviceTokenContext);
+  const deviceToken = useRecoilValue(deviceTokenState);
 
   const homeSettingsJson = [
     {

@@ -3,7 +3,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ServerListProvider } from './context/ServerListContext'
 import { VpnStatusMainProvider } from './context/VpnStatusMainContext'
-import { DeviceTokenProvider } from './context/DeviceTokenContext'
 import { SelectionProvider } from './context/SelectionContext'
 import Home from './pages/Home/Home';
 import { Box, Typography } from '@mui/material';
@@ -103,7 +102,6 @@ function App() {
         <VpnStatusMainProvider>
           <VpnTunnelStatusProvider>
             <SelectionProvider>
-              <DeviceTokenProvider>
                 <FavListProvider>
                   <SysSettingsProvider>
                     <DnsListProvider>
@@ -121,7 +119,6 @@ function App() {
                     </DnsListProvider>
                   </SysSettingsProvider>
                 </FavListProvider>
-              </DeviceTokenProvider>
             </SelectionProvider>
           </VpnTunnelStatusProvider>
         </VpnStatusMainProvider>
