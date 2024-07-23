@@ -39,6 +39,11 @@ class V2RAY extends Network{
       isv2rayConfigCleaned: false,
       isEstablishedInternalTunnel: false,
       isInternetConnectivityCheckPassed : false,
+      isAdapterIpAssigned: false,
+      isDnsAssigned: false,
+      isGlobalTrafficRouteRuleAssigned: false,
+      isGatewayAdapterIpResolved: false,
+      isVpnTrafficRouteRuleAssigned: false,
     }
 
     V2RAY.instance = this
@@ -85,21 +90,36 @@ class V2RAY extends Network{
       
       await this.writeConfigToDisk(config);
       this.processTree.isConfigToDisk = true;
+
       this.serverIp = await this.getIPv4FromDomain(endpoint);
       this.processTree.isResolvedServerIp = true;
+
       await this.establishV2RAYTunnel();
       this.processTree.isEstablishV2RAYTunnel = true;
+
       await this.deleteConfigFromDisk();
       this.isv2rayConfigCleaned = true;
+
       await this.checkSocksInternetConnectivity('127.0.0.1', 10808);
       this.isInternetConnectivityCheckPassed = true;
+
       await this.startInternalTunnel();
       this.isEstablishedInternalTunnel = true;
+
       await this.assignStaticIp();
+      this.isAdapterIpAssigned = true;
+
       await this.assignDns();
+      this.isDnsAssigned = true;
+
       await this.assignGlobalTrafficRouteRule();
+      this.isGlobalTrafficRouteRuleAssigned = true;
+
       await this.getGatewayAdapterIp();
+      this.isGatewayAdapterIpResolved = true;
+      
       await this.vpnTrafficRouteRule(this.serverIp, this.GatewayIp);
+      this.isVpnTrafficRouteRuleAssigned = true;
 
       return true
     } catch (error) {
