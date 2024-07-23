@@ -42,24 +42,26 @@ class VPN{
       }
       
       this.isConnected = true
+      this.isConnectionProgress = false
       return true
     } catch (error) {
+      this.isConnected = false
+      this.isConnectionProgress = false
       await this.stop()
       console.error(error)
       return false
     }
   }
-
+  
   async stop(){
     if(this.isDisconnectionProgress) {console.log('vpn already disconnecting'); return}
+    if(this.isConnectionProgress) {console.log('vpn is connecting'); return}
 
     this.isDisconnectionProgress = true
-    this.isConnectionProgress = false
 
     try {
       if(this.protocol === 'V2RAY'){
-        // await this.v2ray.disconnect();
-
+        await this.v2ray.disconnect();
       }
     }
       catch (error) {
