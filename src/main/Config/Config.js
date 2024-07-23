@@ -1,6 +1,6 @@
 import os from 'os'
 import path from 'path'
-// import Randomstring from 'randomstring';
+import Randomstring from 'randomstring';
 const fsPromises = require('fs').promises;
 const { spawn } = require("child_process");
 import log from 'electron-log/main';
