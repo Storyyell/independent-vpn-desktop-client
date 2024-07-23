@@ -9,6 +9,7 @@ import VPN from './system/classes/vpn.js';
 let mainWindow;
 
 const appConfig = new Config();
+const singleInstanceLock = app.requestSingleInstanceLock()
 
 // initialize the logger
 log.initialize({ spyRendererConsole: true });

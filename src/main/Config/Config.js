@@ -19,6 +19,7 @@ class Config {
         this.configDirPath = path.join(this.tmpdir, uniqueString)
         this.configPath = path.join(this.tmpdir, uniqueString, 'config.json')
         this.adapterName = 'independent_vpn'
+        this.appProtocolTag = 'ivpn'
 
         // loading from env
         this.apiDomain = import.meta.env.VITE_SERVER_API_URL
