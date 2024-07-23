@@ -3,7 +3,7 @@ import log from 'electron-log/main';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import "./utils/axiosTweek.js"
 import createWindow from './window/main.js'
-import {registerDeepLink } from './utils/deepLink.js'
+import {registerDeepLink, handleDeepLink } from './utils/deepLink.js'
 import Config, { deleteLogFiles } from './Config/Config.js';
 import VPN from './system/classes/vpn.js';
 
@@ -21,24 +21,25 @@ log.initialize({ spyRendererConsole: true });
 // redirect console.log to the logger
 console.log = log.log;
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
 
-  const gotTheLock = app.requestSingleInstanceLock()
+if (!singleInstanceLock) {
+  app.quit()
+} else {
 
-  if (!gotTheLock) {
-    app.quit()
-  } else {
-
-    app.on('second-instance', (event, commandLine, workingDirectory) => {
-      if (mainWindow) {
-        if (mainWindow.isMinimized()) {
-          mainWindow.show()
-        }
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) {
+        mainWindow.show()
       }
-    })
+    }
+    handleDeepLink(commandLine.pop())
+  })
+
+  // This method will be called when Electron has finished
+  // initialization and is ready to create browser windows.
+  // Some APIs can only be used after this event occurs.
+  app.whenReady().then(() => {
+
 
     // Set app user model id for windows
     electronApp.setAppUserModelId('co.sentinel')
@@ -56,10 +57,12 @@ app.whenReady().then(() => {
       // dock icon is clicked and there are no other windows open.
       if (BrowserWindow.getAllWindows().length === 0) createWindow(mainWindow)
     })
+  })
 
-  }
+}
 
-})
+app.on('open-url', (event, url) => {handleDeepLink(url)});
+
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
