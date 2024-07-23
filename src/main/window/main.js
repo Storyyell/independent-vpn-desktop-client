@@ -4,7 +4,11 @@ import { optimizer, is } from '@electron-toolkit/utils'
 import { registerIpcHandlers } from '../ipcHandlers/handlers.js';
 import icon from '../../../resources/icon.png?asset'
 
-export default function createWindow(mainWindow) {
+
+let mainWindow;
+
+
+function createWindow() {
 
   let tray = null;
 
@@ -100,5 +104,8 @@ export default function createWindow(mainWindow) {
     }
   });
 
-
 }
+
+const getMainWindow =  () => mainWindow
+
+export  { createWindow, getMainWindow };

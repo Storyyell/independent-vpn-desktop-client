@@ -2,13 +2,11 @@ import { app, BrowserWindow } from 'electron'
 import log from 'electron-log/main';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import "./utils/axiosTweek.js"
-import createWindow from './window/main.js'
+import {createWindow, getMainWindow} from './window/main.js'
 import {registerDeepLink, handleDeepLink } from './utils/deepLink.js'
 import Config, { deleteLogFiles } from './Config/Config.js';
 import VPN from './system/classes/vpn.js';
 
-
-let mainWindow;
 
 const appConfig = new Config();
 const singleInstanceLock = app.requestSingleInstanceLock()
@@ -27,12 +25,14 @@ if (!singleInstanceLock) {
 } else {
 
   app.on('second-instance', (event, commandLine, workingDirectory) => {
+    let mainWindow = getMainWindow();
+
     if (mainWindow) {
       if (mainWindow.isMinimized()){
-        // mainWindow.restore()
-        // mainWindow.focus()
-        mainWindow.show()
+        mainWindow.restore();
       } 
+      mainWindow.show();
+      mainWindow.focus();
     }
     handleDeepLink(commandLine.pop())
   })
@@ -51,12 +51,12 @@ if (!singleInstanceLock) {
       optimizer.watchWindowShortcuts(window)
     })
 
-    createWindow(mainWindow)
+    createWindow();
 
     app.on('activate', function () {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
-      if (BrowserWindow.getAllWindows().length === 0) createWindow(mainWindow)
+      if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
   })
 
