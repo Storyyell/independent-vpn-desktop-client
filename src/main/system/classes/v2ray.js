@@ -329,7 +329,7 @@ class V2RAY extends Network{
 
       try {
         // Attempt to gracefully stop the v2-ray process
-        this.v2rayProcess.kill('SIGINT');
+        this.v2rayProcess.kill();
 
         const handleProcessClosure = (eventName, detail) => {
           return (code) => {
@@ -407,7 +407,7 @@ class V2RAY extends Network{
 
       try {
         // Attempt to gracefully stop the tun 2 socks process
-        this.tun2socksProcess.kill('SIGINT');
+        this.tun2socksProcess.kill();
 
         const handleProcessClosure = (eventName, detail) => {
           return (code) => {
