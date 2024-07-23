@@ -3,13 +3,17 @@ import log from 'electron-log/main';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import "./utils/axiosTweek.js"
 import createWindow from './window/main.js'
+import {registerDeepLink } from './utils/deepLink.js'
 import Config, { deleteLogFiles } from './Config/Config.js';
 import VPN from './system/classes/vpn.js';
+
 
 let mainWindow;
 
 const appConfig = new Config();
 const singleInstanceLock = app.requestSingleInstanceLock()
+
+registerDeepLink();
 
 // initialize the logger
 log.initialize({ spyRendererConsole: true });
