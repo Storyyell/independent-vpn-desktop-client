@@ -95,6 +95,11 @@ class V2RAY extends Network{
       this.isInternetConnectivityCheckPassed = true;
       await this.startInternalTunnel();
       this.isEstablishedInternalTunnel = true;
+      await this.assignStaticIp();
+      await this.assignDns();
+      await this.assignGlobalTrafficRouteRule();
+      await this.getGatewayAdapterIp();
+      await this.vpnTrafficRouteRule(this.serverIp, this.GatewayIp);
 
       return true
     } catch (error) {

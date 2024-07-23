@@ -1,6 +1,7 @@
 import { stat } from "fs";
 import Config from "../../Config/Config";
 import DNS from "./dns";
+const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
 class AdapterUils {
@@ -65,7 +66,7 @@ class AdapterUils {
   async assignGlobalTrafficRouteRule(){
     const adapterName = this.appConfig.adapterName
     const staticIPv4 = "192.168.123.1"
-    const staticIPv6 = "fd12:3456:789a:1::1/64"
+    const staticIPv6 = "fd12:3456:789a:1::1"
 
     await exec(`netsh interface ipv4 add route 0.0.0.0/0 "${adapterName}" ${staticIPv4} metric=1`);
     await exec(`netsh interface ipv6 add route ::/0 "${adapterName}" ${staticIPv6} metric=1`);
