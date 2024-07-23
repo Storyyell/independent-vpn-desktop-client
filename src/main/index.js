@@ -5,6 +5,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import "./utils/axiosTweek.js"
 import createWindow from './window/init.js'
 import Config, { deleteLogFiles } from './Config/Config.js';
+import VPN from './system/classes/vpn.js';
 const fsPromises = require('fs').promises;
 
 
@@ -77,16 +78,18 @@ app.on('ready', async () => {
 })
 
 app.on('will-quit', async (event) => {
-  // event.preventDefault
+  event.preventDefault
   // //todo fix file deletion issue for windows
-  // try {
+  try {
   //   deleteLogFiles();
   //   appConfig.deleteConfigDirectory();
-  // } catch (error) {
+    const vpn = new VPN();
+    await vpn.stop();
+  } catch (error) {
     
-  // } finally {
-  //   app.quit();
-  // }
+  } finally {
+    app.quit();
+  }
 
 });
 
