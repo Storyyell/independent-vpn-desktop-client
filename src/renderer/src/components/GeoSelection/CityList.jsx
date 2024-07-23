@@ -2,8 +2,6 @@ import * as React from 'react';
 import { GeoItem } from '../GeoItem/GeoItem';
 import { Box, Typography } from '@mui/material';
 import { refreshCityList, refreshServerList } from '../../scripts/utils';
-import { handleVpnConnTrigger } from '../../pages/Home/ConnectionTrigger';
-import { VpnStatusMainContext } from '../../context/VpnStatusMainContext';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { countrySelectedState } from '../../atoms/userSelection/country';
 import { deviceTokenState } from '../../atoms/app/token';
@@ -17,8 +15,6 @@ const CityList = (props) => {
   let serverList = props.serverList
   let setSelectedItems = props.setSelectedItems
   let setServerList = props.setServerList
-
-  const { vpnStatusMain, setVpnStatusMain } = React.useContext(VpnStatusMainContext);
 
   const countryId = useRecoilValue(countrySelectedState);
   const deviceToken = useRecoilValue(deviceTokenState);

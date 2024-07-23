@@ -75,8 +75,6 @@ const GeoSelection = (props) => {
                     serverList={serverList}
                     cityListProcessed={cityListProcessed}
                     selectedItems={selectedItems}
-                    favList={favList}
-                    setFavList={setFavList}
                     deviceToken={deviceToken}
                     setServerList={setServerList}
                     setSelectedItems={setSelectedItems}
