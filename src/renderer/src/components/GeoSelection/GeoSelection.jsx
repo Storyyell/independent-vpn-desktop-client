@@ -4,7 +4,6 @@ import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import { Stack } from '@mui/material';
-import { ServerListContext } from '../../context/ServerListContext';
 import { SelectionContext } from '../../context/SelectionContext';
 import { FavListContext } from '../../context/FavContext';
 import CountryList from './CountryList';
@@ -17,7 +16,6 @@ import { deviceTokenState } from '../../atoms/app/token';
 
 const GeoSelection = (props) => {
 
-  const { serverList, setServerList } = React.useContext(ServerListContext);
   const deviceToken = useRecoilValue(deviceTokenState);
   const [loadCityList, setLoadCityList] = React.useState(false)
   const { setSelectedItems } = React.useContext(SelectionContext);
@@ -30,17 +28,6 @@ const GeoSelection = (props) => {
     display: 'flex',
     borderRadius: '5px',
   }
-
-
-  // for refreshing the country list
-  React.useEffect(() => {
-    if (props.open) {
-      refreshCountryList(deviceToken, serverList, setServerList);
-    }
-  }, [deviceToken, props.open])
-
-
-
 
   const DrawerList = (
     <>

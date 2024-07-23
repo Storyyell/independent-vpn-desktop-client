@@ -1,7 +1,6 @@
 import React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { ServerListProvider } from './context/ServerListContext'
 import { VpnStatusMainProvider } from './context/VpnStatusMainContext'
 import { SelectionProvider } from './context/SelectionContext'
 import Home from './pages/Home/Home';
@@ -98,7 +97,6 @@ function App() {
 
   return (
     <>
-      <ServerListProvider>
         <VpnStatusMainProvider>
           <VpnTunnelStatusProvider>
             <SelectionProvider>
@@ -122,7 +120,6 @@ function App() {
             </SelectionProvider>
           </VpnTunnelStatusProvider>
         </VpnStatusMainProvider>
-      </ServerListProvider>
     </>
   )
 }
