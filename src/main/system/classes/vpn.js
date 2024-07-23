@@ -56,7 +56,10 @@ class VPN{
   async stop({protocol}){
     if(this.isDisconnectionProgress) {console.log('vpn already disconnecting'); return}
     if(this.isConnectionProgress) {console.log('vpn is connecting'); return}
-    if(!protocol){ throw new Error("protocol not selected") }
+    
+    if(!protocol && !this.protocol){ throw new Error("protocol not selected") }
+    if(protocol){this.protocol= protocol}
+
     this.isDisconnectionProgress = true
 
     this.protocol = protocol
