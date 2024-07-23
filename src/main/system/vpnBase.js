@@ -1,3 +1,5 @@
+// info this file is the orginal implementation of vpn and kept for reference
+
 import { app } from "electron";
 import { spawn } from "child_process"
 import path from "path";
