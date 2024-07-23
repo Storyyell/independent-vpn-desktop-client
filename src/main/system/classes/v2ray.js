@@ -147,11 +147,11 @@ class V2RAY extends Network{
 
 
       try {
-        await this.assignDns();
+        await this.assignDns(this.getGatewayInterfaceName());
         this.processTree.isDnsAssigned = true;
       } catch (error) {
         console.error('Failed to assign DNS');
-        await  this.removeDns();
+        await  this.removeDns(this.getGatewayInterfaceName());
         throw new Error(error);        
       }
 
@@ -177,7 +177,7 @@ class V2RAY extends Network{
         this.processTree.isVpnTrafficRouteRuleAssigned = true;
       } catch (error) {
         console.error('Failed to assign VPN traffic route rule');
-        await this.removeVpnTrafficRouteRule();
+        await this.removeVpnTrafficRouteRule(this.serverIp);
         throw new Error(error);        
       }
 
