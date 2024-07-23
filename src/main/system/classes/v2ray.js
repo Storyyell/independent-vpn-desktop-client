@@ -63,7 +63,6 @@ class V2RAY extends Network{
   v2rayBinaryPathFx(){
     // 4 windows
     if (this.platform === 'win32'){
-      if (this.v2rayBinaryPath){return this.v2rayBinaryPath}  
       return path.join(this.binaryDirPath, 'v2ray.exe')
     }
   }
@@ -71,7 +70,6 @@ class V2RAY extends Network{
   tun2socksBinaryPathFx(){
     // 4 windows
     if (this.platform === 'win32'){
-      if (this.tun2socksBinPath){return this.tun2socksBinPath}  
       return path.join(this.binaryDirPath, 'tun2socks.exe')
     }
   }
