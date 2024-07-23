@@ -1,5 +1,6 @@
 import Config from "../Config/Config";
 import { app} from 'electron'
+const path = require('node:path')
 
 const appConfig = new Config();
 

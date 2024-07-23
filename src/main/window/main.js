@@ -14,7 +14,6 @@ export default function createWindow(mainWindow) {
   mainWindow = new BrowserWindow({
     width: 393,
     height: 652,
-    minimizable: false,
     maximizable: false,
     x: screen_size.width - 393 - 40,
     y: screen_size.height - 652 - 50,
