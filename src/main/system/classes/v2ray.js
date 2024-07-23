@@ -353,12 +353,13 @@ class V2RAY extends Network{
   async startInternalTunnel(){
     return new Promise((resolve, reject)=>{
 
+      const tun2socksBinPath = this.tun2socksBinPath
+
       const tun2socks = spawn(tun2socksBinPath, [
         '-tcp-auto-tuning',
         '-device', `tun://${this.appConfig.adapterName}`,
         '-proxy', 'socks5://127.0.0.1:10808'
       ]);
-
       this.tun2socksProcess = tun2socks;
 
       tun2socks.on('error', async (error) => {
