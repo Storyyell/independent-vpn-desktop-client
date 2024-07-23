@@ -186,45 +186,90 @@ class V2RAY extends Network{
 
       return true
     } catch (error) {
-      console.log(this.processTree)
-      // await this.disconnect()
+      await this.disconnect()
       throw new Error(error)
     }
   }
   
   async disconnect(){
+    let success = true;
+
     try {
+      if (this.processTree.isGlobalTrafficRouteRuleAssigned) {
+        try {
+          await this.removeGlobalTrafficRouteRule();
+        } catch (error) {
+          success = false;
+        }
+      }
 
-      if (this.processTree.isGlobalTrafficRouteRuleAssigned){await this.removeGlobalTrafficRouteRule()}
-      if (this.processTree.isVpnTrafficRouteRuleAssigned){await this.removeVpnTrafficRouteRule()}
-      if (this.processTree.isDnsAssigned){await this.removeDns()}
-      if (this.processTree.isAdapterIpAssigned){await this.removeStaticIp()}
-      if (this.processTree.isEstablishedInternalTunnel){await this.stopInternalTunnel()}
-      if (this.processTree.isEstablishV2RAYTunnel){await this.closeV2RAYTunnel()}
-      if (this.processTree.isConfigToDisk){await this.deleteConfigFromDisk()}
+      if (this.processTree.isVpnTrafficRouteRuleAssigned) {
+        try {
+          await this.removeVpnTrafficRouteRule();
+        } catch (error) {
+          success = false;
+        }
+      }
 
-      return true
-      
-    } catch (error) {
-      return false
+      if (this.processTree.isDnsAssigned) {
+        try {
+          await this.removeDns();
+        } catch (error) {
+          success = false;
+        }
+      }
+
+      if (this.processTree.isAdapterIpAssigned) {
+        try {
+          await this.removeStaticIp();
+        } catch (error) {
+          success = false;
+        }
+      }
+
+      if (this.processTree.isEstablishedInternalTunnel) {
+        try {
+          await this.stopInternalTunnel();
+        } catch (error) {
+          success = false;
+        }
+      }
+
+      if (this.processTree.isEstablishV2RAYTunnel) {
+        try {
+          await this.closeV2RAYTunnel();
+        } catch (error) {
+          success = false;
+        }
+      }
+
+      if (this.processTree.isConfigToDisk) {
+        try {
+          await this.deleteConfigFromDisk();
+        } catch (error) {
+          success = false;
+        }
+      }
+
     } finally {
-      this.processTree ={
+      this.processTree = {
         isConfigToDisk: false,
         isResolvedServerIp: false,
         isEstablishV2RAYTunnel: false,
         isv2rayConfigCleaned: false,
         isEstablishedInternalTunnel: false,
-        isInternetConnectivityCheckPassed : false,
+        isInternetConnectivityCheckPassed: false,
         isAdapterIpAssigned: false,
         isDnsAssigned: false,
         isGlobalTrafficRouteRuleAssigned: false,
         isGatewayAdapterIpResolved: false,
-        isVpnTrafficRouteRuleAssigned : false
-      }
+        isVpnTrafficRouteRuleAssigned: false
+      };
     }
 
-  }
+    return success;
 
+  }
 
   async establishV2RAYTunnel() {
     try {
