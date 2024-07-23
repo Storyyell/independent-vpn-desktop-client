@@ -23,6 +23,7 @@ class V2RAY extends Network{
     this.binaryDirPath = this.publicDirPath()
     this.v2rayBinaryPath = this.v2rayBinaryPathFx()
     this.tun2socksBinPath = this.tun2socksBinaryPathFx()
+    this.gatewayInterfaceName = null
     
     this.appConfig = new Config()
     this.v2rayconffname = 'v2ray_config.json'
@@ -33,6 +34,7 @@ class V2RAY extends Network{
     this.tun2socksProcess = null
 
     this.processTree = {
+      isGatewayAdapterNameResolved: false,
       isConfigToDisk: false,
       isResolvedServerIp: false,
       isEstablishV2RAYTunnel: false,
@@ -85,6 +87,14 @@ class V2RAY extends Network{
     this.uid = uid
 
     try {
+
+      try {
+        this.gatewayInterfaceName = await this.getGatewayInterfaceName();
+        this.processTree.isGatewayAdapterNameResolved = true;
+      } catch (error) {
+        console.error('Failed to get gateway interface name');
+        throw new Error(error);
+      }
       
       try {
         await this.writeConfigToDisk(config);
@@ -147,11 +157,11 @@ class V2RAY extends Network{
 
 
       try {
-        await this.assignDns(this.getGatewayInterfaceName());
+        await this.assignDns(this.gatewayInterfaceName);
         this.processTree.isDnsAssigned = true;
       } catch (error) {
         console.error('Failed to assign DNS');
-        await  this.removeDns(this.getGatewayInterfaceName());
+        await  this.removeDns(this.gatewayInterfaceName);
         throw new Error(error);        
       }
 
@@ -212,7 +222,7 @@ class V2RAY extends Network{
 
       if (this.processTree.isDnsAssigned) {
         try {
-          await this.removeDns(this.getGatewayInterfaceName());
+          await this.removeDns(this.gatewayInterfaceName);
         } catch (error) {
           console.error('Failed to remove DNS');
           success = false;
@@ -257,6 +267,7 @@ class V2RAY extends Network{
 
     } finally {
       this.processTree = {
+        isGatewayAdapterNameResolved: false,
         isConfigToDisk: false,
         isResolvedServerIp: false,
         isEstablishV2RAYTunnel: false,
