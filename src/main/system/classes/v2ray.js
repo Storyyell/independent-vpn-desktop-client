@@ -196,22 +196,25 @@ class V2RAY extends Network{
         try {
           await this.removeGlobalTrafficRouteRule();
         } catch (error) {
+          console.error('Failed to remove global traffic route rule');
           success = false;
         }
       }
 
       if (this.processTree.isVpnTrafficRouteRuleAssigned) {
         try {
-          await this.removeVpnTrafficRouteRule();
+          await this.removeVpnTrafficRouteRule(this.serverIp);
         } catch (error) {
+          console.error('Failed to remove VPN traffic route rule');
           success = false;
         }
       }
 
       if (this.processTree.isDnsAssigned) {
         try {
-          await this.removeDns();
+          await this.removeDns(this.getGatewayInterfaceName());
         } catch (error) {
+          console.error('Failed to remove DNS');
           success = false;
         }
       }
@@ -220,6 +223,7 @@ class V2RAY extends Network{
         try {
           await this.removeStaticIp();
         } catch (error) {
+          console.error('Failed to remove static IP from adapter');
           success = false;
         }
       }
@@ -228,6 +232,7 @@ class V2RAY extends Network{
         try {
           await this.stopInternalTunnel();
         } catch (error) {
+          console.error('Failed to stop internal tunnel');
           success = false;
         }
       }
@@ -236,6 +241,7 @@ class V2RAY extends Network{
         try {
           await this.closeV2RAYTunnel();
         } catch (error) {
+          console.error('Failed to close v2ray tunnel');
           success = false;
         }
       }
@@ -244,6 +250,7 @@ class V2RAY extends Network{
         try {
           await this.deleteConfigFromDisk();
         } catch (error) {
+          console.error('Failed to delete v2ray config from disk');
           success = false;
         }
       }
