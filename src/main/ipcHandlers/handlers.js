@@ -31,7 +31,7 @@ export function registerIpcHandlers(ipcMain) {
   ipcMain.handle('triggerDisconnection', async (event) => {
     console.log('vpn disconnection trigger on main process')
     // return await vpnDisconnect()
-    // return await vpnInstance.stop()
+    return await vpnInstance.stop()
   })
 
   ipcMain.handle('vpnConnStatus', (event, serverObj) => {
