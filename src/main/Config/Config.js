@@ -12,8 +12,7 @@ class Config {
             return Config.instance;
         }
 
-        // const uniqueString = Randomstring.generate();
-        const uniqueString = "949725481000034";
+        const uniqueString = Randomstring.generate();
         
 
         this.tmpdir = os.tmpdir()
@@ -59,18 +58,19 @@ class Config {
 
 export function deleteLogFiles() {
     const logFilePath = log.transports.file.getFile().path;
-    cmd = ''
-    if (process.platform == 'win32') {
-        cmd = `rd ${logFilePath}`
+    let cmd = '';
+    
+    if (process.platform === 'win32') {
+        cmd = ['rd', '/s', '/q', logFilePath];
+    } else if (process.platform === 'linux' || process.platform === 'darwin') {
+        cmd = `rm -rf ${logFilePath}`;
     }
-    if (process.platform == 'linux') {
-        cmd = `rm -rf ${logFilePath}`
-    }
-    if (process.platform == 'darwin') {
-        cmd = `rm -rf ${logFilePath}`
-    }
-    const process = spawn(cmd, { shell: (process.platform == 'win32' ? 'cmd.exe' : true), stdio: "ignore", detached: true });
-    process.unref();
+
+    const shell = process.platform === 'win32' ? process.env.comspec : true;
+    const args = process.platform === 'win32' ? ['/c', ...cmd] : [cmd];
+
+    const childProcess = spawn(shell, args, { stdio: 'ignore', detached: true });
+    childProcess.unref();
 }
 
 export default Config;

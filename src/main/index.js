@@ -80,10 +80,10 @@ app.on('ready', async () => {
 app.on('will-quit', async (event) => {
   event.preventDefault
   try {
-    deleteLogFiles();
-    appConfig.deleteConfigDirectory();
-    const vpn = new VPN();
-    await vpn.stop();
+    // try{deleteLogFiles();}catch(e){console.log(e)}
+    try{appConfig.deleteConfigDirectory();}catch(e){}
+    
+    try{const vpn = new VPN();await vpn.stop();}catch(e){}
   } catch (error) {
     
   } finally {
