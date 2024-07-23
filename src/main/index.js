@@ -29,8 +29,9 @@ if (!singleInstanceLock) {
   app.on('second-instance', (event, commandLine, workingDirectory) => {
     if (mainWindow) {
       if (mainWindow.isMinimized()){
-        mainWindow.restore()
-        mainWindow.focus()
+        // mainWindow.restore()
+        // mainWindow.focus()
+        mainWindow.show()
       } 
     }
     handleDeepLink(commandLine.pop())
