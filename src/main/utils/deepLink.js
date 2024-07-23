@@ -17,7 +17,8 @@ function registerDeepLink() {
 
 const handleDeepLink = (url) => {
   if (!url.startsWith(`${appConfig.appProtocolTag}://`)) return
-  if (url.endsWith('/')) url = url.slice(0, -1)
+  if (url.endsWith('/')) url = url.slice(0, -1);
+  console.log(url);
 
 }
 
