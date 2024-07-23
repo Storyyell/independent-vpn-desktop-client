@@ -1,4 +1,3 @@
-import { stat } from "fs";
 import Config from "../../Config/Config";
 import DNS from "./dns";
 const util = require('util');

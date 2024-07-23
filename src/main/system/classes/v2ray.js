@@ -1,7 +1,7 @@
 import Config from "../../Config/Config";
 import Network from "./network";
 import path from 'path'
-import fs, { mkdir } from 'fs'
+import fs from 'fs'
 const fsPromises = require('fs').promises;
 import { spawn } from "child_process"
 import { app } from 'electron'
