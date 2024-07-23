@@ -3,7 +3,6 @@
 // const exec = promisify(execCb);
 import os from 'os';
 import ip from 'ip'
-import { Console } from 'console';
 import dns from "dns";
 import net from "net";
 import https from 'https';
@@ -87,7 +86,7 @@ class Network extends AdapterUils{
       return this.GatewayIps;
 
     } catch (error) {
-      Console.error('error getting gateway adapter ips')
+      console.error('error getting gateway adapter ips')
       throw error
     }
   }

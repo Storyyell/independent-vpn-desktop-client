@@ -144,7 +144,7 @@ class V2RAY extends Network{
         this.isAdapterIpAssigned = true;
       } catch (error) {
         console.error('Failed to assign static IP to adapter');
-        this.removeStaticIp();
+        await  this.removeStaticIp();
         throw new Error(error);        
       }
 
@@ -154,7 +154,7 @@ class V2RAY extends Network{
         this.isDnsAssigned = true;
       } catch (error) {
         console.error('Failed to assign DNS');
-        this.removeDns();
+        await  this.removeDns();
         throw new Error(error);        
       }
 
@@ -163,7 +163,7 @@ class V2RAY extends Network{
         this.isGlobalTrafficRouteRuleAssigned = true;
       } catch (error) {
         console.error('Failed to assign global traffic route rule');
-        this.removeGlobalTrafficRouteRule();
+        await this.removeGlobalTrafficRouteRule();
         throw new Error(error);        
       }
 
@@ -180,7 +180,7 @@ class V2RAY extends Network{
         this.isVpnTrafficRouteRuleAssigned = true;
       } catch (error) {
         console.error('Failed to assign VPN traffic route rule');
-        this.removeVpnTrafficRouteRule();
+        await this.removeVpnTrafficRouteRule();
         throw new Error(error);        
       }
 
@@ -188,7 +188,7 @@ class V2RAY extends Network{
     } catch (error) {
       console.log(this.processTree)
       // await this.disconnect()
-      throw error
+      throw new Error(error)
     }
   }
   
@@ -219,7 +219,7 @@ class V2RAY extends Network{
         isDnsAssigned: false,
         isGlobalTrafficRouteRuleAssigned: false,
         isGatewayAdapterIpResolved: false,
-        isVpnTrafficRouteRuleAssigned
+        isVpnTrafficRouteRuleAssigned : false
       }
     }
 
@@ -283,7 +283,7 @@ class V2RAY extends Network{
       }
 
       try {
-        // Attempt to gracefully stop the v2ray process
+        // Attempt to gracefully stop the v2-ray process
         this.v2rayProcess.kill('SIGINT');
 
         const handleProcessClosure = (eventName, detail) => {
@@ -361,7 +361,7 @@ class V2RAY extends Network{
       }
 
       try {
-        // Attempt to gracefully stop the tun2socks process
+        // Attempt to gracefully stop the tun 2 socks process
         this.tun2socksProcess.kill('SIGINT');
 
         const handleProcessClosure = (eventName, detail) => {
@@ -400,13 +400,13 @@ class V2RAY extends Network{
         try {
           await fsPromises.access(configDirPath)
         } catch (error) {
-          fsPromises.mkdir(configDirPath, {recursive: true})      
+          await fsPromises.mkdir(configDirPath, {recursive: true})
         }
         await fs.promises.writeFile(this.v2rayconfpath, config, { flag: 'w' });
         return true;
       } catch (error) {
-        console.error('Error writing v2ray config to disk', error);
-        throw error;
+        console.error('Error writing v2ray config to disk');
+        throw new Error(error);
       }
     }
 

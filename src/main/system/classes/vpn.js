@@ -44,7 +44,7 @@ class VPN{
       this.isConnected = true
       return true
     } catch (error) {
-      this.stop()
+      await this.stop()
       console.error(error)
       return false
     }
