@@ -88,38 +88,100 @@ class V2RAY extends Network{
 
     try {
       
-      await this.writeConfigToDisk(config);
-      this.processTree.isConfigToDisk = true;
+      try {
+        await this.writeConfigToDisk(config);
+        this.processTree.isConfigToDisk = true;
+      } catch (error) {
+        console.error('Failed to write v2ray config to disk');
+        await this.deleteConfigFromDisk();
+        throw new Error(error);
+      }
 
-      this.serverIp = await this.getIPv4FromDomain(endpoint);
-      this.processTree.isResolvedServerIp = true;
+      try {
+        this.serverIp = await this.getIPv4FromDomain(endpoint);
+        this.processTree.isResolvedServerIp = true;
+      } catch (error) {
+        console.error('Failed to resolve server IP', error);
+        throw new Error(error);
+      }
 
-      await this.establishV2RAYTunnel();
-      this.processTree.isEstablishV2RAYTunnel = true;
+      try {
+        await this.establishV2RAYTunnel();
+        this.processTree.isEstablishV2RAYTunnel = true;
+      } catch (error) {
+        console.error('Failed to establish v2ray tunnel');
+        await this.closeV2RAYTunnel();
+        throw new Error(error);
+      }
 
-      await this.deleteConfigFromDisk();
-      this.isv2rayConfigCleaned = true;
+      try {
+        await this.deleteConfigFromDisk();
+        this.isv2rayConfigCleaned = true;
+      } catch (error) {
+        console.error('Failed to clean up v2ray config from disk', error);
+        throw new Error(error);
+      }
 
-      await this.checkSocksInternetConnectivity('127.0.0.1', 10808);
-      this.isInternetConnectivityCheckPassed = true;
+      try {
+        await this.checkSocksInternetConnectivity('127.0.0.1', 10808);
+        this.isInternetConnectivityCheckPassed = true;
+      } catch (error) {
+        throw new Error('Failed to check internet connectivity through socks proxy');        
+      }
 
-      await this.startInternalTunnel();
-      this.isEstablishedInternalTunnel = true;
+      try {
+        await this.startInternalTunnel();
+        this.isEstablishedInternalTunnel = true;
+      } catch (error) {
+        console.error('Failed to establish internal tunnel');
+        await this.stopInternalTunnel();
+        throw new Error(error);
+      }
 
-      await this.assignStaticIp();
-      this.isAdapterIpAssigned = true;
+      try {
+        await this.assignStaticIp();
+        this.isAdapterIpAssigned = true;
+      } catch (error) {
+        console.error('Failed to assign static IP to adapter');
+        this.removeStaticIp();
+        throw new Error(error);        
+      }
 
-      await this.assignDns();
-      this.isDnsAssigned = true;
 
-      await this.assignGlobalTrafficRouteRule();
-      this.isGlobalTrafficRouteRuleAssigned = true;
+      try {
+        await this.assignDns();
+        this.isDnsAssigned = true;
+      } catch (error) {
+        console.error('Failed to assign DNS');
+        this.removeDns();
+        throw new Error(error);        
+      }
 
-      await this.getGatewayAdapterIp();
-      this.isGatewayAdapterIpResolved = true;
-      
-      await this.vpnTrafficRouteRule(this.serverIp, this.GatewayIp);
-      this.isVpnTrafficRouteRuleAssigned = true;
+      try {
+        await this.assignGlobalTrafficRouteRule();
+        this.isGlobalTrafficRouteRuleAssigned = true;
+      } catch (error) {
+        console.error('Failed to assign global traffic route rule');
+        this.removeGlobalTrafficRouteRule();
+        throw new Error(error);        
+      }
+
+      try {
+        await this.getGatewayAdapterIp();
+        this.isGatewayAdapterIpResolved = true;
+      } catch (error) {
+        console.error('Failed to get gateway adapter IP');
+        throw new Error(error);        
+      }
+
+      try {
+        await this.vpnTrafficRouteRule(this.serverIp, this.GatewayIp);
+        this.isVpnTrafficRouteRuleAssigned = true;
+      } catch (error) {
+        console.error('Failed to assign VPN traffic route rule');
+        this.removeVpnTrafficRouteRule();
+        throw new Error(error);        
+      }
 
       return true
     } catch (error) {
