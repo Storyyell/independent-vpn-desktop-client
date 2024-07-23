@@ -2,28 +2,23 @@ import { Box, Stack, Typography } from '@mui/material'
 import React from 'react'
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
-import { VpnStatusMainContext } from '../../context/VpnStatusMainContext';
 
 const VpnTraffic = () => {
-  const { vpnStatusMain } = React.useContext(VpnStatusMainContext);
   const [sendBytes, setSendBytes] = React.useState(0);
   const [recvBytes, setRecvBytes] = React.useState(0);
 
 
-  if (vpnStatusMain === 'connected') {
+  // if (vpnStatusMain === 'connected') { // when connected
 
-    setInterval(() => {
-
-
-
-      window.api.adapterSpeed()
-        .then((res) => {
-          setSendBytes(res.sent)
-          setRecvBytes(res.received)
-        })
-        .catch((err) => { })
-    }, 500)
-  }
+  //   setInterval(() => {
+  //     window.api.adapterSpeed()
+  //       .then((res) => {
+  //         setSendBytes(res.sent)
+  //         setRecvBytes(res.received)
+  //       })
+  //       .catch((err) => { })
+  //   }, 500)
+  // }
 
 
 

@@ -1,14 +1,10 @@
 import React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { VpnStatusMainProvider } from './context/VpnStatusMainContext'
-import { SelectionProvider } from './context/SelectionContext'
 import Home from './pages/Home/Home';
 import { Box, Typography } from '@mui/material';
 import Header from './components/Header/Header';
-import { FavListProvider } from './context/FavContext';
 import { SysSettingsProvider } from './context/SysSettingsContext';
-import { VpnTunnelStatusProvider } from './context/VpnTunnelStatusContext';
 import { DnsListProvider } from './context/DnsListContext';
 
 import { appVersionState } from './atoms/app/version';
@@ -97,29 +93,21 @@ function App() {
 
   return (
     <>
-        <VpnStatusMainProvider>
-          <VpnTunnelStatusProvider>
-            <SelectionProvider>
-                <FavListProvider>
-                  <SysSettingsProvider>
-                    <DnsListProvider>
-                      <ThemeProvider theme={theme}>
-                        <CssBaseline />
-                        <Box className="app svg-background app-padding">
-                          {isLoading && <LoadingSceen />}
-                          {!isLoading && <Header />}
-                          {!isLoading && <Home />}
-                          {/* StateSave want to be moved to app level */}
-                          <StateSave />
-                          <OfflineModal />
-                        </Box>
-                      </ThemeProvider>
-                    </DnsListProvider>
-                  </SysSettingsProvider>
-                </FavListProvider>
-            </SelectionProvider>
-          </VpnTunnelStatusProvider>
-        </VpnStatusMainProvider>
+      <SysSettingsProvider>
+        <DnsListProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Box className="app svg-background app-padding">
+              {isLoading && <LoadingSceen />}
+              {!isLoading && <Header />}
+              {!isLoading && <Home />}
+              {/* StateSave want to be moved to app level */}
+              <StateSave />
+              <OfflineModal />
+            </Box>
+          </ThemeProvider>
+        </DnsListProvider>
+      </SysSettingsProvider>
     </>
   )
 }

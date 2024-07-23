@@ -2,9 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
 import { IconButton, Paper, Stack, TextField, Typography } from '@mui/material';
-import favIcon from '../../assets/favIcon.svg';
 import ListItemButton from '@mui/material/ListItemButton';
-import { FavListContext } from '../../context/FavContext';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import serverIcon from "../../assets/server_icon.svg"
 
@@ -69,7 +67,6 @@ export const GeoItem = (props) => {
           </Stack>
 
           <Stack alignItems={'center'} justifyContent={'center'} >
-            {/* <FavIcon /> */}
             <KeyboardArrowRightIcon />
           </Stack>
 

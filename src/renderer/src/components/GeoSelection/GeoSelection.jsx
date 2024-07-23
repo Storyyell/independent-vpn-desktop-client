@@ -4,8 +4,6 @@ import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import { Stack } from '@mui/material';
-import { SelectionContext } from '../../context/SelectionContext';
-import { FavListContext } from '../../context/FavContext';
 import CountryList from './CountryList';
 import CityList from './CityList';
 import GeoSelHeader from './GeoSelHeader';
@@ -18,7 +16,6 @@ const GeoSelection = (props) => {
 
   const deviceToken = useRecoilValue(deviceTokenState);
   const [loadCityList, setLoadCityList] = React.useState(false)
-  const { setSelectedItems } = React.useContext(SelectionContext);
 
   const mentIconStyle = {
     width: '30px',
@@ -38,7 +35,6 @@ const GeoSelection = (props) => {
             mentIconStyle={mentIconStyle}
             loadCityList={loadCityList}
             setLoadCityList={setLoadCityList}
-            setSelectedItems={setSelectedItems}
             onClose={props.onClose}
           />
         </Box>
