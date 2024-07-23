@@ -2,7 +2,7 @@ import { app, BrowserWindow } from 'electron'
 import log from 'electron-log/main';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import "./utils/axiosTweek.js"
-import createWindow from './window/init.js'
+import createWindow from './window/main.js'
 import Config, { deleteLogFiles } from './Config/Config.js';
 import VPN from './system/classes/vpn.js';
 

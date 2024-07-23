@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain, screen, Tray, Menu } from 'electron'
 import { join } from 'path'
 import { optimizer, is } from '@electron-toolkit/utils'
-import { registerIpcHandlers } from '../../main/ipcHandlers/handlers.js';
+import { registerIpcHandlers } from '../ipcHandlers/handlers.js';
 import icon from '../../../resources/icon.png?asset'
 
 export default function createWindow(mainWindow) {
