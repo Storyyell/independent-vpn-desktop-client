@@ -1,6 +1,6 @@
 import axios from 'axios';
 const { Notification } = require('electron')
-import { vpnObj } from './vpnBase';
+// import { vpnObj } from './vpnBase';
 import log from 'electron-log/main';
 import { exec } from 'child_process';
 
@@ -36,7 +36,7 @@ export async function showNotification(title, body) {
 }
 
 export async function getVpnMetric() {
-    return vpnObj.statusObj()
+    // return vpnObj.statusObj()
 }
 
 

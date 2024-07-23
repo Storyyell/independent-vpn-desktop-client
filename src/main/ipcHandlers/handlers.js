@@ -1,6 +1,6 @@
 import { app, protocol, shell, } from 'electron'
 import { vpnConnet, vpnDisconnect } from '../system/vpnBase.js'
-import { vpnObj } from '../system/vpnBase.js'
+// import { vpnObj } from '../system/vpnBase.js'
 import {
   getIp,
   showNotification,
