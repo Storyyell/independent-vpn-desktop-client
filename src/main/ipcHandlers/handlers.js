@@ -4,7 +4,7 @@ import {
   showNotification,
   getVpnMetric,
   openLogFile
-} from '../system/ipcs.js'
+} from '../utils/ipcs.js'
 import { adapterSpeed } from '../system/stats/adapter.js'
 import SENTINEL_API from '../system/classes/sentinel.js'
 import DNS from '../system/classes/dns.js'

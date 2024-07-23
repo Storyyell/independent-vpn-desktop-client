@@ -36,7 +36,7 @@ export async function showNotification(title, body) {
 }
 
 export async function getVpnMetric() {
-    // return vpnObj.statusObj()
+    return
 }
 
 

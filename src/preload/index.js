@@ -1,7 +1,7 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { ipcRenderer } from 'electron'
-import { getVpnMetric } from '../main/system/ipcs'
+import { getVpnMetric } from '../main/utils/ipcs'
 
 
 // Custom APIs for renderer
