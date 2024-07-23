@@ -14,9 +14,6 @@ import { citySelectedState } from '../../atoms/userSelection/city';
 
 
 const GeoSelHeader = (props) => {
-  let favIconClick = props.favIconClick
-  let setFavIconClick = props.setFavIconClick
-  let mentIconStyle = props.mentIconStyle
   let loadCityList = props.loadCityList
   let setLoadCityList = props.setLoadCityList
   let setSelectedItems = props.setSelectedItems

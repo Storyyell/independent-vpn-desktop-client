@@ -19,12 +19,7 @@ const GeoSelection = (props) => {
   const { serverList, setServerList } = React.useContext(ServerListContext);
   const { deviceToken } = React.useContext(DeviceTokenContext);
   const [loadCityList, setLoadCityList] = React.useState(false)
-  const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
-  const { favList, setFavList } = React.useContext(FavListContext);
-  const [favIconClick, setFavIconClick] = React.useState(false);
-  const [countryListProcessed, setCountryListProcessed] = React.useState(serverList?.countries?.data || []);
-  const [cityListProcessed, setCityListProcessed] = React.useState(serverList?.cities?.[selectedItems?.countryId]?.data || []);
-  const [processListUpdate, setProcessListUpdate] = React.useState(false)
+  const { setSelectedItems } = React.useContext(SelectionContext);
 
   const mentIconStyle = {
     width: '30px',
@@ -52,8 +47,6 @@ const GeoSelection = (props) => {
 
         <Box style={{ marginBottom: "8px" }}>
           <GeoSelHeader
-            favIconClick={favIconClick}
-            setFavIconClick={setFavIconClick}
             mentIconStyle={mentIconStyle}
             loadCityList={loadCityList}
             setLoadCityList={setLoadCityList}
@@ -72,25 +65,12 @@ const GeoSelection = (props) => {
                   ?
 
                   <CityList
-                    serverList={serverList}
-                    cityListProcessed={cityListProcessed}
-                    selectedItems={selectedItems}
-                    deviceToken={deviceToken}
-                    setServerList={setServerList}
-                    setSelectedItems={setSelectedItems}
                     onClose={props.onClose}
-
                   />
                   :
 
                   <CountryList
-                    serverList={serverList}
-                    countryListProcessed={countryListProcessed}
-                    favList={favList}
-                    setFavList={setFavList}
                     setLoadCityList={setLoadCityList}
-                    setSelectedItems={setSelectedItems}
-                    setProcessListUpdate={setProcessListUpdate}
                   />
               }
             </List>

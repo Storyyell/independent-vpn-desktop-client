@@ -12,10 +12,6 @@ const dataValidityPeroid = 10 * 60 * 1000 // 10minutes
 
 const CityList = (props) => {
 
-  let serverList = props.serverList
-  let setSelectedItems = props.setSelectedItems
-  let setServerList = props.setServerList
-
   const countryId = useRecoilValue(countrySelectedState);
   const deviceToken = useRecoilValue(deviceTokenState);
   const [cityObj, setCityObj] = useRecoilState(cityListState);
@@ -29,7 +25,6 @@ const CityList = (props) => {
 
   const handleCityChange = (cityId_) => {
     // trigerring vpn connection 
-    // handleVpnConnTrigger(deviceToken, { countryId: countryId, cityId: cityId_ }, serverList, () => { }, vpnStatusMain, setServerList, setVpnStatusMain, setSelectedItems)
     setCitySelected(cityId_);
   };
 
