@@ -79,10 +79,9 @@ app.on('ready', async () => {
 
 app.on('will-quit', async (event) => {
   event.preventDefault
-  // //todo fix file deletion issue for windows
   try {
-  //   deleteLogFiles();
-  //   appConfig.deleteConfigDirectory();
+    deleteLogFiles();
+    appConfig.deleteConfigDirectory();
     const vpn = new VPN();
     await vpn.stop();
   } catch (error) {
