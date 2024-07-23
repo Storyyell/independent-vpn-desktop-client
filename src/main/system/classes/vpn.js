@@ -71,6 +71,7 @@ class VPN{
       this.isConnected = false
       this.isDisconnectionProgress = false
     }
+    return true
   }
 
 }
