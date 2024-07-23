@@ -1,4 +1,4 @@
-import { app, shell, } from 'electron'
+import { app, protocol, shell, } from 'electron'
 import { vpnConnet, vpnDisconnect } from '../system/vpnBase.js'
 import { vpnObj } from '../system/vpnBase.js'
 import {
@@ -31,7 +31,7 @@ export function registerIpcHandlers(ipcMain) {
   ipcMain.handle('triggerDisconnection', async (event) => {
     console.log('vpn disconnection trigger on main process')
     // return await vpnDisconnect()
-    return await vpnInstance.stop()
+    return await vpnInstance.stop({protocol: 'V2RAY'})
   })
 
   ipcMain.handle('vpnConnStatus', (event, serverObj) => {
