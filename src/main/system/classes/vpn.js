@@ -53,16 +53,13 @@ class VPN{
     }
   }
   
-  async stop({protocol}){
+  async stop(){
     if(this.isDisconnectionProgress) {console.log('vpn already disconnecting'); return}
     if(this.isConnectionProgress) {console.log('vpn is connecting'); return}
     
-    if(!protocol && !this.protocol){ throw new Error("protocol not selected") }
-    if(protocol){this.protocol= protocol}
+    if(!this.protocol){ throw new Error("protocol not selected") }
 
     this.isDisconnectionProgress = true
-
-    this.protocol = protocol
 
     try {
       if(this.protocol === 'V2RAY'){

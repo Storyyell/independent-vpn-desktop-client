@@ -5,7 +5,6 @@ import fs, { mkdir } from 'fs'
 const fsPromises = require('fs').promises;
 import { spawn } from "child_process"
 import { app } from 'electron'
-import { is } from "@electron-toolkit/utils";
 
 
 class V2RAY extends Network{
@@ -361,7 +360,7 @@ class V2RAY extends Network{
         '-device', `tun://${this.appConfig.adapterName}`,
         '-proxy', 'socks5://127.0.0.1:10808'
       ]);
-      
+
       this.tun2socksProcess = tun2socks;
 
       tun2socks.on('error', async (error) => {
