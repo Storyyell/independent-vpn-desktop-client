@@ -22,12 +22,11 @@ export function registerIpcHandlers(ipcMain) {
   ipcMain.handle('triggerConnection', async (event, serverParms) => {
     console.log('vpn connection trigger on main process')
     return await vpnInstance.start({protocol: "V2RAY", ...serverParms});
-
   })
 
   ipcMain.handle('triggerDisconnection', async (event) => {
     console.log('vpn disconnection trigger on main process')
-    return await vpnInstance.stop({protocol: 'V2RAY'})
+    return await vpnInstance.stop()
   })
 
   ipcMain.handle('vpnConnStatus', (event, serverObj) => {
