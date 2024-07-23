@@ -30,7 +30,7 @@ export function registerIpcHandlers(ipcMain) {
   })
 
   ipcMain.handle('vpnConnStatus', (event, serverObj) => {
-    return global.vpnConnStatus
+    return vpnInstance.isConnected
   })
 
   ipcMain.handle('registerDevice', async () => {

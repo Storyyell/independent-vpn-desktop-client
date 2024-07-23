@@ -1,15 +1,10 @@
 import { app, BrowserWindow } from 'electron'
 import log from 'electron-log/main';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-// import { vpnObj } from './system/vpnBase.js'
 import "./utils/axiosTweek.js"
 import createWindow from './window/init.js'
 import Config, { deleteLogFiles } from './Config/Config.js';
 import VPN from './system/classes/vpn.js';
-const fsPromises = require('fs').promises;
-
-
-global.vpnConnStatus = false;
 
 let mainWindow;
 
@@ -19,7 +14,7 @@ const appConfig = new Config();
 log.initialize({ spyRendererConsole: true });
 
 // redirect console.log to the logger
-Object.assign(console, log.functions);
+console.log = log.log;
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
