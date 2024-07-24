@@ -1,57 +1,60 @@
 import { app, shell, } from 'electron'
-import { vpnConnet, vpnDisconnect } from '../system/vpnBase.js'
-import { vpnObj } from '../system/vpnBase.js'
 import {
-  registerDevice,
-  pullCountryList,
-  pullCityList,
-  pullServerList,
-  pullServerConf,
   getIp,
   showNotification,
   getVpnMetric,
   openLogFile
-
-} from '../system/ipcs.js'
-import { dnsList } from '../system/dns/dnsList.js'
+} from '../utils/ipcs.js'
 import { adapterSpeed } from '../system/stats/adapter.js'
+import SENTINEL_API from '../system/classes/sentinel.js'
+import DNS from '../system/classes/dns.js'
+import Config from '../Config/Config.js'
+import VPN from '../system/classes/vpn.js'
+
+const sentinel = new SENTINEL_API();
+const dns = new DNS();
+const vpnInstance = new VPN();
 
 
 export function registerIpcHandlers(ipcMain) {
+  const appConfig = new Config();
 
   ipcMain.handle('triggerConnection', async (event, serverParms) => {
     console.log('vpn connection trigger on main process')
-    return await vpnConnet(serverParms);
+    return await vpnInstance.start({protocol: "V2RAY", ...serverParms});
   })
 
   ipcMain.handle('triggerDisconnection', async (event) => {
     console.log('vpn disconnection trigger on main process')
-    return await vpnDisconnect()
+    return await vpnInstance.stop()
   })
 
   ipcMain.handle('vpnConnStatus', (event, serverObj) => {
-    return global.vpnConnStatus
+    return vpnInstance.isConnected
   })
 
   ipcMain.handle('registerDevice', async () => {
-    // console.log('device registration triggered on main process')
-    return registerDevice()
+    return sentinel.registerDevice()
   })
 
-  ipcMain.handle('getCountries', async (event, args) => {
-    return pullCountryList(args)
+  ipcMain.handle('setDeviceToken', async (event, device_token) => {
+    return sentinel.setDeviceToken(device_token)
+  })
+
+  ipcMain.handle('getCountries', async (event, device_token) => {
+    return sentinel.pullCountryList()
   })
 
   ipcMain.handle('getCities', async (event, device_token, countryCode) => {
-    return pullCityList(device_token, countryCode)
+    return sentinel.pullCityList(countryCode)
   })
 
   ipcMain.handle('getServers', async (event, device_token, countryCode, cityCode) => {
-    return pullServerList(device_token, countryCode, cityCode)
+    return sentinel.pullServerList(countryCode, cityCode)
   })
 
   ipcMain.handle('getServerConf', async (event, device_token, countryCode, cityCode, serverId) => {
-    return pullServerConf(device_token, countryCode, cityCode, serverId)
+    return sentinel.pullServerConf(countryCode, cityCode, serverId)
   })
 
   ipcMain.handle('sysOpen', async (event, ...url) => {
@@ -94,14 +97,14 @@ export function registerIpcHandlers(ipcMain) {
   ipcMain.handle('getDnsList', async (event) => {
 
     return {
-      dnsList: dnsList || [],
-      selectedDns: vpnObj.dnsIndex || 0
+      dnsList: dns.getDNSList(),
+      selectedDns: dns.getCurrentDNSIndex()
     };
 
   })
-  ipcMain.handle('setDns', async (event, dnsId) => { vpnObj.dnsIndex = dnsId || 0 })
+  ipcMain.handle('setDns', async (event, dnsId) => { dns.setCurrentDNSIndex(dnsId || 0) })
 
-  ipcMain.handle('adapterSpeed', async (event) => { return adapterSpeed(global.adapterName); });
+  ipcMain.handle('adapterSpeed', async (event) => { return adapterSpeed(appConfig.adapterName); });
 
   ipcMain.handle('openLogger', async (event) => {
     return openLogFile();

@@ -4,27 +4,18 @@ import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import { Stack } from '@mui/material';
-import { ServerListContext } from '../../context/ServerListContext';
-import { SelectionContext } from '../../context/SelectionContext';
-import { DeviceTokenContext } from '../../context/DeviceTokenContext';
-import { FavListContext } from '../../context/FavContext';
 import CountryList from './CountryList';
 import CityList from './CityList';
 import GeoSelHeader from './GeoSelHeader';
 import { refreshCityList, refreshCountryList } from '../../scripts/utils';
 import backgroundImage from '../../assets/background.svg';
+import { useRecoilValue } from 'recoil';
+import { deviceTokenState } from '../../atoms/app/token';
 
 const GeoSelection = (props) => {
 
-  const { serverList, setServerList } = React.useContext(ServerListContext);
-  const { deviceToken } = React.useContext(DeviceTokenContext);
+  const deviceToken = useRecoilValue(deviceTokenState);
   const [loadCityList, setLoadCityList] = React.useState(false)
-  const { selectedItems, setSelectedItems } = React.useContext(SelectionContext);
-  const { favList, setFavList } = React.useContext(FavListContext);
-  const [favIconClick, setFavIconClick] = React.useState(false);
-  const [countryListProcessed, setCountryListProcessed] = React.useState(serverList?.countries?.data || []);
-  const [cityListProcessed, setCityListProcessed] = React.useState(serverList?.cities?.[selectedItems?.countryId]?.data || []);
-  const [processListUpdate, setProcessListUpdate] = React.useState(false)
 
   const mentIconStyle = {
     width: '30px',
@@ -35,29 +26,15 @@ const GeoSelection = (props) => {
     borderRadius: '5px',
   }
 
-
-  // for refreshing the country list
-  React.useEffect(() => {
-    if (props.open) {
-      refreshCountryList(deviceToken, serverList, setServerList);
-    }
-  }, [deviceToken, props.open])
-
-
-
-
   const DrawerList = (
     <>
       <Stack direction={'column'} spacing={1} className='app-padding' sx={{ height: '100vh' }} style={{ overflowY: 'scroll' }}>
 
         <Box style={{ marginBottom: "8px" }}>
           <GeoSelHeader
-            favIconClick={favIconClick}
-            setFavIconClick={setFavIconClick}
             mentIconStyle={mentIconStyle}
             loadCityList={loadCityList}
             setLoadCityList={setLoadCityList}
-            setSelectedItems={setSelectedItems}
             onClose={props.onClose}
           />
         </Box>
@@ -72,27 +49,12 @@ const GeoSelection = (props) => {
                   ?
 
                   <CityList
-                    serverList={serverList}
-                    cityListProcessed={cityListProcessed}
-                    selectedItems={selectedItems}
-                    favList={favList}
-                    setFavList={setFavList}
-                    deviceToken={deviceToken}
-                    setServerList={setServerList}
-                    setSelectedItems={setSelectedItems}
                     onClose={props.onClose}
-
                   />
                   :
 
                   <CountryList
-                    serverList={serverList}
-                    countryListProcessed={countryListProcessed}
-                    favList={favList}
-                    setFavList={setFavList}
                     setLoadCityList={setLoadCityList}
-                    setSelectedItems={setSelectedItems}
-                    setProcessListUpdate={setProcessListUpdate}
                   />
               }
             </List>

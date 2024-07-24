@@ -2,56 +2,13 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
 import { IconButton, Paper, Stack, TextField, Typography } from '@mui/material';
-import favIcon from '../../assets/favIcon.svg';
 import ListItemButton from '@mui/material/ListItemButton';
-import { FavListContext } from '../../context/FavContext';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import serverIcon from "../../assets/server_icon.svg"
 
 
 export const GeoItem = (props) => {
   const d = props.data;
-  // const { favList, setFavList } = React.useContext(FavListContext);
-
-
-  // const mentIconStyle = {
-  //   width: '28px',
-  //   height: '28px'
-  // }
-
-
-  // const FavIcon = () => {
-
-  //   let isFav = false;
-
-  //   if (props.geoType == 'country') {
-  //     isFav = favList.countries.includes(d.id);
-  //   } else if (props.geoType == 'city') {
-  //     isFav = favList?.cities?.[d?.country_id]?.includes(d?.id)
-  //   }
-
-  //   return (
-  //     <IconButton style={mentIconStyle}
-  //       onClick={(e) => {
-  //         props.onFavClick();
-  //         e.stopPropagation();
-  //       }}
-
-  //       sx={{
-  //         backgroundColor: isFav ? 'red' : 'gray',
-  //         borderRadius: '4px',
-  //         '&:hover': {
-  //           backgroundColor: isFav ? 'red' : 'gray',
-  //         },
-  //       }}
-  //     // todo prevent hover propogation
-
-  //     >
-  //       <img alt="favicon" src={favIcon} loading="lazy" width='14px' />
-  //     </IconButton>
-  //   )
-  // }
-
   return (
     <ListItem key={d.id} sx={{ p: 0.2 }}>
       <ListItemButton onClick={() => { props.onClick(d.id) }} sx={{ p: 0.7 }}>
@@ -110,7 +67,6 @@ export const GeoItem = (props) => {
           </Stack>
 
           <Stack alignItems={'center'} justifyContent={'center'} >
-            {/* <FavIcon /> */}
             <KeyboardArrowRightIcon />
           </Stack>
 

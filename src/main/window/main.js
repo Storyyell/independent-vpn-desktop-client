@@ -1,22 +1,24 @@
 import { app, shell, BrowserWindow, ipcMain, screen, Tray, Menu } from 'electron'
 import { join } from 'path'
 import { optimizer, is } from '@electron-toolkit/utils'
-import { registerIpcHandlers } from '../../main/ipcHandlers/handlers.js';
+import { registerIpcHandlers } from '../ipcHandlers/handlers.js';
 import icon from '../../../resources/icon.png?asset'
-import icon_ from '../../../resources/icon.ico?asset'
 
-export default function createWindow() {
+
+let mainWindow;
+
+
+function createWindow() {
 
   let tray = null;
 
   let screen_size = screen.getPrimaryDisplay().workAreaSize
 
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    minWidth: 393,
-    minHeight: 652,
+  mainWindow = new BrowserWindow({
     width: 393,
     height: 652,
+    maximizable: false,
     x: screen_size.width - 393 - 40,
     y: screen_size.height - 652 - 50,
     backgroundColor: '#171A20',
@@ -29,7 +31,6 @@ export default function createWindow() {
       devTools: process.env.NODE_ENV === 'production' ? false : true // disable the Developer Tools
 
     },
-    maximizable: false,
   })
 
   // devtools configurations
@@ -82,7 +83,7 @@ export default function createWindow() {
   ipcMain.handle('toggle-tray', (event, isEnabled) => {
     if (isEnabled) {
       if (!tray) {
-        tray = new Tray(icon_)
+        tray = new Tray(icon);
         var contextMenu = Menu.buildFromTemplate([
           { label: 'Quit', click: function () { app.isQuiting = true; app.quit(); } }
         ]);
@@ -103,5 +104,8 @@ export default function createWindow() {
     }
   });
 
-
 }
+
+const getMainWindow =  () => mainWindow
+
+export  { createWindow, getMainWindow };

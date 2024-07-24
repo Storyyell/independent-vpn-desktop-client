@@ -11,7 +11,8 @@ async function refreshCountryList(deviceToken, countryList, setCountryList) {
     window.api.getCountries(deviceToken).then(({ data }) => {
       setCountryList({ data: data || [], timestamp: new Date() });
     }).catch((e) => {
-      console.error(e);
+      // console.error(e);
+      console.error('Failed to get country list');
     });
   }
 
@@ -36,7 +37,7 @@ async function refreshCityList(deviceToken, countryId, cityList, setCityList) {
         ...cityListObj,
         [countryId]: { data: data || [], timestamp: new Date() }
       }));
-    }).catch(console.error);
+    }).catch((e) => {console.error("Failed to get city list")});
   }
 
   return cityObj?.data || [];
@@ -63,7 +64,8 @@ async function refreshServerList(countryId, cityId, setServerList, serverList, d
       setServerList(updatedServerList);
       return updatedServerList;
     } catch (e) {
-      console.error(e);
+      // console.error(e);
+      console.error('Failed to get server list');
     }
   }
   return serverList;

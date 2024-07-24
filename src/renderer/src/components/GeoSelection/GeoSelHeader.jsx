@@ -2,7 +2,6 @@ import { Box, IconButton, Stack, Typography } from '@mui/material'
 import React from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import favIcon from '../../assets/favIcon.svg';
 import GearBtn from '../Header/GearBtn';
 import StatusBar from '../Header/StatusBar';
 import PublicIcon from '@mui/icons-material/Public';
@@ -14,12 +13,8 @@ import { citySelectedState } from '../../atoms/userSelection/city';
 
 
 const GeoSelHeader = (props) => {
-  let favIconClick = props.favIconClick
-  let setFavIconClick = props.setFavIconClick
-  let mentIconStyle = props.mentIconStyle
   let loadCityList = props.loadCityList
   let setLoadCityList = props.setLoadCityList
-  let setSelectedItems = props.setSelectedItems
 
   const resetCountrySelection = useResetRecoilState(countrySelectedState);
   const resetCitySelection = useResetRecoilState(citySelectedState);
@@ -29,9 +24,6 @@ const GeoSelHeader = (props) => {
       <GearBtn menuClick={true}
         handleMenuClick={() => {
           if (loadCityList) {
-            setSelectedItems((d) => {
-              return { ...d, cityId: '' }
-            })
             setLoadCityList(false)
           } else {
             props.onClose()

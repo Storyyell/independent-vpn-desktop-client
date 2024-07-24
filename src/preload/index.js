@@ -1,12 +1,13 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { ipcRenderer } from 'electron'
-import { getVpnMetric } from '../main/system/ipcs'
+import { getVpnMetric } from '../main/utils/ipcs'
 
 
 // Custom APIs for renderer
 const api = {
   registerDevice: () => ipcRenderer.invoke('registerDevice'),
+  setDeviceToken: (token) => ipcRenderer.invoke('setDeviceToken', token),
   getCountries: (device_token) => ipcRenderer.invoke('getCountries', device_token),
   getCities: (device_token, countryCode) => ipcRenderer.invoke('getCities', device_token, countryCode),
   getServers: (device_token, countryCode, cityCode) => ipcRenderer.invoke('getServers', device_token, countryCode, cityCode),
