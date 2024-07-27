@@ -6,28 +6,28 @@
 ### Install
 
 ```bash
-$ npm install
+$ yarn install
 ```
 
 ### Development
 
 ```bash
-$ npm run dev
+$ yarn run dev
 ```
 
 ### Build
 
 ```bash
 # For windows
-$ npm run build:win
+$ yarn run build:win
 
 # for macOS and Linux vpn routing rule want to be upated
 
 # For macOS
-$ npm run build:mac
+$ yarn run build:mac
 
 # For Linux
-$ npm run build:linux
+$ yarn run build:linux
 ```
 
 
