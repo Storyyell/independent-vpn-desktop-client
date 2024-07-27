@@ -6,6 +6,7 @@ out
 resources/bin/config.json
 .env
 customSign.js
+private/
 
 # test/
 # src/main/system/

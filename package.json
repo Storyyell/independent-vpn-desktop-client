@@ -1,10 +1,11 @@
 {
   "name": "independent_vpn",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "independent_vpn powered by sentinel network",
   "main": "./out/main/index.js",
   "author": "example.com",
   "homepage": "https://www.sentinel.co/",
+  "repository": "https://github.com/Storyyell/independent-vpn-desktop-client.git",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
@@ -16,7 +17,8 @@
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "npm run build && electron-builder --mac",
-    "build:linux": "npm run build && electron-builder --linux"
+    "build:linux": "npm run build && electron-builder --linux",
+    "release": "electron-builder --win --publish onTagOrDraft"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.0",

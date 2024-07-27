@@ -38,7 +38,3 @@ VITE_SERVER_API_URL=<sentinel api url>
 VITE_MAPBOX_KEY=<mappbox api key>
 VITE_IP_API_KEY=<pro-ipapi key>
 ```
-
-
-please comment out sign: "./customSign.js" in electron-builder.yml when using 
-is part of windows code signing 
