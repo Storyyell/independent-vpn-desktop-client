@@ -3,6 +3,7 @@ import { join } from 'path'
 import { optimizer, is } from '@electron-toolkit/utils'
 import { registerIpcHandlers } from '../ipcHandlers/handlers.js';
 import icon from '../../../resources/icon.png?asset'
+import initUpdater from '../utils/updater.js';
 
 
 let mainWindow;
@@ -13,6 +14,8 @@ function createWindow() {
   let tray = null;
 
   let screen_size = screen.getPrimaryDisplay().workAreaSize
+
+  setTimeout(initUpdater, 2000);
 
   // Create the browser window.
   mainWindow = new BrowserWindow({

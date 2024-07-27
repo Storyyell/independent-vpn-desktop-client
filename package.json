@@ -1,6 +1,6 @@
 {
   "name": "independent_vpn",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "independent_vpn powered by sentinel network",
   "main": "./out/main/index.js",
   "author": "example.com",
