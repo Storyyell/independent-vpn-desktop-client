@@ -4,6 +4,7 @@ import { Box, Typography } from '@mui/material';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { geoCoordinateState } from '../../atoms/app/geoCordinate';
 import LocationTxt from './LocationTxt';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Set your mapbox token
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_KEY;
