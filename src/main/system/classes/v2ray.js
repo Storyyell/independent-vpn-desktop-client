@@ -67,6 +67,9 @@ class V2RAY extends Network{
     if (this.platform === 'win32'){
       return path.join(this.binaryDirPath, 'v2ray.exe')
     }
+    if (this.platform === 'linux'){
+      return path.join(this.binaryDirPath, 'linux' ,'xray')
+    }
   }
 
   tun2socksBinaryPathFx(){
@@ -308,7 +311,7 @@ class V2RAY extends Network{
 
         async function onDataReceived(data) {
           const output = data.toString();
-          if (output.includes('started')) {
+          if (output.includes('Xray 1.8.21 started')) {
             v2ray.stdout.removeListener('data', onDataReceived);
             try {
               resolve(true);
