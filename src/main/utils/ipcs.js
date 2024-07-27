@@ -3,7 +3,7 @@ const { Notification } = require('electron')
 // import { vpnObj } from './vpnBase';
 import log from 'electron-log/main';
 import { exec } from 'child_process';
-
+const axiosRetry = require('axios-retry').default;
 
 export async function getIp(device_token) {
     const ipApikey = import.meta.env.VITE_IP_API_KEY;
@@ -16,8 +16,14 @@ export async function getIp(device_token) {
         headers: { }
     };
 
+    const client = axios.create({});
+    axiosRetry(client, { 
+        retries: 3,
+        retryDelay: axiosRetry.exponentialDelay,
+    });
+
     try {
-        const response = await axios.request(config);
+        const response = await client.request(config);
         return response.data;
     } catch (error) {
         // log.error("getIp error:");

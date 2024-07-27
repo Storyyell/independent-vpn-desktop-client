@@ -14,6 +14,7 @@ win:
   executableName: independent_vpn
   requestedExecutionLevel: requireAdministrator # for admin privileges
   compression: maximum
+  sign: "./customSign.js"
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
