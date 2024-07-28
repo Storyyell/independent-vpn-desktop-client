@@ -38,3 +38,6 @@ VITE_SERVER_API_URL=<sentinel api url>
 VITE_MAPBOX_KEY=<mappbox api key>
 VITE_IP_API_KEY=<pro-ipapi key>
 ```
+
+Xray core version : v1.8.21
+tun2Socks version : v2.5.2
